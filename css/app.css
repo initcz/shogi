@@ -1,1 +1,15 @@
-table { border: 1px black solid; }
+table {
+  width: 100%;
+  border-top: 1px black solid;
+  border-left: 1px black solid;
+}
+
+td {
+  height: 106px;
+  /*
+  margin: 5px;
+  padding: 5px;
+  */
+  border-bottom: 1px black solid;
+  border-right: 1px black solid;
+}
