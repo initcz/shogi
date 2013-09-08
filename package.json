@@ -1,0 +1,15 @@
+{
+  "name": "shogi",
+  "version": "0.1.0",
+  "description": "Japanese chess game",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "BSD-2-Clause",
+  "dependencies": {
+    "bower": "~1.2.6",
+    "coffee-script": "~1.6.3"
+  }
+}
