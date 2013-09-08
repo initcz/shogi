@@ -30,7 +30,7 @@ class ShogiGame
 
     @_ws.onmessage = (evt) ->
       console.log '[msg]'
-      console.log evt
+      console.log evt.data
 
     @_ws.onerror = (evt) ->
       console.log '[err]'
