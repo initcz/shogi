@@ -10,6 +10,7 @@
   "license": "BSD-2-Clause",
   "dependencies": {
     "bower": "~1.2.6",
-    "coffee-script": "~1.6.3"
+    "coffee-script": "~1.6.3",
+    "ws": "~0.4.30"
   }
 }

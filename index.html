@@ -6,21 +6,26 @@
 <link rel="stylesheet" href="css/reset.css" />
 <link rel="stylesheet" href="css/text.css" />
 <link rel="stylesheet" href="css/960_24_col.css" />
+<!--
 <link rel="stylesheet" href="css/demo.css" />
+//-->
 <link rel="stylesheet" href="css/app.css" />
 <script type="text/javascript" src="js/zepto.min.js"></script>
 <script type="text/javascript" src="js/coffee-script.js"></script>
-<script type="text/javascript" src="js/app.js"></script>
+<script type="text/javascript" src="js/ShogiGame.js"></script>
 </head>
 <body>
-<h1>Shogi</h1>
+<h1><a href="http://www.shogi.cz/pravidla.html">Shogi</a></h1>
 <div id="content" class="container_24">
 </div>
-<img src="img/sachovnice_kameny.png" />
 <!-- end .container_24 -->
+<img src="img/sachovnice_kameny.png" />
+<a href="http://www.w3.org/html/logo/">
+  <img src="http://www.w3.org/html/logo/badge/html5-badge-h-connectivity.png" width="133" height="64" alt="HTML5 Powered with Connectivity / Realtime" title="HTML5 Powered with Connectivity / Realtime">
+</a>
 <script type="text/javascript">
   $('document').ready(function() {
-    new ShogiGame('content');
+    new ShogiGame('content', 'ws://31.31.73.10:8080');
   });
 </script>
 </body>
