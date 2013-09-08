@@ -1,0 +1,1 @@
+../bower_components/coffee-script/extras/coffee-script.js
