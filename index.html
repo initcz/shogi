@@ -27,7 +27,8 @@
 <button>send</button>
 <script type="text/javascript">
   $('document').ready(function() {
-    new ShogiGame('content', 'ws://31.31.73.10:8080');
+    var shogi = new ShogiGame('ws://31.31.73.10:8080');
+    shogi.initUI('content');
   });
 </script>
 </body>
