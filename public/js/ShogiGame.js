@@ -24,12 +24,9 @@ constant = {
 };
 
 Figure = (function() {
-  function Figure(id, type, owner, x, y) {
-    this.id = id;
+  function Figure(type, owner) {
     this.type = type;
     this.owner = owner;
-    this.x = x;
-    this.y = y;
     this.promoted = false;
   }
 

@@ -28,7 +28,7 @@ constant =
 # Figure class
 #
 class Figure
-  constructor: (@type, @owner, @x, @y) ->
+  constructor: (@type, @owner) ->
     @promoted = false
 
 #
