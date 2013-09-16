@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Shogi</title>
+<link rel="stylesheet" href="/css/reset.css" />
+<link rel="stylesheet" href="/css/text.css" />
+<link rel="stylesheet" href="/css/960_24_col.css" />
+<link rel="stylesheet" href="/css/app.css" />
+<script type="text/javascript" src="/js/zepto.min.js"></script>
+<script type="text/javascript" src="/js/coffee-script.js"></script>
+<script type="text/javascript" src="/js/ShogiGame.js"></script>
+</head>
+<body>
+<h1><a href="http://www.shogi.cz/pravidla.html">Shogi</a></h1>
+<a href="http://www.w3.org/html/logo/">
+  <img src="http://www.w3.org/html/logo/badge/html5-badge-h-connectivity.png" width="133" height="64" alt="HTML5 Powered with Connectivity / Realtime" title="HTML5 Powered with Connectivity / Realtime">
+</a>
+<div id="content" class="container_24">
+</div>
+<!-- end .container_24 -->
+<textarea></textarea><br />
+<input type="text"></input>
+<button>send</button>
+<script type="text/javascript">
+  $('document').ready(function() {
+    var shogi = new ShogiGame('ws://31.31.73.10:8080');
+    shogi.initUI('content');
+  });
+</script>
+</body>
+</html>
