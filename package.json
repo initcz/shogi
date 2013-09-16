@@ -11,7 +11,6 @@
   "dependencies": {
     "bower": "~1.2.6",
     "coffee-script": "~1.6.3",
-    "ws": "~0.4.30",
     "hapi": "~1.10.0"
   }
 }

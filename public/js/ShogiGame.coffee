@@ -38,27 +38,8 @@ class Figure
 ## TODO: mind UI and CORE separation
 
 class ShogiGame
-  constructor: (wsUri) ->
-    @initWS wsUri
-
-  initWS: (wsUri) ->
-    @_ws = new WebSocket wsUri
-
-    @_ws.onopen = (evt) ->
-      console.log '[open]'
-      console.log evt
-
-    @_ws.onclose = (evt) ->
-      console.log '[close]'
-      console.log evt
-
-    @_ws.onmessage = (evt) ->
-      console.log '[msg]'
-      console.log evt.data
-
-    @_ws.onerror = (evt) ->
-      console.log '[err]'
-      console.log evt
+  constructor: ->
+    # TODO: init communication
 
   # TODO: put this in another class
   initUI: (id) ->
