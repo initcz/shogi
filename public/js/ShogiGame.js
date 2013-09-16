@@ -35,29 +35,7 @@ Figure = (function() {
 })();
 
 ShogiGame = (function() {
-  function ShogiGame(wsUri) {
-    this.initWS(wsUri);
-  }
-
-  ShogiGame.prototype.initWS = function(wsUri) {
-    this._ws = new WebSocket(wsUri);
-    this._ws.onopen = function(evt) {
-      console.log('[open]');
-      return console.log(evt);
-    };
-    this._ws.onclose = function(evt) {
-      console.log('[close]');
-      return console.log(evt);
-    };
-    this._ws.onmessage = function(evt) {
-      console.log('[msg]');
-      return console.log(evt.data);
-    };
-    return this._ws.onerror = function(evt) {
-      console.log('[err]');
-      return console.log(evt);
-    };
-  };
+  function ShogiGame() {}
 
   ShogiGame.prototype.initUI = function(id) {
     var cellId, html, max_i, max_j;
