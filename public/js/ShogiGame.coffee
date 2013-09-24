@@ -45,14 +45,14 @@ class ShogiGame
     @board = []
     `
     for(var i=0;i<constant.misc.BOARD_SIZE;i++){
-      board[i] = [];
+     this.board[i] = [];
     }
     `
     @figures = []
     @offside = []
     @offside[constant.owner.A] = []
     @offside[constant.owner.B] = []
-    init();
+    @init();
     # TODO: init communication
 
   # TODO: put this in another class
@@ -118,7 +118,7 @@ class ShogiGame
     @figures[37] = new Figure constant.figureType.PAWN, constatnt.owner.B
     @figures[38] = new Figure constant.figureType.PAWN, constatnt.owner.B
     @figures[39] = new Figure constant.figureType.PAWN, constatnt.owner.B
-    reset();
+    @reset();
 
   reset: ->
     # top-left corner is counted as 0,0
