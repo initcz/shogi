@@ -2,7 +2,7 @@
   "name": "shogi",
   "version": "0.1.0",
   "authors": [
-    "Jakub Vitak <mainiak@gmail.com>"
+    "Jakub Vitak <mainiak@gmail.com>",
     "Martin Petak <martin.petak@gmail.com"
   ],
   "description": "Japanese chess game",

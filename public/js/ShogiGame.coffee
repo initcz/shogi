@@ -45,7 +45,7 @@ class ShogiGame
     @board = []
     `
     for(var i=0;i<constant.misc.BOARD_SIZE;i++){
-      @board[i] = [];
+      board[i] = [];
     }
     `
     @figures = []
