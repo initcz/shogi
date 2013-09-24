@@ -77,47 +77,47 @@ class ShogiGame
 
   init: ->
     # Figures for owner A
-    @figures[0] = new Figure constant.figureType.LANCE, constatnt.owner.A
-    @figures[1] = new Figure constant.figureType.KNIGHT, constatnt.owner.A
-    @figures[2] = new Figure constant.figureType.SILVER_GENERAL, constatnt.owner.A
-    @figures[3] = new Figure constant.figureType.GOLDEN_GENERAL, constatnt.owner.A
-    @figures[4] = new Figure constant.figureType.KING, constatnt.owner.A
-    @figures[5] = new Figure constant.figureType.GOLDEN_GENERAL, constatnt.owner.A
-    @figures[6] = new Figure constant.figureType.SILVER_GENERAL, constatnt.owner.A
-    @figures[7] = new Figure constant.figureType.KNIGHT, constatnt.owner.A
-    @figures[8] = new Figure constant.figureType.LANCE, constatnt.owner.A
-    @figures[9] = new Figure constant.figureType.BISHOP, constatnt.owner.A
-    @figures[10] = new Figure constant.figureType.ROOK, constatnt.owner.A
-    @figures[11] = new Figure constant.figureType.PAWN, constatnt.owner.A
-    @figures[12] = new Figure constant.figureType.PAWN, constatnt.owner.A
-    @figures[13] = new Figure constant.figureType.PAWN, constatnt.owner.A
-    @figures[14] = new Figure constant.figureType.PAWN, constatnt.owner.A
-    @figures[15] = new Figure constant.figureType.PAWN, constatnt.owner.A
-    @figures[16] = new Figure constant.figureType.PAWN, constatnt.owner.A
-    @figures[17] = new Figure constant.figureType.PAWN, constatnt.owner.A
-    @figures[18] = new Figure constant.figureType.PAWN, constatnt.owner.A
-    @figures[19] = new Figure constant.figureType.PAWN, constatnt.owner.A
+    @figures[0] = new Figure constant.figureType.LANCE, constant.owner.A
+    @figures[1] = new Figure constant.figureType.KNIGHT, constant.owner.A
+    @figures[2] = new Figure constant.figureType.SILVER_GENERAL, constant.owner.A
+    @figures[3] = new Figure constant.figureType.GOLDEN_GENERAL, constant.owner.A
+    @figures[4] = new Figure constant.figureType.KING, constant.owner.A
+    @figures[5] = new Figure constant.figureType.GOLDEN_GENERAL, constant.owner.A
+    @figures[6] = new Figure constant.figureType.SILVER_GENERAL, constant.owner.A
+    @figures[7] = new Figure constant.figureType.KNIGHT, constant.owner.A
+    @figures[8] = new Figure constant.figureType.LANCE, constant.owner.A
+    @figures[9] = new Figure constant.figureType.BISHOP, constant.owner.A
+    @figures[10] = new Figure constant.figureType.ROOK, constant.owner.A
+    @figures[11] = new Figure constant.figureType.PAWN, constant.owner.A
+    @figures[12] = new Figure constant.figureType.PAWN, constant.owner.A
+    @figures[13] = new Figure constant.figureType.PAWN, constant.owner.A
+    @figures[14] = new Figure constant.figureType.PAWN, constant.owner.A
+    @figures[15] = new Figure constant.figureType.PAWN, constant.owner.A
+    @figures[16] = new Figure constant.figureType.PAWN, constant.owner.A
+    @figures[17] = new Figure constant.figureType.PAWN, constant.owner.A
+    @figures[18] = new Figure constant.figureType.PAWN, constant.owner.A
+    @figures[19] = new Figure constant.figureType.PAWN, constant.owner.A
     # Figures for owner B
-    @figures[20] = new Figure constant.figureType.LANCE, constatnt.owner.B
-    @figures[21] = new Figure constant.figureType.KNIGHT, constatnt.owner.B
-    @figures[22] = new Figure constant.figureType.SILVER_GENERAL, constatnt.owner.B
-    @figures[23] = new Figure constant.figureType.GOLDEN_GENERAL, constatnt.owner.B
-    @figures[24] = new Figure constant.figureType.KING, constatnt.owner.B
-    @figures[25] = new Figure constant.figureType.GOLDEN_GENERAL, constatnt.owner.B
-    @figures[26] = new Figure constant.figureType.SILVER_GENERAL, constatnt.owner.B
-    @figures[27] = new Figure constant.figureType.KNIGHT, constatnt.owner.B
-    @figures[28] = new Figure constant.figureType.LANCE, constatnt.owner.B
-    @figures[29] = new Figure constant.figureType.BISHOP, constatnt.owner.B
-    @figures[30] = new Figure constant.figureType.ROOK, constatnt.owner.B
-    @figures[31] = new Figure constant.figureType.PAWN, constatnt.owner.B
-    @figures[32] = new Figure constant.figureType.PAWN, constatnt.owner.B
-    @figures[33] = new Figure constant.figureType.PAWN, constatnt.owner.B
-    @figures[34] = new Figure constant.figureType.PAWN, constatnt.owner.B
-    @figures[35] = new Figure constant.figureType.PAWN, constatnt.owner.B
-    @figures[36] = new Figure constant.figureType.PAWN, constatnt.owner.B
-    @figures[37] = new Figure constant.figureType.PAWN, constatnt.owner.B
-    @figures[38] = new Figure constant.figureType.PAWN, constatnt.owner.B
-    @figures[39] = new Figure constant.figureType.PAWN, constatnt.owner.B
+    @figures[20] = new Figure constant.figureType.LANCE, constant.owner.B
+    @figures[21] = new Figure constant.figureType.KNIGHT, constant.owner.B
+    @figures[22] = new Figure constant.figureType.SILVER_GENERAL, constant.owner.B
+    @figures[23] = new Figure constant.figureType.GOLDEN_GENERAL, constant.owner.B
+    @figures[24] = new Figure constant.figureType.KING, constant.owner.B
+    @figures[25] = new Figure constant.figureType.GOLDEN_GENERAL, constant.owner.B
+    @figures[26] = new Figure constant.figureType.SILVER_GENERAL, constant.owner.B
+    @figures[27] = new Figure constant.figureType.KNIGHT, constant.owner.B
+    @figures[28] = new Figure constant.figureType.LANCE, constant.owner.B
+    @figures[29] = new Figure constant.figureType.BISHOP, constant.owner.B
+    @figures[30] = new Figure constant.figureType.ROOK, constant.owner.B
+    @figures[31] = new Figure constant.figureType.PAWN, constant.owner.B
+    @figures[32] = new Figure constant.figureType.PAWN, constant.owner.B
+    @figures[33] = new Figure constant.figureType.PAWN, constant.owner.B
+    @figures[34] = new Figure constant.figureType.PAWN, constant.owner.B
+    @figures[35] = new Figure constant.figureType.PAWN, constant.owner.B
+    @figures[36] = new Figure constant.figureType.PAWN, constant.owner.B
+    @figures[37] = new Figure constant.figureType.PAWN, constant.owner.B
+    @figures[38] = new Figure constant.figureType.PAWN, constant.owner.B
+    @figures[39] = new Figure constant.figureType.PAWN, constant.owner.B
     @reset();
 
   reset: ->
