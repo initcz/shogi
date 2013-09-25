@@ -47,20 +47,18 @@ class ShogiGame
     @resetBoard()
     # TODO: init communication
 
+  # TODO: pedy - finish this, pls
+  _possibleMoves: (x, y) ->
+    ret = []
+    #ret.push {x: 0, y: 0}
+
   _getClass: (figure) ->
     return '' if not figure?
-
-    ###
-    console.log figure # XXX
-    console.log figure.type # should be ID
-    ###
 
     if figure.owner is constant.owner.A
       suffix = '-a'
     else
       suffix = '-b'
-
-    #console.log figure.type # should be ID
 
     if figure.type is constant.figureType.LANCE
       return 'lance' + suffix
@@ -114,11 +112,6 @@ class ShogiGame
     obj = $('#' + id)
     obj.append html
 
-    ###
-    obj.find('td').each (index, item) ->
-      console.log index, item # XXX
-    ###
-
     patt = new RegExp 'R([0-8])C([0-8])'
     lastPosition = null
     xyHolder = $('#xy-helper')
@@ -126,11 +119,9 @@ class ShogiGame
     obj.on 'click', 'td', (e) =>
       o = e.target
 
-
       result = patt.exec o.id
       x = result[1]
       y = result[2]
-      console.log o.id, result
 
       txt = ''
       if lastPosition?
@@ -143,8 +134,9 @@ class ShogiGame
         y: y
 
       figureClass = @_getClass @board[x][y]
-      console.log figureClass
       $(o).toggleClass figureClass
+
+      # TODO: show possible places to move by calling @_possibleMoves
 
   initFigures: ->
 
