@@ -1,4 +1,4 @@
 #!/bin/sh
-set -x
+set -ex
 ./rebuild.sh
 node index.js

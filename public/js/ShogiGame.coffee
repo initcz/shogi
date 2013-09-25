@@ -41,41 +41,115 @@ class Figure
 ## TODO: mind UI and CORE separation
 
 class ShogiGame
+
   constructor: ->
-    @board = []
-    `
-    for(var i=0;i<constant.misc.BOARD_SIZE;i++){
-     this.board[i] = [];
-    }
-    `
-    @figures = []
-    @offside = []
-    @offside[constant.owner.A] = []
-    @offside[constant.owner.B] = []
-    @init();
+    @initFigures()
+    @resetBoard()
     # TODO: init communication
 
-  # TODO: put this in another class
-  initUI: (id) ->
+  _getClass: (figure) ->
+    return '' if not figure?
 
-    max_i = 9
-    max_j = 9
-    html = '<table>'
+    ###
+    console.log figure # XXX
+    console.log figure.type # should be ID
+    ###
+
+    if figure.owner is constant.owner.A
+      suffix = '-a'
+    else
+      suffix = '-b'
+
+    #console.log figure.type # should be ID
+
+    if figure.type is constant.figureType.LANCE
+      return 'lance' + suffix
+
+    if figure.type is constant.figureType.KNIGHT
+      return 'knight' + suffix
+
+    if figure.type is constant.figureType.SILVER_GENERAL
+      return 'silver_general' + suffix
+
+    if figure.type is constant.figureType.GOLDEN_GENERAL
+      return 'golden_general' + suffix
+
+    if figure.type is constant.figureType.KING
+      return 'king' + suffix
+
+    if figure.type is constant.figureType.BISHOP
+      return 'bishop' + suffix
+
+    if figure.type is constant.figureType.ROOK
+      return 'rook' + suffix
+
+    if figure.type is constant.figureType.PAWN
+      return 'pawn' + suffix
+
+    return 'xxx'
+
+  # TODO: put this in another class
+  initUI: (id) =>
+
+    html = '<table class="shogi">'
     cellId = ''
+    figureClass = ''
+
     `
-    for (var i=0; i<max_i; i++) {
+    for (var i=0; i<constant.misc.BOARD_SIZE; i++) {
       html += '<tr>';
-      for (var j=0; j<max_j; j++) {
+      for (var j=0; j<constant.misc.BOARD_SIZE; j++) {
         cellId = 'R' + i + 'C' + j;
-        html += '<td id="' + cellId + '">' + cellId + '</td>';
+        figureClass = this._getClass(this.board[i][j]); // !!!
+        html += '<td id="' + cellId + '" class="' + figureClass + '">' + cellId + '</td>';
       }
       html += '</tr>';
     }
     `
-    html += '</table>'
-    $('#' + id).append html
 
-  init: ->
+    html += '</table>'
+
+    # TODO: add dependency to zepto/jquery
+
+    obj = $('#' + id)
+    obj.append html
+
+    ###
+    obj.find('td').each (index, item) ->
+      console.log index, item # XXX
+    ###
+
+    patt = new RegExp 'R([0-8])C([0-8])'
+    lastPosition = null
+    xyHolder = $('#xy-helper')
+
+    obj.on 'click', 'td', (e) =>
+      o = e.target
+
+
+      result = patt.exec o.id
+      x = result[1]
+      y = result[2]
+      console.log o.id, result
+
+      txt = ''
+      if lastPosition?
+        txt += "(#{lastPosition.x},#{lastPosition.y}) -> "
+      txt += "(#{x},#{y})"
+      xyHolder.text txt
+
+      lastPosition =
+        x: x
+        y: y
+
+      figureClass = @_getClass @board[x][y]
+      console.log figureClass
+      $(o).toggleClass figureClass
+
+  initFigures: ->
+
+    @figures = []
+
     # Figures for owner A
     @figures[0] = new Figure constant.figureType.LANCE, constant.owner.A
     @figures[1] = new Figure constant.figureType.KNIGHT, constant.owner.A
@@ -97,6 +171,7 @@ class ShogiGame
     @figures[17] = new Figure constant.figureType.PAWN, constant.owner.A
     @figures[18] = new Figure constant.figureType.PAWN, constant.owner.A
     @figures[19] = new Figure constant.figureType.PAWN, constant.owner.A
+
     # Figures for owner B
     @figures[20] = new Figure constant.figureType.LANCE, constant.owner.B
     @figures[21] = new Figure constant.figureType.KNIGHT, constant.owner.B
@@ -118,53 +193,66 @@ class ShogiGame
     @figures[37] = new Figure constant.figureType.PAWN, constant.owner.B
     @figures[38] = new Figure constant.figureType.PAWN, constant.owner.B
     @figures[39] = new Figure constant.figureType.PAWN, constant.owner.B
-    @reset();
 
-  reset: ->
+  resetBoard: ->
+    @board = []
+
+    `
+    for(var i=0; i<constant.misc.BOARD_SIZE; i++){
+     this.board[i] = [];
+    }
+    `
+
+    @offside = []
+    @offside[constant.owner.A] = []
+    @offside[constant.owner.B] = []
+
     # top-left corner is counted as 0,0
     # bot-left corner is counted as 8,0
+
     # Owner A
-    @board[8][0] = @figures[0];
-    @board[8][1] = @figures[1];
-    @board[8][2] = @figures[2];
-    @board[8][3] = @figures[3];
-    @board[8][4] = @figures[4];
-    @board[8][5] = @figures[5];
-    @board[8][6] = @figures[6];
-    @board[8][7] = @figures[7];
-    @board[8][8] = @figures[8];
-    @board[7][1] = @figures[9];
-    @board[7][7] = @figures[10];
-    @board[6][0] = @figures[11];
-    @board[6][1] = @figures[12];
-    @board[6][2] = @figures[13];
-    @board[6][3] = @figures[14];
-    @board[6][4] = @figures[15];
-    @board[6][5] = @figures[16];
-    @board[6][6] = @figures[17];
-    @board[6][7] = @figures[18];
-    @board[6][8] = @figures[19];
-    #Owner B
-    @board[0][0] = @figures[20];
-    @board[0][1] = @figures[21];
-    @board[0][2] = @figures[22];
-    @board[0][3] = @figures[23];
-    @board[0][4] = @figures[24];
-    @board[0][5] = @figures[25];
-    @board[0][6] = @figures[26];
-    @board[0][7] = @figures[27];
-    @board[0][8] = @figures[28];
-    @board[1][1] = @figures[30]; # ROOK is always on the right side of the player
-    @board[1][7] = @figures[29]; # BISHOP is always on the left side of the player
-    @board[2][0] = @figures[31];
-    @board[2][1] = @figures[32];
-    @board[2][2] = @figures[33];
-    @board[2][3] = @figures[34];
-    @board[2][4] = @figures[35];
-    @board[2][5] = @figures[36];
-    @board[2][6] = @figures[37];
-    @board[2][7] = @figures[38];
-    @board[2][8] = @figures[39];
+    @board[8][0] = @figures[0]
+    @board[8][1] = @figures[1]
+    @board[8][2] = @figures[2]
+    @board[8][3] = @figures[3]
+    @board[8][4] = @figures[4]
+    @board[8][5] = @figures[5]
+    @board[8][6] = @figures[6]
+    @board[8][7] = @figures[7]
+    @board[8][8] = @figures[8]
+    @board[7][1] = @figures[9]
+    @board[7][7] = @figures[10]
+    @board[6][0] = @figures[11]
+    @board[6][1] = @figures[12]
+    @board[6][2] = @figures[13]
+    @board[6][3] = @figures[14]
+    @board[6][4] = @figures[15]
+    @board[6][5] = @figures[16]
+    @board[6][6] = @figures[17]
+    @board[6][7] = @figures[18]
+    @board[6][8] = @figures[19]
+
+    # Owner B
+    @board[0][0] = @figures[20]
+    @board[0][1] = @figures[21]
+    @board[0][2] = @figures[22]
+    @board[0][3] = @figures[23]
+    @board[0][4] = @figures[24]
+    @board[0][5] = @figures[25]
+    @board[0][6] = @figures[26]
+    @board[0][7] = @figures[27]
+    @board[0][8] = @figures[28]
+    @board[1][1] = @figures[30] # ROOK is always on the right side of the player
+    @board[1][7] = @figures[29] # BISHOP is always on the left side of the player
+    @board[2][0] = @figures[31]
+    @board[2][1] = @figures[32]
+    @board[2][2] = @figures[33]
+    @board[2][3] = @figures[34]
+    @board[2][4] = @figures[35]
+    @board[2][5] = @figures[36]
+    @board[2][6] = @figures[37]
+    @board[2][7] = @figures[38]
+    @board[2][8] = @figures[39]
 
   move: ->
   promote: ->
