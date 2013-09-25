@@ -1,4 +1,4 @@
 #!/bin/sh
 set -ex
 ./rebuild.sh
-node index.js
+./index.coffee
