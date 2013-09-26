@@ -138,6 +138,28 @@ class ShogiGame
 
       # TODO: show possible places to move by calling @_possibleMoves
 
+  redrawUI: (putFigures = true) ->
+    cell = null
+    figure = null
+
+    `
+    for (var i=0; i<constant.misc.BOARD_SIZE; i++) {
+      for (var j=0; j<constant.misc.BOARD_SIZE; j++) {
+        cell = $('#R' + i + 'C' + j);
+        cell.removeClass();
+        if (putFigures) {
+          figure = this.board[i][j];
+          if (figure != null) {
+            cell.addClass(this._getClass(figure));
+          }
+        }
+      }
+    }
+    `
+
+    # ugly Coffee hack - `` can't be last in func, because of return
+    return true
+
   initFigures: ->
 
     @figures = []
@@ -186,7 +208,9 @@ class ShogiGame
     @figures[38] = new Figure constant.figureType.PAWN, constant.owner.B
     @figures[39] = new Figure constant.figureType.PAWN, constant.owner.B
 
-  resetBoard: ->
+  resetBoard: (putFigures = true) ->
+
+    delete @board
     @board = []
 
     `
@@ -195,9 +219,12 @@ class ShogiGame
     }
     `
 
+    delete @offside
     @offside = []
     @offside[constant.owner.A] = []
     @offside[constant.owner.B] = []
+
+    return if not putFigures
 
     # top-left corner is counted as 0,0
     # bot-left corner is counted as 8,0
@@ -245,6 +272,20 @@ class ShogiGame
     @board[2][6] = @figures[37]
     @board[2][7] = @figures[38]
     @board[2][8] = @figures[39]
+
+    # 'downgrade' all figures
+    `
+    for (var i=0; i<constant.misc.BOARD_SIZE; i++) {
+      for (var j=0; j<constant.misc.BOARD_SIZE; j++) {
+        if (this.board[i][j] != null) {
+          this.board[i][j].promoted = false
+        }
+      }
+    }
+    `
+
+    # ugly Coffee hack - `` can't be last in func, because of return
+    return true
 
   move: ->
   promote: ->

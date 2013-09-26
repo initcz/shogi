@@ -45,16 +45,16 @@ ShogiGame = (function() {
     this.resetBoard();
   }
 
+  ShogiGame.prototype._possibleMoves = function(x, y) {
+    var ret;
+    return ret = [];
+  };
+
   ShogiGame.prototype._getClass = function(figure) {
     var suffix;
     if (figure == null) {
       return '';
     }
-    /*
-    console.log figure # XXX
-    console.log figure.type # should be ID
-    */
-
     if (figure.owner === constant.owner.A) {
       suffix = '-a';
     } else {
@@ -107,11 +107,6 @@ ShogiGame = (function() {
     html += '</table>';
     obj = $('#' + id);
     obj.append(html);
-    /*
-    obj.find('td').each (index, item) ->
-      console.log index, item # XXX
-    */
-
     patt = new RegExp('R([0-8])C([0-8])');
     lastPosition = null;
     xyHolder = $('#xy-helper');
@@ -121,7 +116,6 @@ ShogiGame = (function() {
       result = patt.exec(o.id);
       x = result[1];
       y = result[2];
-      console.log(o.id, result);
       txt = '';
       if (lastPosition != null) {
         txt += "(" + lastPosition.x + "," + lastPosition.y + ") -> ";
@@ -133,9 +127,32 @@ ShogiGame = (function() {
         y: y
       };
       figureClass = _this._getClass(_this.board[x][y]);
-      console.log(figureClass);
       return $(o).toggleClass(figureClass);
     });
+  };
+
+  ShogiGame.prototype.redrawUI = function(putFigures) {
+    var cell, figure;
+    if (putFigures == null) {
+      putFigures = true;
+    }
+    cell = null;
+    figure = null;
+    
+    for (var i=0; i<constant.misc.BOARD_SIZE; i++) {
+      for (var j=0; j<constant.misc.BOARD_SIZE; j++) {
+        cell = $('#R' + i + 'C' + j);
+        cell.removeClass();
+        if (putFigures) {
+          figure = this.board[i][j];
+          if (figure != null) {
+            cell.addClass(this._getClass(figure));
+          }
+        }
+      }
+    }
+    ;
+    return true;
   };
 
   ShogiGame.prototype.initFigures = function() {
@@ -182,16 +199,24 @@ ShogiGame = (function() {
     return this.figures[39] = new Figure(constant.figureType.PAWN, constant.owner.B);
   };
 
-  ShogiGame.prototype.resetBoard = function() {
+  ShogiGame.prototype.resetBoard = function(putFigures) {
+    if (putFigures == null) {
+      putFigures = true;
+    }
+    delete this.board;
     this.board = [];
     
     for(var i=0; i<constant.misc.BOARD_SIZE; i++){
      this.board[i] = [];
     }
     ;
+    delete this.offside;
     this.offside = [];
     this.offside[constant.owner.A] = [];
     this.offside[constant.owner.B] = [];
+    if (!putFigures) {
+      return;
+    }
     this.board[8][0] = this.figures[0];
     this.board[8][1] = this.figures[1];
     this.board[8][2] = this.figures[2];
@@ -231,7 +256,17 @@ ShogiGame = (function() {
     this.board[2][5] = this.figures[36];
     this.board[2][6] = this.figures[37];
     this.board[2][7] = this.figures[38];
-    return this.board[2][8] = this.figures[39];
+    this.board[2][8] = this.figures[39];
+    
+    for (var i=0; i<constant.misc.BOARD_SIZE; i++) {
+      for (var j=0; j<constant.misc.BOARD_SIZE; j++) {
+        if (this.board[i][j] != null) {
+          this.board[i][j].promoted = false
+        }
+      }
+    }
+    ;
+    return true;
   };
 
   ShogiGame.prototype.move = function() {};

@@ -25,10 +25,16 @@
 <input type="text"></input>
 <button>send</button>
 <script type="text/javascript">
+  var shogi = null;
   $('document').ready(function() {
-    var shogi = new ShogiGame();
+    shogi = new ShogiGame();
     shogi.initUI('content');
   });
+  /*
+  shogi.resetBoard(false); // no figures
+  // put some figures in own alignment
+  shogi.redrawUI();
+  */
 </script>
 </body>
 </html>
