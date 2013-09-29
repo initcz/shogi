@@ -22,7 +22,7 @@ td {
   background-color: black;
 }
 
-.shogi * td:hover { background-color: yellow; }
+.selected { background-color: yellow !important; }
 
 .bishop-a { background: url(../img/bishop-a.png) no-repeat; }
 .bishop-b { background: url(../img/bishop-b.png) no-repeat; }

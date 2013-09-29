@@ -99,7 +99,7 @@ class ShogiGame
       for (var j=0; j<constant.misc.BOARD_SIZE; j++) {
         cellId = 'R' + i + 'C' + j;
         figureClass = this._getClass(this.board[i][j]); // !!!
-        html += '<td id="' + cellId + '" class="' + figureClass + '">' + cellId + '</td>';
+        html += '<td id="' + cellId + '" class="' + figureClass + '"></td>';
       }
       html += '</tr>';
     }
@@ -112,31 +112,39 @@ class ShogiGame
     obj = $('#' + id)
     obj.append html
 
-    patt = new RegExp 'R([0-8])C([0-8])'
-    lastPosition = null
-    xyHolder = $('#xy-helper')
 
+    patt = new RegExp '#?R([0-8])C([0-8])'
+    parseId = (id) ->
+      result = patt.exec id
+      data =
+        x: result[1]
+        y: result[2]
+
+    lastPositionSelector = null
     obj.on 'click', 'td', (e) =>
       o = e.target
 
-      result = patt.exec o.id
-      x = result[1]
-      y = result[2]
-
-      txt = ''
-      if lastPosition?
-        txt += "(#{lastPosition.x},#{lastPosition.y}) -> "
-      txt += "(#{x},#{y})"
-      xyHolder.text txt
-
-      lastPosition =
-        x: x
-        y: y
-
-      figureClass = @_getClass @board[x][y]
-      $(o).toggleClass figureClass
-
       # TODO: show possible places to move by calling @_possibleMoves
+
+      coordinates = parseId o.id
+
+      figure = @board[coordinates.x][coordinates.y]
+
+      if lastPositionSelector?
+        $(lastPositionSelector).toggleClass('selected')
+
+        # move figure to empty place
+        if not figure?
+          lastCoordinates = parseId lastPositionSelector
+          @board[coordinates.x][coordinates.y] = @board[lastCoordinates.x][lastCoordinates.y]
+          @board[lastCoordinates.x][lastCoordinates.y] = null
+          @redrawUI() # XXX
+
+      if figure?
+        $(o).toggleClass('selected')
+        lastPositionSelector = '#' + o.id
+      else
+        lastPositionSelector = null
 
   redrawUI: (putFigures = true) ->
     cell = null

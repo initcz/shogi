@@ -88,7 +88,7 @@ ShogiGame = (function() {
   };
 
   ShogiGame.prototype.initUI = function(id) {
-    var cellId, figureClass, html, lastPosition, obj, patt, xyHolder,
+    var cellId, figureClass, html, lastPositionSelector, obj, parseId, patt,
       _this = this;
     html = '<table class="shogi">';
     cellId = '';
@@ -99,7 +99,7 @@ ShogiGame = (function() {
       for (var j=0; j<constant.misc.BOARD_SIZE; j++) {
         cellId = 'R' + i + 'C' + j;
         figureClass = this._getClass(this.board[i][j]); // !!!
-        html += '<td id="' + cellId + '" class="' + figureClass + '">' + cellId + '</td>';
+        html += '<td id="' + cellId + '" class="' + figureClass + '"></td>';
       }
       html += '</tr>';
     }
@@ -107,27 +107,36 @@ ShogiGame = (function() {
     html += '</table>';
     obj = $('#' + id);
     obj.append(html);
-    patt = new RegExp('R([0-8])C([0-8])');
-    lastPosition = null;
-    xyHolder = $('#xy-helper');
-    return obj.on('click', 'td', function(e) {
-      var o, result, txt, x, y;
-      o = e.target;
-      result = patt.exec(o.id);
-      x = result[1];
-      y = result[2];
-      txt = '';
-      if (lastPosition != null) {
-        txt += "(" + lastPosition.x + "," + lastPosition.y + ") -> ";
-      }
-      txt += "(" + x + "," + y + ")";
-      xyHolder.text(txt);
-      lastPosition = {
-        x: x,
-        y: y
+    patt = new RegExp('#?R([0-8])C([0-8])');
+    parseId = function(id) {
+      var data, result;
+      result = patt.exec(id);
+      return data = {
+        x: result[1],
+        y: result[2]
       };
-      figureClass = _this._getClass(_this.board[x][y]);
-      return $(o).toggleClass(figureClass);
+    };
+    lastPositionSelector = null;
+    return obj.on('click', 'td', function(e) {
+      var coordinates, figure, lastCoordinates, o;
+      o = e.target;
+      coordinates = parseId(o.id);
+      figure = _this.board[coordinates.x][coordinates.y];
+      if (lastPositionSelector != null) {
+        $(lastPositionSelector).toggleClass('selected');
+        if (figure == null) {
+          lastCoordinates = parseId(lastPositionSelector);
+          _this.board[coordinates.x][coordinates.y] = _this.board[lastCoordinates.x][lastCoordinates.y];
+          _this.board[lastCoordinates.x][lastCoordinates.y] = null;
+          _this.redrawUI();
+        }
+      }
+      if (figure != null) {
+        $(o).toggleClass('selected');
+        return lastPositionSelector = '#' + o.id;
+      } else {
+        return lastPositionSelector = null;
+      }
     });
   };
 
