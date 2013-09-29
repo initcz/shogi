@@ -10,18 +10,6 @@ td {
   border-right: 1px black solid;
 }
 
-#xy-helper {
-  position: absolute;
-  top: 0px;
-  right: 0px;
-  margin: 5px;
-  padding: 5px;
-  width: 75px;
-  height: 20px;
-  color: white;
-  background-color: black;
-}
-
 .selected { background-color: yellow !important; }
 
 .bishop-a { background: url(../img/bishop-a.png) no-repeat; }
