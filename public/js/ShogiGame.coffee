@@ -34,6 +34,35 @@ class Figure
   constructor: (@type, @owner) ->
     @promoted = false
 
+
+
+patt = new RegExp '#?R([0-8])C([0-8])'
+parseId = (id) ->
+  result = patt.exec id
+  data =
+    x: result[1]
+    y: result[2]
+
+#
+# Position class
+#
+class Position
+    constructor: (@x, @y) ->
+      if not y? and 'string' is typeof x
+        data = parseId @x
+        @x = data.x
+        @y = data.y
+    getSelector: ->
+      return "#R#{@x}C#{@y}"
+
+###
+p1 = new Position 8, 8
+console.log p1.getSelector()
+
+p2 = new Position '#R1C1'
+console.log p2.x, p2.y
+###
+
 #
 # Main class
 #
@@ -112,39 +141,31 @@ class ShogiGame
     obj = $('#' + id)
     obj.append html
 
-
-    patt = new RegExp '#?R([0-8])C([0-8])'
-    parseId = (id) ->
-      result = patt.exec id
-      data =
-        x: result[1]
-        y: result[2]
-
-    lastPositionSelector = null
+    lastPosition = null
     obj.on 'click', 'td', (e) =>
       o = e.target
 
       # TODO: show possible places to move by calling @_possibleMoves
 
-      coordinates = parseId o.id
+      position = new Position o.id
 
-      figure = @board[coordinates.x][coordinates.y]
+      figure = @board[position.x][position.y]
 
-      if lastPositionSelector?
-        $(lastPositionSelector).toggleClass('selected')
+      if lastPosition?
+        $(lastPosition.getSelector()).toggleClass('selected')
 
         # move figure to empty place
         if not figure?
-          lastCoordinates = parseId lastPositionSelector
-          @board[coordinates.x][coordinates.y] = @board[lastCoordinates.x][lastCoordinates.y]
-          @board[lastCoordinates.x][lastCoordinates.y] = null
+          @board[position.x][position.y] = @board[lastPosition.x][lastPosition.y]
+          @board[lastPosition.x][lastPosition.y] = null
           @redrawUI() # XXX
 
       if figure?
         $(o).toggleClass('selected')
-        lastPositionSelector = '#' + o.id
+        lastPosition = position
       else
-        lastPositionSelector = null
+        #delete lastPosition
+        lastPosition = null
 
   redrawUI: (putFigures = true) ->
     cell = null
