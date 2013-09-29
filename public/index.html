@@ -1,40 +1,68 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<title>Shogi</title>
-<link rel="stylesheet" href="/css/reset.css" />
-<link rel="stylesheet" href="/css/text.css" />
-<link rel="stylesheet" href="/css/960_24_col.css" />
-<link rel="stylesheet" href="/css/app.css" />
-<script type="text/javascript" src="/js/zepto.min.js"></script>
-<script type="text/javascript" src="/js/coffee-script.js"></script>
-<script type="text/javascript" src="/js/ShogiGame.js"></script>
+  <meta charset="utf-8" />
+  <title>Shogi</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Bootstrap -->
+  <link href="/css/bootstrap.min.css" rel="stylesheet" media="screen">
+
+   <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+   <!--[if lt IE 9]>
+   <script src="/js/html5shiv.js"></script>
+   <script src="/js/respond.min.js"></script>
+   <![endif]-->
+
+  <link rel="stylesheet" href="/css/app.css" />
 </head>
 <body>
-<h1><a href="http://www.shogi.cz/pravidla.html">Shogi</a></h1>
-<a href="http://www.w3.org/html/logo/">
-  <img src="http://www.w3.org/html/logo/badge/html5-badge-h-connectivity.png" width="133" height="64" alt="HTML5 Powered with Connectivity / Realtime" title="HTML5 Powered with Connectivity / Realtime">
-</a>
-<div id="content" class="container_24">
-</div>
-<!-- end .container_24 -->
-<div id="xy-helper">
-</div>
-<textarea></textarea><br />
-<input type="text"></input>
-<button>send</button>
-<script type="text/javascript">
-  var shogi = null;
-  $('document').ready(function() {
-    shogi = new ShogiGame();
-    shogi.initUI('content');
-  });
-  /*
-  shogi.resetBoard(false); // no figures
-  // put some figures in own alignment
-  shogi.redrawUI();
-  */
-</script>
+  <div class="container">
+    <h1><a href="http://www.shogi.cz/pravidla.html">Shogi</a></h1>
+    <div class="row">
+      Top area.
+      <div class="row">
+        <div id="content" class="col-md-8">
+        </div>
+        <div id="chat" class="col-md-4">
+          <textarea></textarea><br />
+          <input type="text"></input>
+          <button>send</button>
+        </div>
+      </div>
+      Bottom area.
+    </div>
+  </div><!-- end container -->
+
+  <a href="http://www.w3.org/html/logo/"><img src="http://www.w3.org/html/logo/badge/html5-badge-h-connectivity.png" width="133" height="64" alt="HTML5 Powered with Connectivity / Realtime" title="HTML5 Powered with Connectivity / Realtime"></a>
+  <div id="xy-helper">
+  </div>
+
+  <script type="text/javascript" src="/js/zepto.min.js"></script>
+  <script type="text/javascript">
+    // http://stackoverflow.com/questions/16160755/using-bootstrap-with-zepto-undefined-is-not-a-function
+    if(!window.jQuery)
+    {
+      //Zepto.browser = {webkit: true}
+      window.jQuery = Zepto
+    }
+  </script>
+  <script src="js/bootstrap.min.js"></script>
+
+  <script type="text/javascript" src="/js/coffee-script.js"></script>
+  <script type="text/javascript" src="/js/ShogiGame.js"></script>
+  <script type="text/javascript">
+    var shogi = null;
+    $('document').ready(function() {
+      shogi = new ShogiGame();
+      shogi.initUI('content');
+    });
+    /*
+    shogi.resetBoard(false); // no figures
+    // put some figures in own alignment
+    shogi.redrawUI();
+    */
+  </script>
 </body>
 </html>

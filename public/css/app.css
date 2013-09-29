@@ -5,11 +5,7 @@ table {
 }
 
 td {
-  height: 106px;
-  /*
-  margin: 5px;
-  padding: 5px;
-  */
+  height: 80px;
   border-bottom: 1px black solid;
   border-right: 1px black solid;
 }
