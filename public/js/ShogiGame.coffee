@@ -81,6 +81,14 @@ class ShogiGame
     ret = []
     #ret.push {x: 0, y: 0}
 
+  _pawnPossibleMoves: (x, y) ->
+    ret = []
+    if @board[x][y].owner is constant.owner.A
+      ret.push new Position x, y+1
+    else
+      ret.push new Position x, y-1
+    return ret
+
   _getClass: (figure) ->
     return '' if not figure?
 
@@ -255,52 +263,62 @@ class ShogiGame
 
     return if not putFigures
 
-    # top-left corner is counted as 0,0
-    # bot-left corner is counted as 8,0
+    #0,8             8,8
+    # _ _ _ _ _ _ _ _ _
+    #|_|_|_|_|_|_|_|_|_|
+    #|_|_|_|_|_|_|_|_|_|
+    #|_|_|_|_|_|_|_|_|_|
+    #|_|_|_|_|_|_|_|_|_|
+    #|_|_|_|_|_|_|_|_|_|
+    #|_|_|_|_|_|_|_|_|_|
+    #|_|_|_|_|_|_|_|_|_|
+    #|_|_|_|_|_|_|_|_|_|
+    #|_|_|_|_|_|_|_|_|_|
+    #0,0             8,0
 
     # Owner A
-    @board[8][0] = @figures[0]
-    @board[8][1] = @figures[1]
-    @board[8][2] = @figures[2]
-    @board[8][3] = @figures[3]
-    @board[8][4] = @figures[4]
-    @board[8][5] = @figures[5]
-    @board[8][6] = @figures[6]
-    @board[8][7] = @figures[7]
-    @board[8][8] = @figures[8]
-    @board[7][1] = @figures[9]
-    @board[7][7] = @figures[10]
-    @board[6][0] = @figures[11]
-    @board[6][1] = @figures[12]
-    @board[6][2] = @figures[13]
-    @board[6][3] = @figures[14]
-    @board[6][4] = @figures[15]
-    @board[6][5] = @figures[16]
-    @board[6][6] = @figures[17]
-    @board[6][7] = @figures[18]
-    @board[6][8] = @figures[19]
+    @board[0][0] = @figures[0]
+    @board[1][0] = @figures[1]
+    @board[2][0] = @figures[2]
+    @board[3][0] = @figures[3]
+    @board[4][0] = @figures[4]
+    @board[5][0] = @figures[5]
+    @board[6][0] = @figures[6]
+    @board[7][0] = @figures[7]
+    @board[8][0] = @figures[8]
+    @board[1][1] = @figures[9]
+    @board[7][1] = @figures[10]
+    @board[0][2] = @figures[11]
+    @board[1][2] = @figures[12]
+    @board[2][2] = @figures[13]
+    @board[3][2] = @figures[14]
+    @board[4][2] = @figures[15]
+    @board[5][2] = @figures[16]
+    @board[6][2] = @figures[17]
+    @board[7][2] = @figures[18]
+    @board[8][2] = @figures[19]
 
     # Owner B
-    @board[0][0] = @figures[20]
-    @board[0][1] = @figures[21]
-    @board[0][2] = @figures[22]
-    @board[0][3] = @figures[23]
-    @board[0][4] = @figures[24]
-    @board[0][5] = @figures[25]
-    @board[0][6] = @figures[26]
-    @board[0][7] = @figures[27]
-    @board[0][8] = @figures[28]
-    @board[1][1] = @figures[30] # ROOK is always on the right side of the player
-    @board[1][7] = @figures[29] # BISHOP is always on the left side of the player
-    @board[2][0] = @figures[31]
-    @board[2][1] = @figures[32]
-    @board[2][2] = @figures[33]
-    @board[2][3] = @figures[34]
-    @board[2][4] = @figures[35]
-    @board[2][5] = @figures[36]
-    @board[2][6] = @figures[37]
-    @board[2][7] = @figures[38]
-    @board[2][8] = @figures[39]
+    @board[0][8] = @figures[20]
+    @board[1][8] = @figures[21]
+    @board[2][8] = @figures[22]
+    @board[3][8] = @figures[23]
+    @board[4][8] = @figures[24]
+    @board[5][8] = @figures[25]
+    @board[6][8] = @figures[26]
+    @board[7][8] = @figures[27]
+    @board[8][8] = @figures[28]
+    @board[1][7] = @figures[30] # ROOK is always on the right side of the player
+    @board[7][7] = @figures[29] # BISHOP is always on the left side of the player
+    @board[0][6] = @figures[31]
+    @board[1][6] = @figures[32]
+    @board[2][6] = @figures[33]
+    @board[3][6] = @figures[34]
+    @board[4][6] = @figures[35]
+    @board[5][6] = @figures[36]
+    @board[6][6] = @figures[37]
+    @board[7][6] = @figures[38]
+    @board[8][6] = @figures[39]
 
     # 'downgrade' all figures
     `
