@@ -54,6 +54,8 @@ class Position
         @y = data.y
     getSelector: ->
       return "#x#{@x}y#{@y}"
+    getFigure: (board) ->
+      return board[@x][@y]
 
 #
 # Main class
@@ -149,10 +151,10 @@ class ShogiGame
 
       position = new Position o.id
 
-      figure = @board[position.x][position.y]
+      figure = position.getFigure @board
 
       if lastPosition?
-        $(lastPosition.getSelector()).toggleClass('selected')
+        $(lastPosition.getSelector()).toggleClass('selected-figure')
 
         # move figure to empty place
         if not figure?
@@ -161,7 +163,7 @@ class ShogiGame
           @redrawUI() # XXX
 
       if figure?
-        $(o).toggleClass('selected')
+        $(o).toggleClass('selected-figure')
         lastPosition = position
       else
         #delete lastPosition

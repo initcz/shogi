@@ -10,7 +10,10 @@ td {
   border-right: 1px black solid;
 }
 
-.selected { background-color: yellow !important; }
+.selected-figure { background-color: yellow !important; }
+.possible-move { background-color: green !important; }
+.possible-take { background-color: blue !important; }
+.figure-in-danger { background-color: red !important; }
 
 .bishop-a { background: url(../img/bishop-a.png) no-repeat; }
 .bishop-b { background: url(../img/bishop-b.png) no-repeat; }

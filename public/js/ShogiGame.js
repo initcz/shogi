@@ -65,6 +65,10 @@ Position = (function() {
     return "#x" + this.x + "y" + this.y;
   };
 
+  Position.prototype.getFigure = function(board) {
+    return board[this.x][this.y];
+  };
+
   return Position;
 
 })();
@@ -154,9 +158,9 @@ ShogiGame = (function() {
       var figure, o, position;
       o = e.target;
       position = new Position(o.id);
-      figure = _this.board[position.x][position.y];
+      figure = position.getFigure(_this.board);
       if (lastPosition != null) {
-        $(lastPosition.getSelector()).toggleClass('selected');
+        $(lastPosition.getSelector()).toggleClass('selected-figure');
         if (figure == null) {
           _this.board[position.x][position.y] = _this.board[lastPosition.x][lastPosition.y];
           _this.board[lastPosition.x][lastPosition.y] = null;
@@ -164,7 +168,7 @@ ShogiGame = (function() {
         }
       }
       if (figure != null) {
-        $(o).toggleClass('selected');
+        $(o).toggleClass('selected-figure');
         return lastPosition = position;
       } else {
         return lastPosition = null;
