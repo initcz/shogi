@@ -38,7 +38,7 @@ Figure = (function() {
 
 })();
 
-patt = new RegExp('#?R([0-8])C([0-8])');
+patt = new RegExp('#?x([0-8])y([0-8])');
 
 parseId = function(id) {
   var data, result;
@@ -62,21 +62,12 @@ Position = (function() {
   }
 
   Position.prototype.getSelector = function() {
-    return "#R" + this.x + "C" + this.y;
+    return "#x" + this.x + "y" + this.y;
   };
 
   return Position;
 
 })();
-
-/*
-p1 = new Position 8, 8
-console.log p1.getSelector()
-
-p2 = new Position '#R1C1'
-console.log p2.x, p2.y
-*/
-
 
 ShogiGame = (function() {
   function ShogiGame() {
@@ -88,6 +79,17 @@ ShogiGame = (function() {
   ShogiGame.prototype._possibleMoves = function(x, y) {
     var ret;
     return ret = [];
+  };
+
+  ShogiGame.prototype._pawnPossibleMoves = function(x, y) {
+    var ret;
+    ret = [];
+    if (this.board[x][y].owner === constant.owner.A) {
+      ret.push(new Position(x, y + 1));
+    } else {
+      ret.push(new Position(x, y - 1));
+    }
+    return ret;
   };
 
   ShogiGame.prototype._getClass = function(figure) {
@@ -134,11 +136,11 @@ ShogiGame = (function() {
     cellId = '';
     figureClass = '';
     
-    for (var i=0; i<constant.misc.BOARD_SIZE; i++) {
+    for (var y=(constant.misc.BOARD_SIZE-1); y>=0; y--) {
       html += '<tr>';
-      for (var j=0; j<constant.misc.BOARD_SIZE; j++) {
-        cellId = 'R' + i + 'C' + j;
-        figureClass = this._getClass(this.board[i][j]); // !!!
+      for (var x=0; x<constant.misc.BOARD_SIZE; x++) {
+        cellId = 'x' + x + 'y' + y;
+        figureClass = this._getClass(this.board[x][y]); // !!!
         html += '<td id="' + cellId + '" class="' + figureClass + '"></td>';
       }
       html += '</tr>';
@@ -256,46 +258,46 @@ ShogiGame = (function() {
     if (!putFigures) {
       return;
     }
-    this.board[8][0] = this.figures[0];
-    this.board[8][1] = this.figures[1];
-    this.board[8][2] = this.figures[2];
-    this.board[8][3] = this.figures[3];
-    this.board[8][4] = this.figures[4];
-    this.board[8][5] = this.figures[5];
-    this.board[8][6] = this.figures[6];
-    this.board[8][7] = this.figures[7];
-    this.board[8][8] = this.figures[8];
-    this.board[7][1] = this.figures[9];
-    this.board[7][7] = this.figures[10];
-    this.board[6][0] = this.figures[11];
-    this.board[6][1] = this.figures[12];
-    this.board[6][2] = this.figures[13];
-    this.board[6][3] = this.figures[14];
-    this.board[6][4] = this.figures[15];
-    this.board[6][5] = this.figures[16];
-    this.board[6][6] = this.figures[17];
-    this.board[6][7] = this.figures[18];
-    this.board[6][8] = this.figures[19];
-    this.board[0][0] = this.figures[20];
-    this.board[0][1] = this.figures[21];
-    this.board[0][2] = this.figures[22];
-    this.board[0][3] = this.figures[23];
-    this.board[0][4] = this.figures[24];
-    this.board[0][5] = this.figures[25];
-    this.board[0][6] = this.figures[26];
-    this.board[0][7] = this.figures[27];
-    this.board[0][8] = this.figures[28];
-    this.board[1][1] = this.figures[30];
-    this.board[1][7] = this.figures[29];
-    this.board[2][0] = this.figures[31];
-    this.board[2][1] = this.figures[32];
-    this.board[2][2] = this.figures[33];
-    this.board[2][3] = this.figures[34];
-    this.board[2][4] = this.figures[35];
-    this.board[2][5] = this.figures[36];
-    this.board[2][6] = this.figures[37];
-    this.board[2][7] = this.figures[38];
-    this.board[2][8] = this.figures[39];
+    this.board[0][0] = this.figures[0];
+    this.board[1][0] = this.figures[1];
+    this.board[2][0] = this.figures[2];
+    this.board[3][0] = this.figures[3];
+    this.board[4][0] = this.figures[4];
+    this.board[5][0] = this.figures[5];
+    this.board[6][0] = this.figures[6];
+    this.board[7][0] = this.figures[7];
+    this.board[8][0] = this.figures[8];
+    this.board[1][1] = this.figures[9];
+    this.board[7][1] = this.figures[10];
+    this.board[0][2] = this.figures[11];
+    this.board[1][2] = this.figures[12];
+    this.board[2][2] = this.figures[13];
+    this.board[3][2] = this.figures[14];
+    this.board[4][2] = this.figures[15];
+    this.board[5][2] = this.figures[16];
+    this.board[6][2] = this.figures[17];
+    this.board[7][2] = this.figures[18];
+    this.board[8][2] = this.figures[19];
+    this.board[0][8] = this.figures[20];
+    this.board[1][8] = this.figures[21];
+    this.board[2][8] = this.figures[22];
+    this.board[3][8] = this.figures[23];
+    this.board[4][8] = this.figures[24];
+    this.board[5][8] = this.figures[25];
+    this.board[6][8] = this.figures[26];
+    this.board[7][8] = this.figures[27];
+    this.board[8][8] = this.figures[28];
+    this.board[1][7] = this.figures[30];
+    this.board[7][7] = this.figures[29];
+    this.board[0][6] = this.figures[31];
+    this.board[1][6] = this.figures[32];
+    this.board[2][6] = this.figures[33];
+    this.board[3][6] = this.figures[34];
+    this.board[4][6] = this.figures[35];
+    this.board[5][6] = this.figures[36];
+    this.board[6][6] = this.figures[37];
+    this.board[7][6] = this.figures[38];
+    this.board[8][6] = this.figures[39];
     
     for (var i=0; i<constant.misc.BOARD_SIZE; i++) {
       for (var j=0; j<constant.misc.BOARD_SIZE; j++) {

@@ -36,7 +36,7 @@ class Figure
 
 
 
-patt = new RegExp '#?R([0-8])C([0-8])'
+patt = new RegExp '#?x([0-8])y([0-8])'
 parseId = (id) ->
   result = patt.exec id
   data =
@@ -53,15 +53,7 @@ class Position
         @x = data.x
         @y = data.y
     getSelector: ->
-      return "#R#{@x}C#{@y}"
-
-###
-p1 = new Position 8, 8
-console.log p1.getSelector()
-
-p2 = new Position '#R1C1'
-console.log p2.x, p2.y
-###
+      return "#x#{@x}y#{@y}"
 
 #
 # Main class
@@ -131,11 +123,11 @@ class ShogiGame
     figureClass = ''
 
     `
-    for (var i=0; i<constant.misc.BOARD_SIZE; i++) {
+    for (var y=(constant.misc.BOARD_SIZE-1); y>=0; y--) {
       html += '<tr>';
-      for (var j=0; j<constant.misc.BOARD_SIZE; j++) {
-        cellId = 'R' + i + 'C' + j;
-        figureClass = this._getClass(this.board[i][j]); // !!!
+      for (var x=0; x<constant.misc.BOARD_SIZE; x++) {
+        cellId = 'x' + x + 'y' + y;
+        figureClass = this._getClass(this.board[x][y]); // !!!
         html += '<td id="' + cellId + '" class="' + figureClass + '"></td>';
       }
       html += '</tr>';
