@@ -160,13 +160,9 @@ ShogiGame = (function() {
       obj = $(o);
       position = new Position(o.id);
       figure = position.getFigure(_this.board);
-      console.log('lastPosition: ', lastPosition);
-      console.log('position: ', position);
-      console.log('figure: ', figure);
       same = false;
       if (lastPosition != null) {
         same = position.getSelector() === lastPosition.getSelector();
-        console.log('same: ', same);
       }
       clazz = 'selected-figure';
       if (!same && (figure != null) && !obj.hasClass(clazz)) {
@@ -178,7 +174,14 @@ ShogiGame = (function() {
           obj.removeClass(clazz);
         }
       }
-      return lastPosition = position;
+      if ((lastPosition != null) && (figure == null) && !same) {
+        _this.board[position.x][position.y] = lastPosition.getFigure(_this.board);
+        _this.board[lastPosition.x][lastPosition.y] = null;
+        _this.redrawUI();
+        return lastPosition = null;
+      } else {
+        return lastPosition = position;
+      }
     });
   };
 
@@ -192,7 +195,7 @@ ShogiGame = (function() {
     
     for (var i=0; i<constant.misc.BOARD_SIZE; i++) {
       for (var j=0; j<constant.misc.BOARD_SIZE; j++) {
-        cell = $('#R' + i + 'C' + j);
+        cell = $('#x' + i + 'y' + j);
         cell.removeClass();
         if (putFigures) {
           figure = this.board[i][j];

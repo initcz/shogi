@@ -152,15 +152,15 @@ class ShogiGame
       figure = position.getFigure @board
 
       # XXX
-      console.log 'lastPosition: ', lastPosition
-      console.log 'position: ', position
-      console.log 'figure: ', figure
+      #console.log 'lastPosition: ', lastPosition
+      #console.log 'position: ', position
+      #console.log 'figure: ', figure
       # XXX
 
       same = false
       if lastPosition?
         same = position.getSelector() is lastPosition.getSelector()
-        console.log 'same: ', same # XX
+        #console.log 'same: ', same # XX
 
       # highlight current position
       clazz = 'selected-figure'
@@ -173,8 +173,21 @@ class ShogiGame
         if not same and obj.hasClass clazz
           obj.removeClass clazz
 
-      # save last position
-      lastPosition = position
+      # move figure
+      if lastPosition? and not figure? and not same
+        @board[position.x][position.y] = lastPosition.getFigure @board
+        @board[lastPosition.x][lastPosition.y] = null
+        @redrawUI() # XXX
+        #console.log 'moving!' # XXX
+
+        #delete lastPosition
+        lastPosition = null
+
+      else
+        # save last position
+        lastPosition = position
+
+        #console.log 'not moving' # XXX
 
   redrawUI: (putFigures = true) ->
     cell = null
@@ -183,7 +196,7 @@ class ShogiGame
     `
     for (var i=0; i<constant.misc.BOARD_SIZE; i++) {
       for (var j=0; j<constant.misc.BOARD_SIZE; j++) {
-        cell = $('#R' + i + 'C' + j);
+        cell = $('#x' + i + 'y' + j);
         cell.removeClass();
         if (putFigures) {
           figure = this.board[i][j];
