@@ -44,8 +44,8 @@ parseId = function(id) {
   var data, result;
   result = patt.exec(id);
   return data = {
-    x: result[1],
-    y: result[2]
+    x: parseInt(result[1], 10),
+    y: parseInt(result[2], 10)
   };
 };
 
@@ -155,24 +155,30 @@ ShogiGame = (function() {
     obj.append(html);
     lastPosition = null;
     return obj.on('click', 'td', function(e) {
-      var figure, o, position;
+      var clazz, figure, o, position, same;
       o = e.target;
+      obj = $(o);
       position = new Position(o.id);
       figure = position.getFigure(_this.board);
+      console.log('lastPosition: ', lastPosition);
+      console.log('position: ', position);
+      console.log('figure: ', figure);
+      same = false;
       if (lastPosition != null) {
-        $(lastPosition.getSelector()).toggleClass('selected-figure');
-        if (figure == null) {
-          _this.board[position.x][position.y] = _this.board[lastPosition.x][lastPosition.y];
-          _this.board[lastPosition.x][lastPosition.y] = null;
-          _this.redrawUI();
+        same = position.getSelector() === lastPosition.getSelector();
+        console.log('same: ', same);
+      }
+      clazz = 'selected-figure';
+      if (!same && (figure != null) && !obj.hasClass(clazz)) {
+        obj.addClass(clazz);
+      }
+      if (lastPosition != null) {
+        obj = $(lastPosition.getSelector());
+        if (!same && obj.hasClass(clazz)) {
+          obj.removeClass(clazz);
         }
       }
-      if (figure != null) {
-        $(o).toggleClass('selected-figure');
-        return lastPosition = position;
-      } else {
-        return lastPosition = null;
-      }
+      return lastPosition = position;
     });
   };
 

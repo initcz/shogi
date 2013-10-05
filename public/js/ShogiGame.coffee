@@ -34,14 +34,12 @@ class Figure
   constructor: (@type, @owner) ->
     @promoted = false
 
-
-
 patt = new RegExp '#?x([0-8])y([0-8])'
 parseId = (id) ->
   result = patt.exec id
   data =
-    x: result[1]
-    y: result[2]
+    x: parseInt result[1], 10
+    y: parseInt result[2], 10
 
 #
 # Position class
@@ -145,29 +143,38 @@ class ShogiGame
 
     lastPosition = null
     obj.on 'click', 'td', (e) =>
-      o = e.target
 
       # TODO: show possible places to move by calling @_possibleMoves
 
+      o = e.target
+      obj = $(o)
       position = new Position o.id
-
       figure = position.getFigure @board
 
+      # XXX
+      console.log 'lastPosition: ', lastPosition
+      console.log 'position: ', position
+      console.log 'figure: ', figure
+      # XXX
+
+      same = false
       if lastPosition?
-        $(lastPosition.getSelector()).toggleClass('selected-figure')
+        same = position.getSelector() is lastPosition.getSelector()
+        console.log 'same: ', same # XX
 
-        # move figure to empty place
-        if not figure?
-          @board[position.x][position.y] = @board[lastPosition.x][lastPosition.y]
-          @board[lastPosition.x][lastPosition.y] = null
-          @redrawUI() # XXX
+      # highlight current position
+      clazz = 'selected-figure'
+      if not same and figure? and not obj.hasClass clazz
+        obj.addClass clazz
 
-      if figure?
-        $(o).toggleClass('selected-figure')
-        lastPosition = position
-      else
-        #delete lastPosition
-        lastPosition = null
+      # remove highlight for last position
+      if lastPosition?
+        obj = $(lastPosition.getSelector())
+        if not same and obj.hasClass clazz
+          obj.removeClass clazz
+
+      # save last position
+      lastPosition = position
 
   redrawUI: (putFigures = true) ->
     cell = null
