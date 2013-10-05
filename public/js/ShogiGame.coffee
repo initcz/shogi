@@ -50,10 +50,16 @@ class Position
         data = parseId @x
         @x = data.x
         @y = data.y
-    getSelector: ->
-      return "#x#{@x}y#{@y}"
     getFigure: (board) ->
       return board[@x][@y]
+    getSelector: (hash = true) ->
+      return Position.createSelector @x, @y, hash
+    @createSelector: (x, y, hash = true) ->
+      id = "x#{x}y#{y}"
+      if hash
+        return '#' + id
+      else
+        return id
 
 #
 # Main class
@@ -126,7 +132,7 @@ class ShogiGame
     for (var y=(constant.misc.BOARD_SIZE-1); y>=0; y--) {
       html += '<tr>';
       for (var x=0; x<constant.misc.BOARD_SIZE; x++) {
-        cellId = 'x' + x + 'y' + y;
+        cellId = Position.createSelector(x, y, false);
         figureClass = this._getClass(this.board[x][y]); // !!!
         html += '<td id="' + cellId + '" class="' + figureClass + '"></td>';
       }
@@ -144,41 +150,33 @@ class ShogiGame
     lastPosition = null
     obj.on 'click', 'td', (e) =>
 
-      # TODO: show possible places to move by calling @_possibleMoves
-
       o = e.target
       obj = $(o)
       position = new Position o.id
       figure = position.getFigure @board
 
-      # XXX
-      #console.log 'lastPosition: ', lastPosition
-      #console.log 'position: ', position
-      #console.log 'figure: ', figure
-      # XXX
-
       same = false
       if lastPosition?
         same = position.getSelector() is lastPosition.getSelector()
-        #console.log 'same: ', same # XX
 
       # highlight current position
       clazz = 'selected-figure'
       if not same and figure? and not obj.hasClass clazz
         obj.addClass clazz
 
-      # remove highlight for last position
       if lastPosition?
+        # remove highlight for last position
         obj = $(lastPosition.getSelector())
         if not same and obj.hasClass clazz
           obj.removeClass clazz
+
+        # TODO: show possible places to move by calling @_possibleMoves
 
       # move figure
       if lastPosition? and not figure? and not same
         @board[position.x][position.y] = lastPosition.getFigure @board
         @board[lastPosition.x][lastPosition.y] = null
         @redrawUI() # XXX
-        #console.log 'moving!' # XXX
 
         #delete lastPosition
         lastPosition = null
@@ -187,19 +185,17 @@ class ShogiGame
         # save last position
         lastPosition = position
 
-        #console.log 'not moving' # XXX
-
   redrawUI: (putFigures = true) ->
     cell = null
     figure = null
 
     `
-    for (var i=0; i<constant.misc.BOARD_SIZE; i++) {
-      for (var j=0; j<constant.misc.BOARD_SIZE; j++) {
-        cell = $('#x' + i + 'y' + j);
+    for (var x=0; x<constant.misc.BOARD_SIZE; x++) {
+      for (var y=0; y<constant.misc.BOARD_SIZE; y++) {
+        cell = $(Position.createSelector(x, y));
         cell.removeClass();
         if (putFigures) {
-          figure = this.board[i][j];
+          figure = this.board[x][y];
           if (figure != null) {
             cell.addClass(this._getClass(figure));
           }

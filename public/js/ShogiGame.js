@@ -61,12 +61,28 @@ Position = (function() {
     }
   }
 
-  Position.prototype.getSelector = function() {
-    return "#x" + this.x + "y" + this.y;
-  };
-
   Position.prototype.getFigure = function(board) {
     return board[this.x][this.y];
+  };
+
+  Position.prototype.getSelector = function(hash) {
+    if (hash == null) {
+      hash = true;
+    }
+    return Position.createSelector(this.x, this.y, hash);
+  };
+
+  Position.createSelector = function(x, y, hash) {
+    var id;
+    if (hash == null) {
+      hash = true;
+    }
+    id = "x" + x + "y" + y;
+    if (hash) {
+      return '#' + id;
+    } else {
+      return id;
+    }
   };
 
   return Position;
@@ -143,7 +159,7 @@ ShogiGame = (function() {
     for (var y=(constant.misc.BOARD_SIZE-1); y>=0; y--) {
       html += '<tr>';
       for (var x=0; x<constant.misc.BOARD_SIZE; x++) {
-        cellId = 'x' + x + 'y' + y;
+        cellId = Position.createSelector(x, y, false);
         figureClass = this._getClass(this.board[x][y]); // !!!
         html += '<td id="' + cellId + '" class="' + figureClass + '"></td>';
       }
@@ -193,12 +209,12 @@ ShogiGame = (function() {
     cell = null;
     figure = null;
     
-    for (var i=0; i<constant.misc.BOARD_SIZE; i++) {
-      for (var j=0; j<constant.misc.BOARD_SIZE; j++) {
-        cell = $('#x' + i + 'y' + j);
+    for (var x=0; x<constant.misc.BOARD_SIZE; x++) {
+      for (var y=0; y<constant.misc.BOARD_SIZE; y++) {
+        cell = $(Position.createSelector(x, y));
         cell.removeClass();
         if (putFigures) {
-          figure = this.board[i][j];
+          figure = this.board[x][y];
           if (figure != null) {
             cell.addClass(this._getClass(figure));
           }
