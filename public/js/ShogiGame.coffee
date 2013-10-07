@@ -76,7 +76,9 @@ class ShogiGame
 
   # TODO: pedy - finish this, pls
   _possibleMoves: (x, y) ->
-    ret = []
+    if @board[x][y].type is constant.figureType.PAWN
+      return this._pawnPossibleMoves(x, y)
+    #ret = []
     #ret.push {x: 0, y: 0}
 
   _pawnPossibleMoves: (x, y) ->
