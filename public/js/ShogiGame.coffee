@@ -75,11 +75,16 @@ class ShogiGame
     # TODO: init communication
 
   # TODO: pedy - finish this, pls
-  _possibleMoves: (x, y) ->
-    if @board[x][y].type is constant.figureType.PAWN
-      return this._pawnPossibleMoves(x, y)
-    #ret = []
-    #ret.push {x: 0, y: 0}
+  _possibleMoves: (position) ->
+    figure = position.getFigure @board
+    if figure is null
+      #return []
+      return null # FORCE FIX
+
+    if figure.type is constant.figureType.PAWN
+      return @_pawnPossibleMoves position.x, position.y
+
+    return []
 
   _pawnPossibleMoves: (x, y) ->
     ret = []
@@ -166,18 +171,35 @@ class ShogiGame
       if not same and figure? and not obj.hasClass clazz
         obj.addClass clazz
 
+      # remove highlight for last position
       if lastPosition?
-        # remove highlight for last position
         obj = $(lastPosition.getSelector())
         if not same and obj.hasClass clazz
           obj.removeClass clazz
 
-        # TODO: show possible places to move by calling @_possibleMoves
+      # show possible places to move
+      if figure? and not same
+        for move in @_possibleMoves position
+          clazz = 'possible-move'
+          obj = $(move.getSelector())
+          if not obj.hasClass clazz
+            obj.addClass clazz
+
+      # remove highlighted possible places to move
+      if figure? and not same and lastPosition? and lastPosition.getFigure(@board)?
+        for move in @_possibleMoves lastPosition
+          clazz = 'possible-move'
+          obj = $(move.getSelector())
+          if obj.hasClass clazz
+            obj.removeClass clazz
 
       # move figure
       if lastPosition? and not figure? and not same
         @board[position.x][position.y] = lastPosition.getFigure @board
         @board[lastPosition.x][lastPosition.y] = null
+
+        # TODO - 1: redraw only one figure, not whole board
+        # TODO - 2: separate UI from core
         @redrawUI() # XXX
 
         #delete lastPosition

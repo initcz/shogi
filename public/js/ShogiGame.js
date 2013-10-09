@@ -96,9 +96,16 @@ ShogiGame = (function() {
     this.resetBoard();
   }
 
-  ShogiGame.prototype._possibleMoves = function(x, y) {
-    var ret;
-    return ret = [];
+  ShogiGame.prototype._possibleMoves = function(position) {
+    var figure;
+    figure = position.getFigure(this.board);
+    if (figure === null) {
+      return null;
+    }
+    if (figure.type === constant.figureType.PAWN) {
+      return this._pawnPossibleMoves(position.x, position.y);
+    }
+    return [];
   };
 
   ShogiGame.prototype._pawnPossibleMoves = function(x, y) {
@@ -171,7 +178,7 @@ ShogiGame = (function() {
     obj.append(html);
     lastPosition = null;
     return obj.on('click', 'td', function(e) {
-      var clazz, figure, o, position, same;
+      var clazz, figure, move, o, position, same, _i, _j, _len, _len1, _ref, _ref1;
       o = e.target;
       obj = $(o);
       position = new Position(o.id);
@@ -188,6 +195,28 @@ ShogiGame = (function() {
         obj = $(lastPosition.getSelector());
         if (!same && obj.hasClass(clazz)) {
           obj.removeClass(clazz);
+        }
+      }
+      if ((figure != null) && !same) {
+        _ref = _this._possibleMoves(position);
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          move = _ref[_i];
+          clazz = 'possible-move';
+          obj = $(move.getSelector());
+          if (!obj.hasClass(clazz)) {
+            obj.addClass(clazz);
+          }
+        }
+      }
+      if ((figure != null) && !same && (lastPosition != null) && (lastPosition.getFigure(_this.board) != null)) {
+        _ref1 = _this._possibleMoves(lastPosition);
+        for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
+          move = _ref1[_j];
+          clazz = 'possible-move';
+          obj = $(move.getSelector());
+          if (obj.hasClass(clazz)) {
+            obj.removeClass(clazz);
+          }
         }
       }
       if ((lastPosition != null) && (figure == null) && !same) {
