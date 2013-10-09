@@ -94,13 +94,18 @@ ShogiGame = (function() {
     this.initUI = __bind(this.initUI, this);
     this.initFigures();
     this.resetBoard();
+    this.editorMode = false;
   }
 
   ShogiGame.prototype._possibleMoves = function(position) {
     var figure;
     figure = position.getFigure(this.board);
+    if (figure === void 0) {
+      throw new Error("figure shouldn't be undefined - see stack trace and fix it!");
+    }
     if (figure === null) {
-      return null;
+      console.log('calling possibleMoves with position without figure');
+      return [];
     }
     if (figure.type === constant.figureType.PAWN) {
       return this._pawnPossibleMoves(position.x, position.y);
@@ -156,6 +161,24 @@ ShogiGame = (function() {
     return 'xxx';
   };
 
+  ShogiGame.prototype._validMove = function(oldPosition, newPosition) {
+    var id, newFigure, position, valid, _i, _len, _ref;
+    valid = false;
+    id = newPosition.getSelector();
+    _ref = this._possibleMoves(oldPosition);
+    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+      position = _ref[_i];
+      if (id === position.getSelector()) {
+        valid = true;
+      }
+    }
+    newFigure = newPosition.getFigure(this.board);
+    if (valid && (typeof oldFigure !== "undefined" && oldFigure !== null) && (newFigure != null) && oldFigure.owner === newFigure.owner) {
+      valid = false;
+    }
+    return valid;
+  };
+
   ShogiGame.prototype.initUI = function(id) {
     var cellId, figureClass, html, lastPosition, obj,
       _this = this;
@@ -178,7 +201,7 @@ ShogiGame = (function() {
     obj.append(html);
     lastPosition = null;
     return obj.on('click', 'td', function(e) {
-      var clazz, figure, move, o, position, same, _i, _j, _len, _len1, _ref, _ref1;
+      var clazz, figure, move, o, position, same, _i, _j, _k, _len, _len1, _len2, _ref, _ref1, _ref2;
       o = e.target;
       obj = $(o);
       position = new Position(o.id);
@@ -220,9 +243,21 @@ ShogiGame = (function() {
         }
       }
       if ((lastPosition != null) && (figure == null) && !same) {
-        _this.board[position.x][position.y] = lastPosition.getFigure(_this.board);
-        _this.board[lastPosition.x][lastPosition.y] = null;
-        _this.redrawUI();
+        if (_this.editorMode || _this._validMove(lastPosition, position)) {
+          _this.board[position.x][position.y] = lastPosition.getFigure(_this.board);
+          _this.board[lastPosition.x][lastPosition.y] = null;
+          _this.redrawUI();
+        } else {
+          _ref2 = _this._possibleMoves(lastPosition);
+          for (_k = 0, _len2 = _ref2.length; _k < _len2; _k++) {
+            move = _ref2[_k];
+            clazz = 'possible-move';
+            obj = $(move.getSelector());
+            if (obj.hasClass(clazz)) {
+              obj.removeClass(clazz);
+            }
+          }
+        }
         return lastPosition = null;
       } else {
         return lastPosition = position;

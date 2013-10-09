@@ -72,14 +72,19 @@ class ShogiGame
   constructor: ->
     @initFigures()
     @resetBoard()
+    @editorMode = false
     # TODO: init communication
 
   # TODO: pedy - finish this, pls
   _possibleMoves: (position) ->
     figure = position.getFigure @board
+
+    if figure is undefined
+      throw new Error "figure shouldn't be undefined - see stack trace and fix it!"
+
     if figure is null
-      #return []
-      return null # FORCE FIX
+      console.log 'calling possibleMoves with position without figure' # XXX
+      return []
 
     if figure.type is constant.figureType.PAWN
       return @_pawnPossibleMoves position.x, position.y
@@ -127,6 +132,21 @@ class ShogiGame
       return 'pawn' + suffix
 
     return 'xxx'
+
+  _validMove: (oldPosition, newPosition) ->
+
+    valid = false
+    id = newPosition.getSelector()
+    for position in @_possibleMoves oldPosition
+      if id is position.getSelector()
+        valid = true
+
+    # can't take own figure
+    newFigure = newPosition.getFigure @board
+    if valid and oldFigure? and newFigure? and oldFigure.owner is newFigure.owner
+      valid = false
+
+    return valid
 
   # TODO: put this in another class
   initUI: (id) =>
@@ -195,12 +215,21 @@ class ShogiGame
 
       # move figure
       if lastPosition? and not figure? and not same
-        @board[position.x][position.y] = lastPosition.getFigure @board
-        @board[lastPosition.x][lastPosition.y] = null
 
-        # TODO - 1: redraw only one figure, not whole board
-        # TODO - 2: separate UI from core
-        @redrawUI() # XXX
+        if @editorMode or @_validMove lastPosition, position
+          @board[position.x][position.y] = lastPosition.getFigure @board
+          @board[lastPosition.x][lastPosition.y] = null
+
+          # TODO - 1: redraw only one figure, not whole board
+          # TODO - 2: separate UI from core
+          @redrawUI() # XXX
+
+        else
+          for move in @_possibleMoves lastPosition
+            clazz = 'possible-move'
+            obj = $(move.getSelector())
+            if obj.hasClass clazz
+              obj.removeClass clazz
 
         #delete lastPosition
         lastPosition = null
