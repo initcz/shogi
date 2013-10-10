@@ -5,32 +5,64 @@ table.shogi {
 }
 
 table.shogi td {
+	position: relative;
+	overflow: hidden;
   height: 80px;
   border-bottom: 1px black solid;
   border-right: 1px black solid;
-  background-repeat: no-repeat;
-  background-position: center center;
 }
 
-.selected-figure { background-color: yellow !important; }
-.possible-move { background-color: green !important; }
-.possible-take { background-color: blue !important; }
-.figure-in-danger { background-color: red !important; }
+/* see http://www.sitepoint.com/css3-transform-background-image/ */
+table.shogi td:before {
+	content: "";
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background-size: 60%;
+	background-repeat: no-repeat;
+	background-position: center center;
+}
 
-.bishop-a { background-image: url(../img/bishop-a.png); }
-.bishop-b { background-image: url(../img/bishop-b.png); }
-.golden_general-a { background-image: url(../img/golden_general-a.png); }
-.golden_general-b { background-image: url(../img/golden_general-b.png); }
-.king-a { background-image: url(../img/king-a.png); }
-.king-b { background-image: url(../img/king-b.png); }
-.knight-a { background-image: url(../img/knight-a.png); }
-.knight-b { background-image: url(../img/knight-b.png); }
-.lance-a { background-image: url(../img/lance-a.png); }
-.lance-b { background-image: url(../img/lance-b.png); }
-.pawn-a { background-image: url(../img/pawn-a.png); }
-.pawn-b { background-image: url(../img/pawn-b.png); }
-.rook-a { background-image: url(../img/rook-a.png); }
-.rook-b { background-image: url(../img/rook-b.png); }
-.sachovnice_kameny { background-image: url(../img/sachovnice_kameny.png); }
-.silver_general-a { background-image: url(../img/silver_general-a.png); }
-.silver_general-b { background-image: url(../img/silver_general-b.png); }
+.selected-figure {
+	background-color: yellow !important;
+}
+.possible-move {
+	background-color: green !important;
+}
+.possible-take {
+	background-color: blue !important;
+}
+.figure-in-danger {
+	background-color: red !important;
+}
+
+.player-b:before {
+	-webkit-transform: rotate(180deg);
+}
+
+.bishop:before {
+	background-image: url(../img/bishop.svg);
+}
+.golden_general:before {
+	background-image: url(../img/golden-general.svg);
+}
+.king:before {
+	background-image: url(../img/king.svg);
+}
+.knight:before {
+	background-image: url(../img/knight.svg);
+}
+.lance:before {
+	background-image: url(../img/lance.svg);
+}
+.pawn:before {
+	background-image: url(../img/pawn.svg);
+}
+.rook:before {
+	background-image: url(../img/rook.svg);
+}
+.silver_general:before {
+	background-image: url(../img/silver-general.svg);
+}

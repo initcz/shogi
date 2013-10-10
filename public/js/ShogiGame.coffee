@@ -100,38 +100,32 @@ class ShogiGame
     return ret
 
   _getClass: (figure) ->
-    return '' if not figure?
+    return [] if not figure?
 
     if figure.owner is constant.owner.A
-      suffix = '-a'
+      playerCls = 'player-a'
     else
-      suffix = '-b'
+      playerCls = 'player-b'
 
-    if figure.type is constant.figureType.LANCE
-      return 'lance' + suffix
-
-    if figure.type is constant.figureType.KNIGHT
-      return 'knight' + suffix
-
-    if figure.type is constant.figureType.SILVER_GENERAL
-      return 'silver_general' + suffix
-
-    if figure.type is constant.figureType.GOLDEN_GENERAL
-      return 'golden_general' + suffix
-
-    if figure.type is constant.figureType.KING
-      return 'king' + suffix
-
-    if figure.type is constant.figureType.BISHOP
-      return 'bishop' + suffix
-
-    if figure.type is constant.figureType.ROOK
-      return 'rook' + suffix
-
-    if figure.type is constant.figureType.PAWN
-      return 'pawn' + suffix
-
-    return 'xxx'
+    switch figure.type
+      when constant.figureType.LANCE
+        return ['lance', playerCls]
+      when constant.figureType.KNIGHT
+        return ['knight', playerCls]
+      when constant.figureType.SILVER_GENERAL
+        return ['silver_general', playerCls]
+      when constant.figureType.GOLDEN_GENERAL
+        return ['golden_general', playerCls]
+      when constant.figureType.KING
+        return ['king', playerCls]
+      when constant.figureType.BISHOP
+        return ['bishop', playerCls]
+      when constant.figureType.ROOK
+        return ['rook', playerCls]
+      when constant.figureType.PAWN
+        return ['pawn', playerCls]
+      else
+        return []
 
   _validMove: (oldPosition, newPosition) ->
 
@@ -160,7 +154,7 @@ class ShogiGame
       html += '<tr>';
       for (var x=0; x<constant.misc.BOARD_SIZE; x++) {
         cellId = Position.createSelector(x, y, false);
-        figureClass = this._getClass(this.board[x][y]); // !!!
+        figureClass = this._getClass(this.board[x][y]).join(' '); // !!!
         html += '<td id="' + cellId + '" class="' + figureClass + '"></td>';
       }
       html += '</tr>';
@@ -250,7 +244,7 @@ class ShogiGame
         if (putFigures) {
           figure = this.board[x][y];
           if (figure != null) {
-            cell.addClass(this._getClass(figure));
+            cell.addClass(this._getClass(figure).join(' '));
           }
         }
       }

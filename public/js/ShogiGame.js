@@ -125,40 +125,35 @@ ShogiGame = (function() {
   };
 
   ShogiGame.prototype._getClass = function(figure) {
-    var suffix;
+    var playerCls;
     if (figure == null) {
-      return '';
+      return [];
     }
     if (figure.owner === constant.owner.A) {
-      suffix = '-a';
+      playerCls = 'player-a';
     } else {
-      suffix = '-b';
+      playerCls = 'player-b';
     }
-    if (figure.type === constant.figureType.LANCE) {
-      return 'lance' + suffix;
+    switch (figure.type) {
+      case constant.figureType.LANCE:
+        return ['lance', playerCls];
+      case constant.figureType.KNIGHT:
+        return ['knight', playerCls];
+      case constant.figureType.SILVER_GENERAL:
+        return ['silver_general', playerCls];
+      case constant.figureType.GOLDEN_GENERAL:
+        return ['golden_general', playerCls];
+      case constant.figureType.KING:
+        return ['king', playerCls];
+      case constant.figureType.BISHOP:
+        return ['bishop', playerCls];
+      case constant.figureType.ROOK:
+        return ['rook', playerCls];
+      case constant.figureType.PAWN:
+        return ['pawn', playerCls];
+      default:
+        return [];
     }
-    if (figure.type === constant.figureType.KNIGHT) {
-      return 'knight' + suffix;
-    }
-    if (figure.type === constant.figureType.SILVER_GENERAL) {
-      return 'silver_general' + suffix;
-    }
-    if (figure.type === constant.figureType.GOLDEN_GENERAL) {
-      return 'golden_general' + suffix;
-    }
-    if (figure.type === constant.figureType.KING) {
-      return 'king' + suffix;
-    }
-    if (figure.type === constant.figureType.BISHOP) {
-      return 'bishop' + suffix;
-    }
-    if (figure.type === constant.figureType.ROOK) {
-      return 'rook' + suffix;
-    }
-    if (figure.type === constant.figureType.PAWN) {
-      return 'pawn' + suffix;
-    }
-    return 'xxx';
   };
 
   ShogiGame.prototype._validMove = function(oldPosition, newPosition) {
@@ -190,7 +185,7 @@ ShogiGame = (function() {
       html += '<tr>';
       for (var x=0; x<constant.misc.BOARD_SIZE; x++) {
         cellId = Position.createSelector(x, y, false);
-        figureClass = this._getClass(this.board[x][y]); // !!!
+        figureClass = this._getClass(this.board[x][y]).join(' '); // !!!
         html += '<td id="' + cellId + '" class="' + figureClass + '"></td>';
       }
       html += '</tr>';
@@ -280,7 +275,7 @@ ShogiGame = (function() {
         if (putFigures) {
           figure = this.board[x][y];
           if (figure != null) {
-            cell.addClass(this._getClass(figure));
+            cell.addClass(this._getClass(figure).join(' '));
           }
         }
       }
