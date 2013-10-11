@@ -18,6 +18,7 @@ constant = {
     KNIGHT: 6,
     PAWN: 7
   },
+  figureNames: ['king', 'golden_general', 'silver_general', 'bishop', 'rook', 'lance', 'knight', 'pawn'],
   owner: {
     A: 0,
     B: 1
@@ -125,35 +126,13 @@ ShogiGame = (function() {
   };
 
   ShogiGame.prototype._getClass = function(figure) {
-    var playerCls;
-    if (figure == null) {
-      return [];
+    var result;
+    result = [];
+    if (figure != null) {
+      result.push(figure.owner === constant.owner.A ? 'player-a' : 'player-b');
+      result.push(constant.figureNames[figure.type]);
     }
-    if (figure.owner === constant.owner.A) {
-      playerCls = 'player-a';
-    } else {
-      playerCls = 'player-b';
-    }
-    switch (figure.type) {
-      case constant.figureType.LANCE:
-        return ['lance', playerCls];
-      case constant.figureType.KNIGHT:
-        return ['knight', playerCls];
-      case constant.figureType.SILVER_GENERAL:
-        return ['silver_general', playerCls];
-      case constant.figureType.GOLDEN_GENERAL:
-        return ['golden_general', playerCls];
-      case constant.figureType.KING:
-        return ['king', playerCls];
-      case constant.figureType.BISHOP:
-        return ['bishop', playerCls];
-      case constant.figureType.ROOK:
-        return ['rook', playerCls];
-      case constant.figureType.PAWN:
-        return ['pawn', playerCls];
-      default:
-        return [];
-    }
+    return result;
   };
 
   ShogiGame.prototype._validMove = function(oldPosition, newPosition) {

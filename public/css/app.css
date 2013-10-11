@@ -5,7 +5,6 @@ table.shogi {
 }
 
 table.shogi td {
-	position: relative;
 	overflow: hidden;
   height: 80px;
   border-bottom: 1px black solid;
@@ -15,7 +14,7 @@ table.shogi td {
 /* see http://www.sitepoint.com/css3-transform-background-image/ */
 table.shogi td:before {
 	content: "";
-	position: absolute;
+	display: block;
 	top: 0;
 	left: 0;
 	width: 100%;
@@ -40,6 +39,10 @@ table.shogi td:before {
 
 .player-b:before {
 	-webkit-transform: rotate(180deg);
+	-o-transform: rotate(180deg);
+	-moz-transform: rotate(180deg);
+	-ms-transform: rotate(180deg);
+	transform: rotate(180deg);
 }
 
 .bishop:before {

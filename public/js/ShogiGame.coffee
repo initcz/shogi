@@ -20,6 +20,8 @@ constant =
     KNIGHT: 6
     PAWN: 7
 
+  figureNames: ['king', 'golden_general', 'silver_general', 'bishop', 'rook', 'lance', 'knight', 'pawn']
+
   owner:
     A: 0
     B: 1
@@ -100,32 +102,13 @@ class ShogiGame
     return ret
 
   _getClass: (figure) ->
-    return [] if not figure?
+    result = []
 
-    if figure.owner is constant.owner.A
-      playerCls = 'player-a'
-    else
-      playerCls = 'player-b'
+    if figure?
+      result.push(if figure.owner is constant.owner.A then 'player-a' else 'player-b')
+      result.push(constant.figureNames[figure.type]);
 
-    switch figure.type
-      when constant.figureType.LANCE
-        return ['lance', playerCls]
-      when constant.figureType.KNIGHT
-        return ['knight', playerCls]
-      when constant.figureType.SILVER_GENERAL
-        return ['silver_general', playerCls]
-      when constant.figureType.GOLDEN_GENERAL
-        return ['golden_general', playerCls]
-      when constant.figureType.KING
-        return ['king', playerCls]
-      when constant.figureType.BISHOP
-        return ['bishop', playerCls]
-      when constant.figureType.ROOK
-        return ['rook', playerCls]
-      when constant.figureType.PAWN
-        return ['pawn', playerCls]
-      else
-        return []
+    return result
 
   _validMove: (oldPosition, newPosition) ->
 
