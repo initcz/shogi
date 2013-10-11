@@ -66,3 +66,10 @@ table.shogi td:before {
 .silver_general:before {
 	background-image: url(../img/silver-general.svg);
 }
+
+.off-board {
+  border: 1px black solid;
+  height: 80px;
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
