@@ -112,6 +112,30 @@ ShogiGame = (function() {
     if (figure.type === constant.figureType.PAWN) {
       return this._pawnPossibleMoves(position.x, position.y);
     }
+    if (figure.type === constant.figureType.LANCE) {
+      return this._lancePossibleMoves(position.x, position.y);
+    }
+  };
+
+  ShogiGame.prototype._lancePossibleMoves = function(x, y) {
+    var ret;
+    ret = [];
+    if (this.board[x][y].owner === constant.owner.A) {
+      
+      for(var i=y;i<8;i++){
+        ret.push(new Position(x, i + 1));
+      }
+      ;
+    } else {
+      
+      for(var i=y;i>0;i--){
+        ret.push(new Position(x, i - 1));
+      }
+      ;
+    }
+    ret = this._figureIsOnBoard(ret);
+    ret = this._figureCanMove(ret);
+    return ret;
   };
 
   ShogiGame.prototype._pawnPossibleMoves = function(x, y) {

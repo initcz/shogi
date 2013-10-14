@@ -92,6 +92,27 @@ class ShogiGame
     if figure.type is constant.figureType.PAWN
       return @_pawnPossibleMoves position.x, position.y
 
+    if figure.type is constant.figureType.LANCE
+      return @_lancePossibleMoves position.x, position.y
+
+  _lancePossibleMoves: (x, y) ->
+    ret = []
+    if @board[x][y].owner is constant.owner.A
+      `
+      for(var i=y;i<8;i++){
+        ret.push(new Position(x, i + 1));
+      }
+      `
+    else
+      `
+      for(var i=y;i>0;i--){
+        ret.push(new Position(x, i - 1));
+      }
+      `
+    ret = @_figureIsOnBoard ret
+    ret = @_figureCanMove ret
+    return ret
+
   _pawnPossibleMoves: (x, y) ->
     ret = []
     if @board[x][y].owner is constant.owner.A
