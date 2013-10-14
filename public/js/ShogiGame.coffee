@@ -79,6 +79,7 @@ class ShogiGame
 
   # TODO: pedy - finish this, pls
   _possibleMoves: (position) ->
+    ret = []
     figure = position.getFigure @board
 
     if figure is undefined
@@ -91,14 +92,38 @@ class ShogiGame
     if figure.type is constant.figureType.PAWN
       return @_pawnPossibleMoves position.x, position.y
 
-    return []
-
   _pawnPossibleMoves: (x, y) ->
     ret = []
     if @board[x][y].owner is constant.owner.A
       ret.push new Position x, y+1
     else
       ret.push new Position x, y-1
+    ret = @_figureIsOnBoard ret
+    ret = @_figureCanMove ret
+    return ret
+
+  _figureCanMove: (moves) ->
+    ret = []
+    `
+    for(var i=0;i<moves.length;i++){
+      var figure
+      figure = moves[i].getFigure(this.board);
+      if(figure === undefined || figure.owner === constant.owner.B){
+        ret.push(moves[i]);
+      }
+    }
+    `
+    return ret
+
+  _figureIsOnBoard: (moves) ->
+    ret = []
+    `
+    for(var i=0; i<moves.length; i++){
+      if(moves[i].x>=0 && moves[i].y>=0){
+        ret.push(moves[i]);
+      }
+    }
+    `
     return ret
 
   _getClass: (figure) ->

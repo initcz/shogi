@@ -99,7 +99,8 @@ ShogiGame = (function() {
   }
 
   ShogiGame.prototype._possibleMoves = function(position) {
-    var figure;
+    var figure, ret;
+    ret = [];
     figure = position.getFigure(this.board);
     if (figure === void 0) {
       throw new Error("figure shouldn't be undefined - see stack trace and fix it!");
@@ -111,7 +112,6 @@ ShogiGame = (function() {
     if (figure.type === constant.figureType.PAWN) {
       return this._pawnPossibleMoves(position.x, position.y);
     }
-    return [];
   };
 
   ShogiGame.prototype._pawnPossibleMoves = function(x, y) {
@@ -122,6 +122,36 @@ ShogiGame = (function() {
     } else {
       ret.push(new Position(x, y - 1));
     }
+    ret = this._figureIsOnBoard(ret);
+    ret = this._figureCanMove(ret);
+    return ret;
+  };
+
+  ShogiGame.prototype._figureCanMove = function(moves) {
+    var ret;
+    ret = [];
+    
+    for(var i=0;i<moves.length;i++){
+      var figure
+      figure = moves[i].getFigure(this.board);
+      if(figure === undefined || figure.owner === constant.owner.B){
+        ret.push(moves[i]);
+      }
+    }
+    ;
+    return ret;
+  };
+
+  ShogiGame.prototype._figureIsOnBoard = function(moves) {
+    var ret;
+    ret = [];
+    
+    for(var i=0; i<moves.length; i++){
+      if(moves[i].x>=0 && moves[i].y>=0){
+        ret.push(moves[i]);
+      }
+    }
+    ;
     return ret;
   };
 
