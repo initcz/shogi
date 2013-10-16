@@ -38,19 +38,16 @@
   </script>
   <script src="js/bootstrap.min.js"></script>
 
-  <script type="text/javascript" src="/js/coffee-script.js"></script>
-  <script type="text/javascript" src="/js/ShogiGame.js"></script>
-  <script type="text/javascript">
-    var shogi = null;
-    $('document').ready(function() {
-      shogi = new ShogiGame();
-      shogi.initUI('content');
-    });
-    /*
-    shogi.resetBoard(false); // no figures
-    // put some figures in own alignment
-    shogi.redrawUI();
-    */
+  <script type="text/coffeescript" src="/js/ShogiGame.coffee"></script>
+
+  <script type="text/coffeescript">
+    $(->
+      shogi = new ShogiGame()
+      shogi.initUI 'content'
+    )
   </script>
+
+  <!-- this must be after all coffeescript definitions //-->
+  <script type="text/javascript" src="/js/coffee-script.js"></script>
 </body>
 </html>

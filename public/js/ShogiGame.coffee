@@ -460,3 +460,7 @@ class ShogiGame
 
   move: ->
   promote: ->
+
+## FIXME !!!
+if window?
+  window.ShogiGame = ShogiGame
