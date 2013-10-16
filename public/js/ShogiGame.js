@@ -118,52 +118,86 @@ ShogiGame = (function() {
   };
 
   ShogiGame.prototype._lancePossibleMoves = function(x, y) {
-    var ret;
+    var currentPosition, ret;
     ret = [];
+    currentPosition = new Position(x, y);
     if (this.board[x][y].owner === constant.owner.A) {
       
       for(var i=y;i<8;i++){
-        ret.push(new Position(x, i + 1));
+        newPosition = new Position(x, i+1);
+        console.log(i);
+        if(this._figureCanMove(currentPosition, newPosition)){
+          figure = newPosition.getFigure(this.board);
+          ret.push(newPosition);
+          if(figure !== void 0){
+            if(figure.owner === constant.owner.B){
+              break;
+            }
+          }
+        }else{
+          break;
+        }
       }
       ;
     } else {
       
       for(var i=y;i>0;i--){
-        ret.push(new Position(x, i - 1));
+        newPosition = new Position(x, i-1);
+        console.log(i);
+        if(this._figureCanMove(currentPosition, newPosition)){
+          figure = newPosition.getFigure(this.board);
+          ret.push(newPosition);
+          if(figure !== void 0){
+            if(figure.owner === constant.owner.A){
+              break;
+            }
+          }
+        }else{
+          break;
+        }
       }
       ;
     }
     ret = this._figureIsOnBoard(ret);
-    ret = this._figureCanMove(ret);
     return ret;
   };
 
   ShogiGame.prototype._pawnPossibleMoves = function(x, y) {
-    var ret;
+    var currentPosition, newPosition, ret;
     ret = [];
+    currentPosition = new Position(x, y);
     if (this.board[x][y].owner === constant.owner.A) {
-      ret.push(new Position(x, y + 1));
+      newPosition = new Position(x, y + 1);
+      if (this._figureCanMove(currentPosition, newPosition)) {
+        ret.push(newPosition);
+      }
     } else {
-      ret.push(new Position(x, y - 1));
+      newPosition = new Position(x, y - 1);
+      if (this._figureCanMove(currentPosition, newPosition)) {
+        ret.push(newPosition);
+      }
     }
     ret = this._figureIsOnBoard(ret);
-    ret = this._figureCanMove(ret);
     return ret;
   };
 
-  ShogiGame.prototype._figureCanMove = function(moves) {
-    var ret;
-    ret = [];
-    
-    for(var i=0;i<moves.length;i++){
-      var figure
-      figure = moves[i].getFigure(this.board);
-      if(figure === undefined || figure.owner === constant.owner.B){
-        ret.push(moves[i]);
+  ShogiGame.prototype._figureCanMove = function(oldPosition, newPosition) {
+    var figure, newFigure;
+    figure = oldPosition.getFigure(this.board);
+    newFigure = newPosition.getFigure(this.board);
+    if (figure.owner === constant.owner.A) {
+      if (newFigure === void 0 || newFigure.owner === constant.owner.B) {
+        return true;
+      } else {
+        return false;
+      }
+    } else {
+      if (newFigure === void 0 || newFigure.owner === constant.owner.A) {
+        return true;
+      } else {
+        return false;
       }
     }
-    ;
-    return ret;
   };
 
   ShogiGame.prototype._figureIsOnBoard = function(moves) {

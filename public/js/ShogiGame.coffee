@@ -97,44 +97,73 @@ class ShogiGame
 
   _lancePossibleMoves: (x, y) ->
     ret = []
+    currentPosition = new Position x, y
     if @board[x][y].owner is constant.owner.A
       `
       for(var i=y;i<8;i++){
-        ret.push(new Position(x, i + 1));
+        newPosition = new Position(x, i+1);
+        console.log(i);
+        if(this._figureCanMove(currentPosition, newPosition)){
+          figure = newPosition.getFigure(this.board);
+          ret.push(newPosition);
+          if(figure !== void 0){
+            if(figure.owner === constant.owner.B){
+              break;
+            }
+          }
+        }else{
+          break;
+        }
       }
       `
     else
       `
       for(var i=y;i>0;i--){
-        ret.push(new Position(x, i - 1));
+        newPosition = new Position(x, i-1);
+        console.log(i);
+        if(this._figureCanMove(currentPosition, newPosition)){
+          figure = newPosition.getFigure(this.board);
+          ret.push(newPosition);
+          if(figure !== void 0){
+            if(figure.owner === constant.owner.A){
+              break;
+            }
+          }
+        }else{
+          break;
+        }
       }
       `
     ret = @_figureIsOnBoard ret
-    ret = @_figureCanMove ret
     return ret
 
   _pawnPossibleMoves: (x, y) ->
     ret = []
+    currentPosition = new Position x, y
     if @board[x][y].owner is constant.owner.A
-      ret.push new Position x, y+1
+      newPosition = new Position x, y+1
+      if @_figureCanMove currentPosition, newPosition
+        ret.push newPosition
     else
-      ret.push new Position x, y-1
+      newPosition = new Position x, y-1
+      if @_figureCanMove currentPosition, newPosition
+        ret.push newPosition
     ret = @_figureIsOnBoard ret
-    ret = @_figureCanMove ret
     return ret
 
-  _figureCanMove: (moves) ->
-    ret = []
-    `
-    for(var i=0;i<moves.length;i++){
-      var figure
-      figure = moves[i].getFigure(this.board);
-      if(figure === undefined || figure.owner === constant.owner.B){
-        ret.push(moves[i]);
-      }
-    }
-    `
-    return ret
+  _figureCanMove: (oldPosition, newPosition) ->
+    figure = oldPosition.getFigure @board
+    newFigure = newPosition.getFigure @board
+    if figure.owner is constant.owner.A
+      if newFigure is undefined or newFigure.owner is constant.owner.B
+        return true
+      else
+        return false
+    else
+      if newFigure is undefined or newFigure.owner is constant.owner.A
+        return true
+      else
+        return false
 
   _figureIsOnBoard: (moves) ->
     ret = []
