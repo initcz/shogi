@@ -1,4 +1,20 @@
 /*
+ * https://github.com/requirejs/example-jquery-shim
+ */
+requirejs.config({
+  "baseUrl": "js/lib",
+  "paths": {
+    "app": "../app"
+  /*
+  },
+  "shim": {
+    "jquery.alpha": ["jquery"],
+    "jquery.beta": ["jquery"]
+  */
+  }
+});
+
+/*
  * see https://github.com/requirejs/require-cs
  *
  * [D3.js]
@@ -10,9 +26,4 @@
  * http://simonsmith.io/using-zepto-and-jquery-with-requirejs/
  *
  */
-require({
-  paths: {
-    cs: './cs',
-    'coffee-script': './coffee-script'
-  }
-}, ['cs!csmain']);
+require(['cs!app/csmain']);
