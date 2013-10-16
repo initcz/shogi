@@ -9,13 +9,10 @@
   <!-- Bootstrap -->
   <link href="/css/bootstrap.min.css" rel="stylesheet" media="screen">
 
-   <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
-   <!--[if lt IE 9]>
-   <script src="/js/html5shiv.js"></script>
-   <script src="/js/respond.min.js"></script>
-   <![endif]-->
-
   <link rel="stylesheet" href="/css/app.css" />
+  <!-- data-main attribute tells require.js to load
+  scripts/main.js after require.js loads. -->
+  <script data-main="js/main" src="js/require.js"></script>
 </head>
 <body>
   <div class="container">
@@ -26,29 +23,5 @@
     <div id="bottom" class="row off-board">
     </div>
   </div><!-- end container -->
-
-  <script type="text/javascript" src="/js/zepto.min.js"></script>
-  <script type="text/javascript">
-    // http://stackoverflow.com/questions/16160755/using-bootstrap-with-zepto-undefined-is-not-a-function
-    if(!window.jQuery)
-    {
-      //Zepto.browser = {webkit: true}
-      window.jQuery = Zepto
-    }
-  </script>
-  <script src="js/bootstrap.min.js"></script>
-
-  <script type="text/coffeescript" src="/js/ShogiGame.coffee"></script>
-
-  <script type="text/coffeescript">
-    $(->
-      shogi = new ShogiGame()
-      shogi.initUI 'content'
-      window.shogi = shogi # FIXME !!!
-    )
-  </script>
-
-  <!-- this must be after all coffeescript definitions //-->
-  <script type="text/javascript" src="/js/coffee-script.js"></script>
 </body>
 </html>

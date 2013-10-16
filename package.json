@@ -2,9 +2,9 @@
   "name": "shogi",
   "version": "0.1.0",
   "description": "Japanese chess game",
-  "main": "index.js",
+  "main": "lib/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "node_modules/.bin/coffee test/game.coffee"
   },
   "author": "",
   "license": "BSD-2-Clause",
