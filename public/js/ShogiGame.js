@@ -125,11 +125,10 @@ ShogiGame = (function() {
       
       for(var i=y;i<8;i++){
         newPosition = new Position(x, i+1);
-        console.log(i);
         if(this._figureCanMove(currentPosition, newPosition)){
           figure = newPosition.getFigure(this.board);
           ret.push(newPosition);
-          if(figure !== void 0){
+          if(figure !== null){
             if(figure.owner === constant.owner.B){
               break;
             }
@@ -143,11 +142,10 @@ ShogiGame = (function() {
       
       for(var i=y;i>0;i--){
         newPosition = new Position(x, i-1);
-        console.log(i);
         if(this._figureCanMove(currentPosition, newPosition)){
           figure = newPosition.getFigure(this.board);
           ret.push(newPosition);
-          if(figure !== void 0){
+          if(figure !== null){
             if(figure.owner === constant.owner.A){
               break;
             }
@@ -186,13 +184,13 @@ ShogiGame = (function() {
     figure = oldPosition.getFigure(this.board);
     newFigure = newPosition.getFigure(this.board);
     if (figure.owner === constant.owner.A) {
-      if (newFigure === void 0 || newFigure.owner === constant.owner.B) {
+      if (newFigure === null || newFigure.owner === constant.owner.B) {
         return true;
       } else {
         return false;
       }
     } else {
-      if (newFigure === void 0 || newFigure.owner === constant.owner.A) {
+      if (newFigure === null || newFigure.owner === constant.owner.A) {
         return true;
       } else {
         return false;
@@ -453,6 +451,15 @@ ShogiGame = (function() {
     this.board[6][6] = this.figures[37];
     this.board[7][6] = this.figures[38];
     this.board[8][6] = this.figures[39];
+    
+    for (var i=0; i<constant.misc.BOARD_SIZE; i++) {
+      for (var j=0; j<constant.misc.BOARD_SIZE; j++) {
+        if (this.board[i][j] === void 0) {
+          this.board[i][j] = null;
+        }
+      }
+    }
+    ;
     
     for (var i=0; i<constant.misc.BOARD_SIZE; i++) {
       for (var j=0; j<constant.misc.BOARD_SIZE; j++) {

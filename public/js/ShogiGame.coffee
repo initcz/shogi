@@ -102,11 +102,10 @@ class ShogiGame
       `
       for(var i=y;i<8;i++){
         newPosition = new Position(x, i+1);
-        console.log(i);
         if(this._figureCanMove(currentPosition, newPosition)){
           figure = newPosition.getFigure(this.board);
           ret.push(newPosition);
-          if(figure !== void 0){
+          if(figure !== null){
             if(figure.owner === constant.owner.B){
               break;
             }
@@ -120,11 +119,10 @@ class ShogiGame
       `
       for(var i=y;i>0;i--){
         newPosition = new Position(x, i-1);
-        console.log(i);
         if(this._figureCanMove(currentPosition, newPosition)){
           figure = newPosition.getFigure(this.board);
           ret.push(newPosition);
-          if(figure !== void 0){
+          if(figure !== null){
             if(figure.owner === constant.owner.A){
               break;
             }
@@ -155,12 +153,12 @@ class ShogiGame
     figure = oldPosition.getFigure @board
     newFigure = newPosition.getFigure @board
     if figure.owner is constant.owner.A
-      if newFigure is undefined or newFigure.owner is constant.owner.B
+      if newFigure is null or newFigure.owner is constant.owner.B
         return true
       else
         return false
     else
-      if newFigure is undefined or newFigure.owner is constant.owner.A
+      if newFigure is null or newFigure.owner is constant.owner.A
         return true
       else
         return false
@@ -434,6 +432,17 @@ class ShogiGame
     @board[6][6] = @figures[37]
     @board[7][6] = @figures[38]
     @board[8][6] = @figures[39]
+
+    #undefined to null
+    `
+    for (var i=0; i<constant.misc.BOARD_SIZE; i++) {
+      for (var j=0; j<constant.misc.BOARD_SIZE; j++) {
+        if (this.board[i][j] === void 0) {
+          this.board[i][j] = null;
+        }
+      }
+    }
+    `
 
     # 'downgrade' all figures
     `
