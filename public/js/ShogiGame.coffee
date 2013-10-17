@@ -90,16 +90,28 @@ class ShogiGame
       return []
 
     if figure.type is constant.figureType.PAWN
-      return @_pawnPossibleMoves position.x, position.y
+      if figure.promoted
+        return @_goldenGeneralPossibleMoves position.x, position.y
+      else
+       return @_pawnPossibleMoves position.x, position.y
 
     if figure.type is constant.figureType.LANCE
-      return @_lancePossibleMoves position.x, position.y
+      if figure.promoted
+        return @_goldenGeneralPossibleMoves position.x, position.y
+      else
+        return @_lancePossibleMoves position.x, position.y
     
     if figure.type is constant.figureType.SILVER_GENERAL
-      return @_silverGeneralPossibleMoves position.x, position.y
+      if figure.promoted
+        return @_goldenGeneralPossibleMoves position.x, position.y
+      else
+        return @_silverGeneralPossibleMoves position.x, position.y
 
     if figure.type is constant.figureType.KNIGHT
-      return @_knightPossibleMoves position.x, position.y
+      if figure.promoted
+        return @_goldenGeneralPossibleMoves position.x, position.y
+      else
+        return @_knightPossibleMoves position.x, position.y
 
     if figure.type is constant.figureType.KING
       return @_kingPossibleMoves position.x, position.y
