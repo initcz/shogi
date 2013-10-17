@@ -90,19 +90,66 @@ class ShogiGame
       return []
 
     if figure.type is constant.figureType.PAWN
-      return @_pawnPossibleMoves position.x, position.y
+      if figure.promoted
+        return @_goldenGeneralPossibleMoves position.x, position.y
+      else
+       return @_pawnPossibleMoves position.x, position.y
 
     if figure.type is constant.figureType.LANCE
-      return @_lancePossibleMoves position.x, position.y
+      if figure.promoted
+        return @_goldenGeneralPossibleMoves position.x, position.y
+      else
+        return @_lancePossibleMoves position.x, position.y
     
     if figure.type is constant.figureType.SILVER_GENERAL
-      return @_silverGeneralPossibleMoves position.x, position.y
+      if figure.promoted
+        return @_goldenGeneralPossibleMoves position.x, position.y
+      else
+        return @_silverGeneralPossibleMoves position.x, position.y
 
     if figure.type is constant.figureType.KNIGHT
-      return @_knightPossibleMoves position.x, position.y
+      if figure.promoted
+        return @_goldenGeneralPossibleMoves position.x, position.y
+      else
+        return @_knightPossibleMoves position.x, position.y
 
     if figure.type is constant.figureType.KING
       return @_kingPossibleMoves position.x, position.y
+
+    if figure.type is constant.figureType.GOLDEN_GENERAL
+      return @_goldenGeneralPossibleMoves position.x, position.y
+
+  _goldenGeneralPossibleMoves: (x, y) ->
+    ret = []
+    currentPosition = new Position x, y
+    if @board[x][y].owner is constant.owner.A
+      newPosition = new Position x+1, y+1
+      if @_figureCanMove currentPosition, newPosition
+        ret.push newPosition
+      newPosition = new Position x-1, y+1
+      if @_figureCanMove currentPosition, newPosition
+        ret.push newPosition
+    else
+      newPosition = new Position x+1, y-1
+      if @_figureCanMove currentPosition, newPosition
+        ret.push newPosition
+      newPosition = new Position x-1, y-1
+      if @_figureCanMove currentPosition, newPosition
+        ret.push newPosition
+    newPosition = new Position x+1, y
+    if @_figureCanMove currentPosition, newPosition
+      ret.push newPosition
+    newPosition = new Position x-1, y
+    if @_figureCanMove currentPosition, newPosition
+      ret.push newPosition
+    newPosition = new Position x, y+1
+    if @_figureCanMove currentPosition, newPosition
+      ret.push newPosition
+    newPosition = new Position x, y-1
+    if @_figureCanMove currentPosition, newPosition
+      ret.push newPosition
+    ret = @_figureIsOnBoard ret
+    return ret
 
   _kingPossibleMoves: (x, y) ->
     ret = []
