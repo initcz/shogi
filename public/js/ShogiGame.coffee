@@ -101,6 +101,40 @@ class ShogiGame
     if figure.type is constant.figureType.KNIGHT
       return @_knightPossibleMoves position.x, position.y
 
+    if figure.type is constant.figureType.KING
+      return @_kingPossibleMoves position.x, position.y
+
+  _kingPossibleMoves: (x, y) ->
+    ret = []
+    currentPosition = new Position x, y
+    newPosition = new Position x+1, y
+    if @_figureCanMove currentPosition, newPosition
+      ret.push newPosition
+    newPosition = new Position x-1, y
+    if @_figureCanMove currentPosition, newPosition
+      ret.push newPosition
+    newPosition = new Position x, y+1
+    if @_figureCanMove currentPosition, newPosition
+      ret.push newPosition
+    newPosition = new Position x, y-1
+    if @_figureCanMove currentPosition, newPosition
+      ret.push newPosition
+    newPosition = new Position x+1, y+1
+    if @_figureCanMove currentPosition, newPosition
+      ret.push newPosition
+    newPosition = new Position x+1, y-1
+    if @_figureCanMove currentPosition, newPosition
+      ret.push newPosition
+    newPosition = new Position x-1, y+1
+    if @_figureCanMove currentPosition, newPosition
+      ret.push newPosition
+    newPosition = new Position x-1, y-1
+    if @_figureCanMove currentPosition, newPosition
+      ret.push newPosition
+    ret = @_figureIsOnBoard ret
+    return ret
+    
+
   _knightPossibleMoves: (x, y) ->
     ret = []
     currentPosition = new Position x, y
@@ -210,7 +244,7 @@ class ShogiGame
       else
         return false
     else
-      if newFigure is null or newFigure.owner is constant.owner.A
+      if newFigure is undefined or newFigure is null or newFigure.owner is constant.owner.A
         return true
       else
         return false
