@@ -95,8 +95,31 @@ class ShogiGame
     if figure.type is constant.figureType.LANCE
       return @_lancePossibleMoves position.x, position.y
     
-     if figure.type is constant.figureType.SILVER_GENERAL
+    if figure.type is constant.figureType.SILVER_GENERAL
       return @_silverGeneralPossibleMoves position.x, position.y
+
+    if figure.type is constant.figureType.BISHOP
+      return @_bishopPossibleMoves position.x, position.y
+
+  _bishopPossibleMoves: (x, y) ->
+    ret = []
+    currentPosition = new Position x, y
+    if @board[x][y].owner is constant.owner.A
+      newPosition = new Position x+1, y+2
+      if @_figureCanMove currentPosition, newPosition
+        ret.push newPosition
+      newPosition = new Position x-1, y+2
+      if @_figureCanMove currentPosition, newPosition
+        ret.push newPosition
+    else
+      newPosition = new Position x+1, y-2
+      if @_figureCanMove currentPosition, newPosition
+        ret.push newPosition
+      newPosition = new Position x-1, y-2
+      if @_figureCanMove currentPosition, newPosition
+        ret.push newPosition
+    ret = @_figureIsOnBoard ret
+    return ret
 
   _silverGeneralPossibleMoves: (x, y) ->
     ret = []
