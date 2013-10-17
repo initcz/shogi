@@ -94,6 +94,92 @@ class ShogiGame
 
     if figure.type is constant.figureType.LANCE
       return @_lancePossibleMoves position.x, position.y
+    
+    if figure.type is constant.figureType.SILVER_GENERAL
+      return @_silverGeneralPossibleMoves position.x, position.y
+
+    if figure.type is constant.figureType.KNIGHT
+      return @_knightPossibleMoves position.x, position.y
+
+    if figure.type is constant.figureType.KING
+      return @_kingPossibleMoves position.x, position.y
+
+  _kingPossibleMoves: (x, y) ->
+    ret = []
+    currentPosition = new Position x, y
+    newPosition = new Position x+1, y
+    if @_figureCanMove currentPosition, newPosition
+      ret.push newPosition
+    newPosition = new Position x-1, y
+    if @_figureCanMove currentPosition, newPosition
+      ret.push newPosition
+    newPosition = new Position x, y+1
+    if @_figureCanMove currentPosition, newPosition
+      ret.push newPosition
+    newPosition = new Position x, y-1
+    if @_figureCanMove currentPosition, newPosition
+      ret.push newPosition
+    newPosition = new Position x+1, y+1
+    if @_figureCanMove currentPosition, newPosition
+      ret.push newPosition
+    newPosition = new Position x+1, y-1
+    if @_figureCanMove currentPosition, newPosition
+      ret.push newPosition
+    newPosition = new Position x-1, y+1
+    if @_figureCanMove currentPosition, newPosition
+      ret.push newPosition
+    newPosition = new Position x-1, y-1
+    if @_figureCanMove currentPosition, newPosition
+      ret.push newPosition
+    ret = @_figureIsOnBoard ret
+    return ret
+    
+
+  _knightPossibleMoves: (x, y) ->
+    ret = []
+    currentPosition = new Position x, y
+    if @board[x][y].owner is constant.owner.A
+      newPosition = new Position x+1, y+2
+      if @_figureCanMove currentPosition, newPosition
+        ret.push newPosition
+      newPosition = new Position x-1, y+2
+      if @_figureCanMove currentPosition, newPosition
+        ret.push newPosition
+    else
+      newPosition = new Position x+1, y-2
+      if @_figureCanMove currentPosition, newPosition
+        ret.push newPosition
+      newPosition = new Position x-1, y-2
+      if @_figureCanMove currentPosition, newPosition
+        ret.push newPosition
+    ret = @_figureIsOnBoard ret
+    return ret
+
+  _silverGeneralPossibleMoves: (x, y) ->
+    ret = []
+    currentPosition = new Position x, y
+    if @board[x][y].owner is constant.owner.A
+      newPosition = new Position x, y+1
+      if @_figureCanMove currentPosition, newPosition
+        ret.push newPosition
+    else
+      newPosition = new Position x, y-1
+      if @_figureCanMove currentPosition, newPosition
+        ret.push newPosition
+    newPosition = new Position x+1, y+1
+    if @_figureCanMove currentPosition, newPosition
+      ret.push newPosition
+    newPosition = new Position x-1, y+1
+    if @_figureCanMove currentPosition, newPosition
+      ret.push newPosition
+    newPosition = new Position x+1, y-1
+    if @_figureCanMove currentPosition, newPosition
+      ret.push newPosition
+    newPosition = new Position x-1, y-1
+    if @_figureCanMove currentPosition, newPosition
+      ret.push newPosition
+    ret = @_figureIsOnBoard ret
+    return ret
 
   _lancePossibleMoves: (x, y) ->
     ret = []
@@ -153,12 +239,12 @@ class ShogiGame
     figure = oldPosition.getFigure @board
     newFigure = newPosition.getFigure @board
     if figure.owner is constant.owner.A
-      if newFigure is null or newFigure.owner is constant.owner.B
+      if newFigure is undefined or newFigure is null or newFigure.owner is constant.owner.B
         return true
       else
         return false
     else
-      if newFigure is null or newFigure.owner is constant.owner.A
+      if newFigure is undefined or newFigure is null or newFigure.owner is constant.owner.A
         return true
       else
         return false
@@ -389,6 +475,14 @@ class ShogiGame
     #|_|_|_|_|_|_|_|_|_|
     #0,0             8,0
 
+    #undefined to null
+    `
+    for (var i=0; i<constant.misc.BOARD_SIZE; i++) {
+      for (var j=0; j<constant.misc.BOARD_SIZE; j++) {
+        this.board[i][j] = null;
+      }
+    }
+    `
     # Owner A
     @board[0][0] = @figures[0]
     @board[1][0] = @figures[1]
@@ -432,17 +526,6 @@ class ShogiGame
     @board[6][6] = @figures[37]
     @board[7][6] = @figures[38]
     @board[8][6] = @figures[39]
-
-    #undefined to null
-    `
-    for (var i=0; i<constant.misc.BOARD_SIZE; i++) {
-      for (var j=0; j<constant.misc.BOARD_SIZE; j++) {
-        if (this.board[i][j] === void 0) {
-          this.board[i][j] = null;
-        }
-      }
-    }
-    `
 
     # 'downgrade' all figures
     `
