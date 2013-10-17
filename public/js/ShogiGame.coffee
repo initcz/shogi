@@ -95,10 +95,10 @@ class ShogiGame
     if figure.type is constant.figureType.LANCE
       return @_lancePossibleMoves position.x, position.y
     
-     if figure.type is constant.figureType.BISHOP
+     if figure.type is constant.figureType.SILVER_GENERAL
       return @_bishopPossibleMoves position.x, position.y
 
-  _bishopPossibleMoves: (x, y) ->
+  _silverGeneralPossibleMoves: (x, y) ->
     ret = []
     currentPosition = new Position x, y
     if @board[x][y].owner is constant.owner.A
