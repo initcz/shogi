@@ -1,26 +1,5 @@
 /*
- * https://github.com/requirejs/example-jquery-shim
- */
-requirejs.config({
-  "baseUrl": "js/lib",
-  "paths": {
-    "app": "../app"
-  /*
-  },
-  "shim": {
-    "jquery.alpha": ["jquery"],
-    "jquery.beta": ["jquery"]
-  */
-  }
-});
-
-/*
  * see https://github.com/requirejs/require-cs
- *
- * https://github.com/jquery/jquery/blob/2.0.3/src/exports.js
- * https://github.com/umdjs/umd/blob/master/amdWeb.js
- * https://github.com/umdjs/umd
- * https://github.com/component/component
  *
  * [D3.js]
  *
@@ -38,4 +17,13 @@ requirejs.config({
  * http://simonsmith.io/using-zepto-and-jquery-with-requirejs/
  *
  */
+
+requirejs.config({
+  "baseUrl": "js/lib",
+  "paths": {
+    "jquery": "jquery-2.0.3",
+    "app": "../app"
+  }
+});
+
 require(['cs!app/csmain']);
