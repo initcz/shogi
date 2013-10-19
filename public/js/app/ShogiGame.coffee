@@ -30,44 +30,8 @@ constant =
     BOARD_SIZE: 9
 
 #
-# Figure class
-#
-class Figure
-  constructor: (@type, @owner) ->
-    @promoted = false
-
-patt = new RegExp '#?x([0-8])y([0-8])'
-parseId = (id) ->
-  result = patt.exec id
-  data =
-    x: parseInt result[1], 10
-    y: parseInt result[2], 10
-
-#
-# Position class
-#
-class Position
-    constructor: (@x, @y) ->
-      if not y? and 'string' is typeof x
-        data = parseId @x
-        @x = data.x
-        @y = data.y
-    getFigure: (board) ->
-      return board[@x][@y]
-    getSelector: (hash = true) ->
-      return Position.createSelector @x, @y, hash
-    @createSelector: (x, y, hash = true) ->
-      id = "x#{x}y#{y}"
-      if hash
-        return '#' + id
-      else
-        return id
-
-#
 # Main class
 #
-
-## TODO: mind UI and CORE separation
 
 class ShogiGame
 
@@ -591,6 +555,11 @@ class ShogiGame
   move: ->
   promote: ->
 
+factory = (Figure, Position) ->
+  console.log Figure
+  console.log Position
+  return ShogiGame
+
 #
 # AMD support
 #
@@ -598,19 +567,20 @@ class ShogiGame
 # and https://github.com/umdjs/umd/blob/master/returnExports.js
 #
 
-factory = ->
-  return ShogiGame
-
 if typeof define is 'function' and define.amd
   # AMD. Register as an anonymous module.
-  define [], factory
+  define ['cs!app/Figure', 'cs!app/Position'], factory
 else if typeof exports is 'object'
+  # using node.js modules system
+  require 'coffee-script'
+  Figure = require 'Figure'
+  Position = require 'Position'
   # Node. Does not work with strict CommonJS, but
   # only CommonJS-like enviroments that support module.exports,
   # like Node.
-  module.exports = factory()
+  module.exports = factory(Figure, Position)
 else
   # Browser globals ('this' is window)
-  this.ShogiGame = factory()
+  this.ShogiGame = factory(this.Figure, this.Position)
 
 ## End

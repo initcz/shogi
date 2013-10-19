@@ -1,20 +1,18 @@
 #
-# This class make sense only for browser
-#
-
-class ShogiGameUI
-
-  constructor: ->
-
-#
 # AMD support
 #
+# This class make sense only for browser
 # see https://github.com/umdjs/umd/blob/master/amdWeb.js
 #
 
 factory = (raphael, ShogiGame) ->
   console.log raphael
   console.log ShogiGame
+
+  class ShogiGameUI
+
+    constructor: ->
+
   return ShogiGameUI
 
 if typeof define is 'function' and define.amd
