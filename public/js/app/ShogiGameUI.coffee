@@ -5,7 +5,7 @@
 # see https://github.com/umdjs/umd/blob/master/amdWeb.js
 #
 
-factory = (ShogiGame) ->
+factory = (Position, ShogiGame) ->
 
   class ShogiGameUI
 
@@ -13,7 +13,7 @@ factory = (ShogiGame) ->
       @editorMode = false
 
       @game = new ShogiGame()
-      @game.initUI 'content'
+      @initUI 'content'
 
     initUI: (id) =>
 
@@ -26,7 +26,7 @@ factory = (ShogiGame) ->
         html += '<tr>';
         for (var x=0; x<ShogiGame.constant.misc.BOARD_SIZE; x++) {
           cellId = Position.createSelector(x, y, false);
-          figureClass = this._getClass(this.board[x][y]).join(' '); // !!!
+          figureClass = this.game._getClass(this.game.board[x][y]).join(' '); // !!!
           html += '<td id="' + cellId + '" class="' + figureClass + '"></td>';
         }
         html += '</tr>';
@@ -46,7 +46,7 @@ factory = (ShogiGame) ->
         o = e.target
         obj = $(o)
         position = new Position o.id
-        figure = position.getFigure @board
+        figure = position.getFigure @game.board
 
         same = false
         if lastPosition?
@@ -65,15 +65,15 @@ factory = (ShogiGame) ->
 
         # show possible places to move
         if figure? and not same
-          for move in @_possibleMoves position
+          for move in @game._possibleMoves position
             clazz = 'possible-move'
             obj = $(move.getSelector())
             if not obj.hasClass clazz
               obj.addClass clazz
 
         # remove highlighted possible places to move
-        if figure? and not same and lastPosition? and lastPosition.getFigure(@board)?
-          for move in @_possibleMoves lastPosition
+        if figure? and not same and lastPosition? and lastPosition.getFigure(@game.board)?
+          for move in @game._possibleMoves lastPosition
             clazz = 'possible-move'
             obj = $(move.getSelector())
             if obj.hasClass clazz
@@ -82,16 +82,16 @@ factory = (ShogiGame) ->
         # move figure
         if lastPosition? and not figure? and not same
 
-          if @editorMode or @_validMove lastPosition, position
-            @board[position.x][position.y] = lastPosition.getFigure @board
-            @board[lastPosition.x][lastPosition.y] = null
+          if @game.editorMode or @game._validMove lastPosition, position
+            @game.board[position.x][position.y] = lastPosition.getFigure @game.board
+            @game.board[lastPosition.x][lastPosition.y] = null
 
             # TODO - 1: redraw only one figure, not whole board
             # TODO - 2: separate UI from core
             @redrawUI() # XXX
 
           else
-            for move in @_possibleMoves lastPosition
+            for move in @game._possibleMoves lastPosition
               clazz = 'possible-move'
               obj = $(move.getSelector())
               if obj.hasClass clazz
@@ -114,9 +114,9 @@ factory = (ShogiGame) ->
           cell = $(Position.createSelector(x, y));
           cell.removeClass();
           if (putFigures) {
-            figure = this.board[x][y];
+            figure = this.game.board[x][y];
             if (figure != null) {
-              cell.addClass(this._getClass(figure).join(' '));
+              cell.addClass(this.game._getClass(figure).join(' '));
             }
           }
         }
@@ -130,9 +130,9 @@ factory = (ShogiGame) ->
 
 if typeof define is 'function' and define.amd
   # AMD. Register as an anonymous module.
-  define ['cs!app/ShogiGame'], factory
+  define ['cs!app/Position','cs!app/ShogiGame'], factory
 else
   # Browser globals ('this' is window)
-  this.ShogiGameUI = factory(this.ShogiGame)
+  this.ShogiGameUI = factory(this.Position, this.ShogiGame)
 
 ## End
