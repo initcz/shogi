@@ -13,7 +13,6 @@ factory = (Figure, Position, $) ->
 
     # TODO: pedy - finish this, pls
     _possibleMoves: (position) ->
-      ret = []
       figure = position.getFigure @board
 
       if figure is undefined
@@ -52,6 +51,8 @@ factory = (Figure, Position, $) ->
 
       if figure.type is ShogiGame.constant.figureType.GOLDEN_GENERAL
         return @_goldenGeneralPossibleMoves position.x, position.y
+
+      return []
 
     _goldenGeneralPossibleMoves: (x, y) ->
       ret = []
