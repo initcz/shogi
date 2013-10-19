@@ -4,38 +4,6 @@
 
 factory = (Figure, Position) ->
 
-  #
-  # defining constants
-  #
-
-  constant =
-
-    # RPC constants
-    action:
-      RESET:   0
-      MOVE:    1
-      PROMOTE: 2
-
-    figureType:
-      KING: 0
-      GOLDEN_GENERAL: 1
-      SILVER_GENERAL: 2
-      BISHOP: 3 # (shooter)
-      ROOK: 4
-      LANCE: 5 # warrior with spear
-      KNIGHT: 6
-      PAWN: 7
-
-    figureNames: ['king', 'golden_general', 'silver_general', 'bishop', 'rook', 'lance', 'knight', 'pawn']
-
-    owner:
-      A: 0
-      B: 1
-
-    misc:
-      BOARD_SIZE: 9
-
-
   class ShogiGame
 
     constructor: ->
@@ -56,40 +24,40 @@ factory = (Figure, Position) ->
         console.log 'calling possibleMoves with position without figure' # XXX
         return []
 
-      if figure.type is constant.figureType.PAWN
+      if figure.type is ShogiGame.constant.figureType.PAWN
         if figure.promoted
           return @_goldenGeneralPossibleMoves position.x, position.y
         else
          return @_pawnPossibleMoves position.x, position.y
 
-      if figure.type is constant.figureType.LANCE
+      if figure.type is ShogiGame.constant.figureType.LANCE
         if figure.promoted
           return @_goldenGeneralPossibleMoves position.x, position.y
         else
           return @_lancePossibleMoves position.x, position.y
       
-      if figure.type is constant.figureType.SILVER_GENERAL
+      if figure.type is ShogiGame.constant.figureType.SILVER_GENERAL
         if figure.promoted
           return @_goldenGeneralPossibleMoves position.x, position.y
         else
           return @_silverGeneralPossibleMoves position.x, position.y
 
-      if figure.type is constant.figureType.KNIGHT
+      if figure.type is ShogiGame.constant.figureType.KNIGHT
         if figure.promoted
           return @_goldenGeneralPossibleMoves position.x, position.y
         else
           return @_knightPossibleMoves position.x, position.y
 
-      if figure.type is constant.figureType.KING
+      if figure.type is ShogiGame.constant.figureType.KING
         return @_kingPossibleMoves position.x, position.y
 
-      if figure.type is constant.figureType.GOLDEN_GENERAL
+      if figure.type is ShogiGame.constant.figureType.GOLDEN_GENERAL
         return @_goldenGeneralPossibleMoves position.x, position.y
 
     _goldenGeneralPossibleMoves: (x, y) ->
       ret = []
       currentPosition = new Position x, y
-      if @board[x][y].owner is constant.owner.A
+      if @board[x][y].owner is ShogiGame.constant.owner.A
         newPosition = new Position x+1, y+1
         if @_figureCanMove currentPosition, newPosition
           ret.push newPosition
@@ -152,7 +120,7 @@ factory = (Figure, Position) ->
     _knightPossibleMoves: (x, y) ->
       ret = []
       currentPosition = new Position x, y
-      if @board[x][y].owner is constant.owner.A
+      if @board[x][y].owner is ShogiGame.constant.owner.A
         newPosition = new Position x+1, y+2
         if @_figureCanMove currentPosition, newPosition
           ret.push newPosition
@@ -172,7 +140,7 @@ factory = (Figure, Position) ->
     _silverGeneralPossibleMoves: (x, y) ->
       ret = []
       currentPosition = new Position x, y
-      if @board[x][y].owner is constant.owner.A
+      if @board[x][y].owner is ShogiGame.constant.owner.A
         newPosition = new Position x, y+1
         if @_figureCanMove currentPosition, newPosition
           ret.push newPosition
@@ -198,7 +166,7 @@ factory = (Figure, Position) ->
     _lancePossibleMoves: (x, y) ->
       ret = []
       currentPosition = new Position x, y
-      if @board[x][y].owner is constant.owner.A
+      if @board[x][y].owner is ShogiGame.constant.owner.A
         `
         for(var i=y;i<8;i++){
           newPosition = new Position(x, i+1);
@@ -206,7 +174,7 @@ factory = (Figure, Position) ->
             figure = newPosition.getFigure(this.board);
             ret.push(newPosition);
             if(figure !== null){
-              if(figure.owner === constant.owner.B){
+              if(figure.owner === ShogiGame.constant.owner.B){
                 break;
               }
             }
@@ -223,7 +191,7 @@ factory = (Figure, Position) ->
             figure = newPosition.getFigure(this.board);
             ret.push(newPosition);
             if(figure !== null){
-              if(figure.owner === constant.owner.A){
+              if(figure.owner === ShogiGame.constant.owner.A){
                 break;
               }
             }
@@ -238,7 +206,7 @@ factory = (Figure, Position) ->
     _pawnPossibleMoves: (x, y) ->
       ret = []
       currentPosition = new Position x, y
-      if @board[x][y].owner is constant.owner.A
+      if @board[x][y].owner is ShogiGame.constant.owner.A
         newPosition = new Position x, y+1
         if @_figureCanMove currentPosition, newPosition
           ret.push newPosition
@@ -252,13 +220,13 @@ factory = (Figure, Position) ->
     _figureCanMove: (oldPosition, newPosition) ->
       figure = oldPosition.getFigure @board
       newFigure = newPosition.getFigure @board
-      if figure.owner is constant.owner.A
-        if newFigure is undefined or newFigure is null or newFigure.owner is constant.owner.B
+      if figure.owner is ShogiGame.constant.owner.A
+        if newFigure is undefined or newFigure is null or newFigure.owner is ShogiGame.constant.owner.B
           return true
         else
           return false
       else
-        if newFigure is undefined or newFigure is null or newFigure.owner is constant.owner.A
+        if newFigure is undefined or newFigure is null or newFigure.owner is ShogiGame.constant.owner.A
           return true
         else
           return false
@@ -278,8 +246,8 @@ factory = (Figure, Position) ->
       result = []
 
       if figure?
-        result.push(if figure.owner is constant.owner.A then 'player-a' else 'player-b')
-        result.push(constant.figureNames[figure.type]);
+        result.push(if figure.owner is ShogiGame.constant.owner.A then 'player-a' else 'player-b')
+        result.push(ShogiGame.constant.figureNames[figure.type]);
 
       return result
 
@@ -306,9 +274,9 @@ factory = (Figure, Position) ->
       figureClass = ''
 
       `
-      for (var y=(constant.misc.BOARD_SIZE-1); y>=0; y--) {
+      for (var y=(ShogiGame.constant.misc.BOARD_SIZE-1); y>=0; y--) {
         html += '<tr>';
-        for (var x=0; x<constant.misc.BOARD_SIZE; x++) {
+        for (var x=0; x<ShogiGame.constant.misc.BOARD_SIZE; x++) {
           cellId = Position.createSelector(x, y, false);
           figureClass = this._getClass(this.board[x][y]).join(' '); // !!!
           html += '<td id="' + cellId + '" class="' + figureClass + '"></td>';
@@ -393,8 +361,8 @@ factory = (Figure, Position) ->
       figure = null
 
       `
-      for (var x=0; x<constant.misc.BOARD_SIZE; x++) {
-        for (var y=0; y<constant.misc.BOARD_SIZE; y++) {
+      for (var x=0; x<ShogiGame.constant.misc.BOARD_SIZE; x++) {
+        for (var y=0; y<ShogiGame.constant.misc.BOARD_SIZE; y++) {
           cell = $(Position.createSelector(x, y));
           cell.removeClass();
           if (putFigures) {
@@ -415,48 +383,48 @@ factory = (Figure, Position) ->
       @figures = []
 
       # Figures for owner A
-      @figures[0] = new Figure constant.figureType.LANCE, constant.owner.A
-      @figures[1] = new Figure constant.figureType.KNIGHT, constant.owner.A
-      @figures[2] = new Figure constant.figureType.SILVER_GENERAL, constant.owner.A
-      @figures[3] = new Figure constant.figureType.GOLDEN_GENERAL, constant.owner.A
-      @figures[4] = new Figure constant.figureType.KING, constant.owner.A
-      @figures[5] = new Figure constant.figureType.GOLDEN_GENERAL, constant.owner.A
-      @figures[6] = new Figure constant.figureType.SILVER_GENERAL, constant.owner.A
-      @figures[7] = new Figure constant.figureType.KNIGHT, constant.owner.A
-      @figures[8] = new Figure constant.figureType.LANCE, constant.owner.A
-      @figures[9] = new Figure constant.figureType.BISHOP, constant.owner.A
-      @figures[10] = new Figure constant.figureType.ROOK, constant.owner.A
-      @figures[11] = new Figure constant.figureType.PAWN, constant.owner.A
-      @figures[12] = new Figure constant.figureType.PAWN, constant.owner.A
-      @figures[13] = new Figure constant.figureType.PAWN, constant.owner.A
-      @figures[14] = new Figure constant.figureType.PAWN, constant.owner.A
-      @figures[15] = new Figure constant.figureType.PAWN, constant.owner.A
-      @figures[16] = new Figure constant.figureType.PAWN, constant.owner.A
-      @figures[17] = new Figure constant.figureType.PAWN, constant.owner.A
-      @figures[18] = new Figure constant.figureType.PAWN, constant.owner.A
-      @figures[19] = new Figure constant.figureType.PAWN, constant.owner.A
+      @figures[0] = new Figure ShogiGame.constant.figureType.LANCE, ShogiGame.constant.owner.A
+      @figures[1] = new Figure ShogiGame.constant.figureType.KNIGHT, ShogiGame.constant.owner.A
+      @figures[2] = new Figure ShogiGame.constant.figureType.SILVER_GENERAL, ShogiGame.constant.owner.A
+      @figures[3] = new Figure ShogiGame.constant.figureType.GOLDEN_GENERAL, ShogiGame.constant.owner.A
+      @figures[4] = new Figure ShogiGame.constant.figureType.KING, ShogiGame.constant.owner.A
+      @figures[5] = new Figure ShogiGame.constant.figureType.GOLDEN_GENERAL, ShogiGame.constant.owner.A
+      @figures[6] = new Figure ShogiGame.constant.figureType.SILVER_GENERAL, ShogiGame.constant.owner.A
+      @figures[7] = new Figure ShogiGame.constant.figureType.KNIGHT, ShogiGame.constant.owner.A
+      @figures[8] = new Figure ShogiGame.constant.figureType.LANCE, ShogiGame.constant.owner.A
+      @figures[9] = new Figure ShogiGame.constant.figureType.BISHOP, ShogiGame.constant.owner.A
+      @figures[10] = new Figure ShogiGame.constant.figureType.ROOK, ShogiGame.constant.owner.A
+      @figures[11] = new Figure ShogiGame.constant.figureType.PAWN, ShogiGame.constant.owner.A
+      @figures[12] = new Figure ShogiGame.constant.figureType.PAWN, ShogiGame.constant.owner.A
+      @figures[13] = new Figure ShogiGame.constant.figureType.PAWN, ShogiGame.constant.owner.A
+      @figures[14] = new Figure ShogiGame.constant.figureType.PAWN, ShogiGame.constant.owner.A
+      @figures[15] = new Figure ShogiGame.constant.figureType.PAWN, ShogiGame.constant.owner.A
+      @figures[16] = new Figure ShogiGame.constant.figureType.PAWN, ShogiGame.constant.owner.A
+      @figures[17] = new Figure ShogiGame.constant.figureType.PAWN, ShogiGame.constant.owner.A
+      @figures[18] = new Figure ShogiGame.constant.figureType.PAWN, ShogiGame.constant.owner.A
+      @figures[19] = new Figure ShogiGame.constant.figureType.PAWN, ShogiGame.constant.owner.A
 
       # Figures for owner B
-      @figures[20] = new Figure constant.figureType.LANCE, constant.owner.B
-      @figures[21] = new Figure constant.figureType.KNIGHT, constant.owner.B
-      @figures[22] = new Figure constant.figureType.SILVER_GENERAL, constant.owner.B
-      @figures[23] = new Figure constant.figureType.GOLDEN_GENERAL, constant.owner.B
-      @figures[24] = new Figure constant.figureType.KING, constant.owner.B
-      @figures[25] = new Figure constant.figureType.GOLDEN_GENERAL, constant.owner.B
-      @figures[26] = new Figure constant.figureType.SILVER_GENERAL, constant.owner.B
-      @figures[27] = new Figure constant.figureType.KNIGHT, constant.owner.B
-      @figures[28] = new Figure constant.figureType.LANCE, constant.owner.B
-      @figures[29] = new Figure constant.figureType.BISHOP, constant.owner.B
-      @figures[30] = new Figure constant.figureType.ROOK, constant.owner.B
-      @figures[31] = new Figure constant.figureType.PAWN, constant.owner.B
-      @figures[32] = new Figure constant.figureType.PAWN, constant.owner.B
-      @figures[33] = new Figure constant.figureType.PAWN, constant.owner.B
-      @figures[34] = new Figure constant.figureType.PAWN, constant.owner.B
-      @figures[35] = new Figure constant.figureType.PAWN, constant.owner.B
-      @figures[36] = new Figure constant.figureType.PAWN, constant.owner.B
-      @figures[37] = new Figure constant.figureType.PAWN, constant.owner.B
-      @figures[38] = new Figure constant.figureType.PAWN, constant.owner.B
-      @figures[39] = new Figure constant.figureType.PAWN, constant.owner.B
+      @figures[20] = new Figure ShogiGame.constant.figureType.LANCE, ShogiGame.constant.owner.B
+      @figures[21] = new Figure ShogiGame.constant.figureType.KNIGHT, ShogiGame.constant.owner.B
+      @figures[22] = new Figure ShogiGame.constant.figureType.SILVER_GENERAL, ShogiGame.constant.owner.B
+      @figures[23] = new Figure ShogiGame.constant.figureType.GOLDEN_GENERAL, ShogiGame.constant.owner.B
+      @figures[24] = new Figure ShogiGame.constant.figureType.KING, ShogiGame.constant.owner.B
+      @figures[25] = new Figure ShogiGame.constant.figureType.GOLDEN_GENERAL, ShogiGame.constant.owner.B
+      @figures[26] = new Figure ShogiGame.constant.figureType.SILVER_GENERAL, ShogiGame.constant.owner.B
+      @figures[27] = new Figure ShogiGame.constant.figureType.KNIGHT, ShogiGame.constant.owner.B
+      @figures[28] = new Figure ShogiGame.constant.figureType.LANCE, ShogiGame.constant.owner.B
+      @figures[29] = new Figure ShogiGame.constant.figureType.BISHOP, ShogiGame.constant.owner.B
+      @figures[30] = new Figure ShogiGame.constant.figureType.ROOK, ShogiGame.constant.owner.B
+      @figures[31] = new Figure ShogiGame.constant.figureType.PAWN, ShogiGame.constant.owner.B
+      @figures[32] = new Figure ShogiGame.constant.figureType.PAWN, ShogiGame.constant.owner.B
+      @figures[33] = new Figure ShogiGame.constant.figureType.PAWN, ShogiGame.constant.owner.B
+      @figures[34] = new Figure ShogiGame.constant.figureType.PAWN, ShogiGame.constant.owner.B
+      @figures[35] = new Figure ShogiGame.constant.figureType.PAWN, ShogiGame.constant.owner.B
+      @figures[36] = new Figure ShogiGame.constant.figureType.PAWN, ShogiGame.constant.owner.B
+      @figures[37] = new Figure ShogiGame.constant.figureType.PAWN, ShogiGame.constant.owner.B
+      @figures[38] = new Figure ShogiGame.constant.figureType.PAWN, ShogiGame.constant.owner.B
+      @figures[39] = new Figure ShogiGame.constant.figureType.PAWN, ShogiGame.constant.owner.B
 
     resetBoard: (putFigures = true) ->
 
@@ -464,15 +432,15 @@ factory = (Figure, Position) ->
       @board = []
 
       `
-      for(var i=0; i<constant.misc.BOARD_SIZE; i++){
+      for(var i=0; i<ShogiGame.constant.misc.BOARD_SIZE; i++){
        this.board[i] = [];
       }
       `
 
       delete @offside
       @offside = []
-      @offside[constant.owner.A] = []
-      @offside[constant.owner.B] = []
+      @offside[ShogiGame.constant.owner.A] = []
+      @offside[ShogiGame.constant.owner.B] = []
 
       return if not putFigures
 
@@ -491,8 +459,8 @@ factory = (Figure, Position) ->
 
       #undefined to null
       `
-      for (var i=0; i<constant.misc.BOARD_SIZE; i++) {
-        for (var j=0; j<constant.misc.BOARD_SIZE; j++) {
+      for (var i=0; i<ShogiGame.constant.misc.BOARD_SIZE; i++) {
+        for (var j=0; j<ShogiGame.constant.misc.BOARD_SIZE; j++) {
           this.board[i][j] = null;
         }
       }
@@ -543,8 +511,8 @@ factory = (Figure, Position) ->
 
       # 'downgrade' all figures
       `
-      for (var i=0; i<constant.misc.BOARD_SIZE; i++) {
-        for (var j=0; j<constant.misc.BOARD_SIZE; j++) {
+      for (var i=0; i<ShogiGame.constant.misc.BOARD_SIZE; i++) {
+        for (var j=0; j<ShogiGame.constant.misc.BOARD_SIZE; j++) {
           if (this.board[i][j] != null) {
             this.board[i][j].promoted = false
           }
@@ -557,6 +525,34 @@ factory = (Figure, Position) ->
 
     move: ->
     promote: ->
+
+    # defining constants only accessible from ShogiGame class ("static")
+    @constant:
+
+      # RPC constants
+      action:
+        RESET:   0
+        MOVE:    1
+        PROMOTE: 2
+
+      figureType:
+        KING: 0
+        GOLDEN_GENERAL: 1
+        SILVER_GENERAL: 2
+        BISHOP: 3 # (shooter)
+        ROOK: 4
+        LANCE: 5 # warrior with spear
+        KNIGHT: 6
+        PAWN: 7
+
+      figureNames: ['king', 'golden_general', 'silver_general', 'bishop', 'rook', 'lance', 'knight', 'pawn']
+
+      owner:
+        A: 0
+        B: 1
+
+      misc:
+        BOARD_SIZE: 9
 
   return ShogiGame
 
