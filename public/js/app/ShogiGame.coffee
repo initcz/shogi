@@ -11,7 +11,6 @@ factory = (Figure, Position, $) ->
       @resetBoard()
       # TODO: init communication
 
-    # TODO: pedy - finish this, pls
     _possibleMoves: (position) ->
       figure = position.getFigure @board
 
@@ -51,6 +50,9 @@ factory = (Figure, Position, $) ->
 
       if figure.type is ShogiGame.constant.figureType.GOLDEN_GENERAL
         return @_goldenGeneralPossibleMoves position.x, position.y
+
+      if figure.type is ShogiGame.constant.figureType.ROOK
+        return @_rookPossibleMoves position.x, position.y
 
       return []
 
@@ -216,19 +218,60 @@ factory = (Figure, Position, $) ->
       ret = @_figureIsOnBoard ret
       return ret
 
+    _rookPossibleMoves: (x, y) =>
+      ret = []
+      i = null
+
+      oldPosition = new Position x, y
+      helper = (x, y) =>
+        newPosition = new Position x, y
+        if @_figureCanMove oldPosition, newPosition
+          ret.push newPosition
+          if newPosition.getFigure(@board) is null
+            return true
+          else
+            return false
+        else
+          return false
+
+      `
+      for (i=(x-1); i>=0; i--) {
+        if (!helper(i, y)) {
+          break;
+        }
+      }
+      for (i=(x+1); i<ShogiGame.constant.misc.BOARD_SIZE; i++) {
+        if (!helper(i, y)) {
+          break;
+        }
+      }
+      for (i=(y-1); i>=0; i--) {
+        if (!helper(x, i)) {
+          break;
+        }
+      }
+      for (i=(y+1); i<ShogiGame.constant.misc.BOARD_SIZE; i++) {
+        if (!helper(x, i)) {
+          break;
+        }
+      }
+      `
+      return ret
+
     _figureCanMove: (oldPosition, newPosition) ->
       figure = oldPosition.getFigure @board
+
+      if figure is null
+        throw new Error "old position is empty"
+
       newFigure = newPosition.getFigure @board
-      if figure.owner is ShogiGame.constant.owner.A
-        if newFigure is undefined or newFigure is null or newFigure.owner is ShogiGame.constant.owner.B
-          return true
-        else
-          return false
+      if newFigure is null
+        return true
+
+      if figure.owner isnt newFigure.owner
+        return true
       else
-        if newFigure is undefined or newFigure is null or newFigure.owner is ShogiGame.constant.owner.A
-          return true
-        else
-          return false
+        return false
 
     _figureIsOnBoard: (moves) ->
       ret = []
