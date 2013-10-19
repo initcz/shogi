@@ -11,7 +11,7 @@ factory = (raphael, ShogiGame) ->
 
     constructor: ->
       @game = new ShogiGame()
-      @game.initUI()
+      @game.initUI 'content'
 
   return ShogiGameUI
 

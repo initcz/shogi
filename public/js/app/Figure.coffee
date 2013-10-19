@@ -5,13 +5,6 @@ class Figure
   constructor: (@type, @owner) ->
     @promoted = false
 
-patt = new RegExp '#?x([0-8])y([0-8])'
-parseId = (id) ->
-  result = patt.exec id
-  data =
-    x: parseInt result[1], 10
-    y: parseInt result[2], 10
-
 factory = ->
   return Figure
 
