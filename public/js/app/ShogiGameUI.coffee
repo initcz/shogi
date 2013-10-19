@@ -65,11 +65,8 @@ factory = (Position, ShogiGame) ->
 
         # remove highlighted possible places to move
         if figure? and not same and lastPosition? and lastPosition.getFigure(@game.board)?
-          for move in @game._possibleMoves lastPosition
-            clazz = 'possible-move'
-            obj = $(move.getSelector())
-            if obj.hasClass clazz
-              obj.removeClass clazz
+          clazz = 'possible-move'
+          $("td.#{clazz}").removeClass(clazz)
 
         # show possible places to move
         if figure? and not same
