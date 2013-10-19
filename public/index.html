@@ -23,29 +23,5 @@
     <div id="bottom" class="row off-board">
     </div>
   </div><!-- end container -->
-
-  <script type="text/javascript" src="/js/lib/zepto.js"></script>
-  <script type="text/javascript">
-    // http://stackoverflow.com/questions/16160755/using-bootstrap-with-zepto-undefined-is-not-a-function
-    if(!window.jQuery)
-    {
-      //Zepto.browser = {webkit: true}
-      window.jQuery = Zepto
-    }
-  </script>
-  <script src="js/bootstrap.min.js"></script>
-
-  <script type="text/coffeescript" src="/js/ShogiGame.coffee"></script>
-
-  <script type="text/coffeescript">
-    $(->
-      shogi = new ShogiGame()
-      shogi.initUI 'content'
-      window.shogi = shogi # FIXME !!!
-    )
-  </script>
-
-  <!-- this must be after all coffeescript definitions //-->
-  <script type="text/javascript" src="/js/lib/coffee-script.js"></script>
 </body>
 </html>

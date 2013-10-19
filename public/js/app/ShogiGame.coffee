@@ -591,6 +591,26 @@ class ShogiGame
   move: ->
   promote: ->
 
-## FIXME !!!
-if window?
-  window.ShogiGame = ShogiGame
+#
+# AMD support
+#
+# see https://github.com/umdjs/umd/blob/master/nodeAdapter.js
+# and https://github.com/umdjs/umd/blob/master/returnExports.js
+#
+
+factory = ->
+  return new ShogiGame()
+
+if typeof define is 'function' and define.amd
+  # AMD. Register as an anonymous module.
+  define [], factory
+else if typeof exports is 'object'
+  # Node. Does not work with strict CommonJS, but
+  # only CommonJS-like enviroments that support module.exports,
+  # like Node.
+  module.exports = factory
+else
+  # Browser globals ('this' is window)
+  this.ShogiGame = factory
+
+## End
