@@ -599,7 +599,7 @@ class ShogiGame
 #
 
 factory = ->
-  return new ShogiGame()
+  return ShogiGame
 
 if typeof define is 'function' and define.amd
   # AMD. Register as an anonymous module.
@@ -608,9 +608,9 @@ else if typeof exports is 'object'
   # Node. Does not work with strict CommonJS, but
   # only CommonJS-like enviroments that support module.exports,
   # like Node.
-  module.exports = factory
+  module.exports = factory()
 else
   # Browser globals ('this' is window)
-  this.ShogiGame = factory
+  this.ShogiGame = factory()
 
 ## End

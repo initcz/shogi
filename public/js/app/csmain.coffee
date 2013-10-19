@@ -1,8 +1,6 @@
 define [
-  'raphael',
-  'cs!app/ShogiGame'
-], (raphael, shogi) ->
-  console.log 'hello AMD world!'
-  console.log raphael
-  console.log shogi
-  shogi.initUI()
+  'cs!app/ShogiGameUI'
+], (ShogiGameUI) ->
+  console.log ShogiGameUI
+  game = new ShogiGameUI()
+  console.log game
