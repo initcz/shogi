@@ -573,8 +573,8 @@ if typeof define is 'function' and define.amd
 else if typeof exports is 'object'
   # using node.js modules system
   require 'coffee-script'
-  Figure = require 'Figure'
-  Position = require 'Position'
+  Figure = require __dirname + '/Figure'
+  Position = require __dirname + '/Position'
   # Node. Does not work with strict CommonJS, but
   # only CommonJS-like enviroments that support module.exports,
   # like Node.
