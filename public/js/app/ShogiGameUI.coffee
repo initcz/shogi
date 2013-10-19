@@ -6,12 +6,12 @@
 #
 
 factory = (raphael, ShogiGame) ->
-  console.log raphael
-  console.log ShogiGame
 
   class ShogiGameUI
 
     constructor: ->
+      @game = new ShogiGame()
+      @game.initUI()
 
   return ShogiGameUI
 
