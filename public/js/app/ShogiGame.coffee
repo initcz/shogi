@@ -4,8 +4,6 @@
 
 factory = (Figure, Position, $) ->
 
-  console.log $ # XXX
-
   class ShogiGame
 
     constructor: ->

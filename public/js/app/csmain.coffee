@@ -1,4 +1,5 @@
 define [
   'cs!app/ShogiGameUI'
 ], (ShogiGameUI) ->
-  new ShogiGameUI()
+  ui = new ShogiGameUI()
+  this.shogi = ui.game
