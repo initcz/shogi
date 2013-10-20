@@ -477,7 +477,8 @@ factory = (Figure, Position, $) ->
         moveOk = true
 
       else
-        moveOk = @_validMove oldPosition, newPosition
+        moveOk = oldPosition.getFigure(@board).owner is @currentUser
+        moveOk = @_validMove oldPosition, newPosition if moveOk
 
       if moveOk
         @board[newPosition.x][newPosition.y] = oldPosition.getFigure @board
@@ -498,6 +499,11 @@ factory = (Figure, Position, $) ->
         data: data
 
       @_throw 'move', data
+
+      if @currentUser is ShogiGame.constant.owner.A
+        @currentUser = ShogiGame.constant.owner.B
+      else
+        @currentUser = ShogiGame.constant.owner.A
 
       return true
 

@@ -42,6 +42,9 @@ factory = (PositionUI, ShogiGame) ->
         position = new PositionUI o.id
         figure = position.getFigure @game.board
 
+        # who's turn it is?
+        return if figure isnt null and figure.owner isnt @game.currentUser
+
         if lastPosition?
           same = position.equalsTo lastPosition
         else
