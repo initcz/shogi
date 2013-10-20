@@ -43,7 +43,7 @@ factory = (PositionUI, ShogiGame) ->
         figure = position.getFigure @game.board
 
         # who's turn it is?
-        return if figure isnt null and figure.owner isnt @game.currentUser
+        return if figure isnt null and figure.owner isnt @game.currentUser and lastPosition is null
 
         if lastPosition?
           same = position.equalsTo lastPosition
@@ -76,7 +76,7 @@ factory = (PositionUI, ShogiGame) ->
               obj.addClass clazz
 
         # move figure
-        if lastPosition? and not figure? and not same
+        if lastPosition? and not same
 
           moveOk = @game.move lastPosition, position, @editorMode
           if moveOk

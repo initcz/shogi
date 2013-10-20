@@ -341,8 +341,7 @@ factory = (Figure, Position, $) ->
 
       # can't take own figure
       newFigure = newPosition.getFigure @board
-      if valid and oldFigure? and newFigure? and oldFigure.owner is newFigure.owner
-        valid = false
+      valid = false if valid and oldFigure? and newFigure? and oldFigure.owner is newFigure.owner
 
       return valid
 
@@ -481,6 +480,17 @@ factory = (Figure, Position, $) ->
         moveOk = @_validMove oldPosition, newPosition if moveOk
 
       if moveOk
+
+        enemyFigure = newPosition.getFigure @board
+        if enemyFigure isnt null
+          enemyFigure.owner = @currentUser
+          @offside[@currentUser].push enemyFigure
+          data =
+            x: newPosition.x
+            y: newPosition.y
+            type: enemyFigure.type
+          @_throw 'taken', data
+
         @board[newPosition.x][newPosition.y] = oldPosition.getFigure @board
         @board[oldPosition.x][oldPosition.y] = null
       else
