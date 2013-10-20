@@ -12,7 +12,11 @@ factory = (PositionUI, ShogiGame) ->
     constructor: ->
       @editorMode = false
 
+      listener = (event, data) ->
+        console.log event, data # XXX
+
       @game = new ShogiGame()
+      @game.addListener listener
       @initUI 'content'
 
     initUI: (id) =>
@@ -26,8 +30,6 @@ factory = (PositionUI, ShogiGame) ->
           html += '<td id="' + position.getSelector(false) + '" class="' + figureClass + '"></td>'
         html += '</tr>'
       html += '</table>'
-
-      # TODO: add dependency to zepto/jquery
 
       obj = $('#' + id)
       obj.append html
@@ -73,9 +75,8 @@ factory = (PositionUI, ShogiGame) ->
         # move figure
         if lastPosition? and not figure? and not same
 
-          if @game.editorMode or @game._validMove lastPosition, position
-            @game.board[position.x][position.y] = lastPosition.getFigure @game.board
-            @game.board[lastPosition.x][lastPosition.y] = null
+          moveOk = @game.move lastPosition, position, @editorMode
+          if moveOk
 
             # TODO - 1: redraw only one figure, not whole board
             # TODO - 2: separate UI from core

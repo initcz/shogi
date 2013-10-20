@@ -10,7 +10,16 @@ factory = (Figure, Position, $) ->
       @currentUser = ShogiGame.constant.owner.A
       @initFigures()
       @resetBoard()
+      @_listeners = []
+      @_moveHistory = []
       # TODO: init communication
+
+    addListener: (listener) ->
+      if typeof listener isnt 'function'
+        throw new Error 'not a function'
+      @_listeners.push listener
+
+    _throw: (event, data) -> handle event, data for handle in @_listeners
 
     _possibleMoves: (position) ->
       figure = position.getFigure @board
@@ -313,7 +322,18 @@ factory = (Figure, Position, $) ->
 
       return result
 
+    _inSpace: (position) ->
+      return false if position.x < 0 or position.x >= ShogiGame.constant.misc.BOARD_SIZE
+      return false if position.y < 0 or position.y >= ShogiGame.constant.misc.BOARD_SIZE
+      return true
+
     _validMove: (oldPosition, newPosition) ->
+
+      if not @_inSpace oldPosition
+        throw new Error 'oldPosition not whithin space'
+
+      if not @_inSpace newPosition
+        throw new Error 'oldPosition not whithin space'
 
       valid = false
       for position in @_possibleMoves oldPosition
@@ -433,8 +453,56 @@ factory = (Figure, Position, $) ->
         for j in [0...boardSize]
           this.board[i][j]?.promoted = false
 
-    move: ->
+    move: (oldPosition, newPosition, editorMode = false) ->
+
+      if editorMode
+        if not @_inSpace oldPosition
+          msg = 'oldPosition not whithin space'
+          console.log msg # XXX
+          moveOk = false
+          #throw new Error msg
+
+        if not @_inSpace newPosition
+          msg = 'oldPosition not whithin space'
+          console.log msg # XXX
+          moveOk = false
+          #throw new Error msg
+
+        if newPosition.getFigure(@board) isnt null
+          msg = 'can\'t move where is figure already'
+          console.log msg # XXX
+          moveOk = false
+          #throw new Error msg
+
+        moveOk = true
+
+      else
+        moveOk = @_validMove oldPosition, newPosition
+
+      if moveOk
+        @board[newPosition.x][newPosition.y] = oldPosition.getFigure @board
+        @board[oldPosition.x][oldPosition.y] = null
+      else
+        return false
+
+      data =
+        srcX: oldPosition.x
+        srcY: oldPosition.y
+        dstX: newPosition.x
+        dstY: newPosition.y
+
+      data.editorMode = true if @editorMode is true
+
+      @_moveHistory.push
+        action: 'move'
+        data: data
+
+      @_throw 'move', data
+
+      return true
+
     promote: ->
+      # requires history of moves
 
     # defining constants only accessible from ShogiGame class ("static")
     @constant:
