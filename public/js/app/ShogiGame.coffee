@@ -7,6 +7,7 @@ factory = (Figure, Position, $) ->
   class ShogiGame
 
     constructor: ->
+      @currentUser = ShogiGame.constant.owner.A
       @initFigures()
       @resetBoard()
       # TODO: init communication
