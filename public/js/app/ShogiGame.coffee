@@ -21,41 +21,35 @@ factory = (Figure, Position, $) ->
         console.log 'calling possibleMoves with position without figure' # XXX
         return []
 
-      if figure.type is ShogiGame.constant.figureType.PAWN
-        if figure.promoted
+      switch figure.type
+        when ShogiGame.constant.figureType.PAWN
+          if figure.promoted
+            return @_goldenGeneralPossibleMoves position.x, position.y
+          else
+            return @_pawnPossibleMoves position.x, position.y
+        when ShogiGame.constant.figureType.LANCE
+          if figure.promoted
+            return @_goldenGeneralPossibleMoves position.x, position.y
+          else
+            return @_lancePossibleMoves position.x, position.y
+        when ShogiGame.constant.figureType.SILVER_GENERAL
+          if figure.promoted
+            return @_goldenGeneralPossibleMoves position.x, position.y
+          else
+            return @_silverGeneralPossibleMoves position.x, position.y
+        when ShogiGame.constant.figureType.KNIGHT
+          if figure.promoted
+            return @_goldenGeneralPossibleMoves position.x, position.y
+          else
+            return @_knightPossibleMoves position.x, position.y
+        when ShogiGame.constant.figureType.KING
+          return @_kingPossibleMoves position.x, position.y
+        when ShogiGame.constant.figureType.GOLDEN_GENERAL
           return @_goldenGeneralPossibleMoves position.x, position.y
-        else
-         return @_pawnPossibleMoves position.x, position.y
-
-      if figure.type is ShogiGame.constant.figureType.LANCE
-        if figure.promoted
-          return @_goldenGeneralPossibleMoves position.x, position.y
-        else
-          return @_lancePossibleMoves position.x, position.y
-
-      if figure.type is ShogiGame.constant.figureType.SILVER_GENERAL
-        if figure.promoted
-          return @_goldenGeneralPossibleMoves position.x, position.y
-        else
-          return @_silverGeneralPossibleMoves position.x, position.y
-
-      if figure.type is ShogiGame.constant.figureType.KNIGHT
-        if figure.promoted
-          return @_goldenGeneralPossibleMoves position.x, position.y
-        else
-          return @_knightPossibleMoves position.x, position.y
-
-      if figure.type is ShogiGame.constant.figureType.KING
-        return @_kingPossibleMoves position.x, position.y
-
-      if figure.type is ShogiGame.constant.figureType.GOLDEN_GENERAL
-        return @_goldenGeneralPossibleMoves position.x, position.y
-
-      if figure.type is ShogiGame.constant.figureType.ROOK
-        return @_rookPossibleMoves position.x, position.y
-
-      if figure.type is ShogiGame.constant.figureType.BISHOP
-        return @_bishopPossibleMoves position.x, position.y
+        when ShogiGame.constant.figureType.ROOK
+          return @_rookPossibleMoves position.x, position.y
+        when ShogiGame.constant.figureType.BISHOP
+          return @_bishopPossibleMoves position.x, position.y
 
       return []
 
@@ -319,13 +313,8 @@ factory = (Figure, Position, $) ->
 
     _figureIsOnBoard: (moves) ->
       ret = []
-      `
-      for(var i=0; i<moves.length; i++){
-        if(moves[i].x>=0 && moves[i].y>=0){
-          ret.push(moves[i]);
-        }
-      }
-      `
+      for i in [0...moves.length]
+        ret.push(moves[i]) if (moves[i].x >= 0 && moves[i].y >= 0)
       return ret
 
     _getClass: (figure) ->
@@ -354,62 +343,35 @@ factory = (Figure, Position, $) ->
 
     initFigures: ->
 
+      types = ShogiGame.constant.figureType
+      pieces = [
+        # first row
+        types.LANCE
+        types.KNIGHT
+        types.SILVER_GENERAL
+        types.GOLDEN_GENERAL
+        types.KING
+        types.GOLDEN_GENERAL
+        types.SILVER_GENERAL
+        types.KNIGHT
+        types.LANCE
+        # second row
+        types.BISHOP
+        types.ROOK
+      ]
+      # third row
+      pieces.push(types.PAWN) for num in [1..9]
+
+      owners = ShogiGame.constant.owner
       @figures = []
-
-      # Figures for owner A
-      @figures[0] = new Figure ShogiGame.constant.figureType.LANCE, ShogiGame.constant.owner.A
-      @figures[1] = new Figure ShogiGame.constant.figureType.KNIGHT, ShogiGame.constant.owner.A
-      @figures[2] = new Figure ShogiGame.constant.figureType.SILVER_GENERAL, ShogiGame.constant.owner.A
-      @figures[3] = new Figure ShogiGame.constant.figureType.GOLDEN_GENERAL, ShogiGame.constant.owner.A
-      @figures[4] = new Figure ShogiGame.constant.figureType.KING, ShogiGame.constant.owner.A
-      @figures[5] = new Figure ShogiGame.constant.figureType.GOLDEN_GENERAL, ShogiGame.constant.owner.A
-      @figures[6] = new Figure ShogiGame.constant.figureType.SILVER_GENERAL, ShogiGame.constant.owner.A
-      @figures[7] = new Figure ShogiGame.constant.figureType.KNIGHT, ShogiGame.constant.owner.A
-      @figures[8] = new Figure ShogiGame.constant.figureType.LANCE, ShogiGame.constant.owner.A
-      @figures[9] = new Figure ShogiGame.constant.figureType.BISHOP, ShogiGame.constant.owner.A
-      @figures[10] = new Figure ShogiGame.constant.figureType.ROOK, ShogiGame.constant.owner.A
-      @figures[11] = new Figure ShogiGame.constant.figureType.PAWN, ShogiGame.constant.owner.A
-      @figures[12] = new Figure ShogiGame.constant.figureType.PAWN, ShogiGame.constant.owner.A
-      @figures[13] = new Figure ShogiGame.constant.figureType.PAWN, ShogiGame.constant.owner.A
-      @figures[14] = new Figure ShogiGame.constant.figureType.PAWN, ShogiGame.constant.owner.A
-      @figures[15] = new Figure ShogiGame.constant.figureType.PAWN, ShogiGame.constant.owner.A
-      @figures[16] = new Figure ShogiGame.constant.figureType.PAWN, ShogiGame.constant.owner.A
-      @figures[17] = new Figure ShogiGame.constant.figureType.PAWN, ShogiGame.constant.owner.A
-      @figures[18] = new Figure ShogiGame.constant.figureType.PAWN, ShogiGame.constant.owner.A
-      @figures[19] = new Figure ShogiGame.constant.figureType.PAWN, ShogiGame.constant.owner.A
-
-      # Figures for owner B
-      @figures[20] = new Figure ShogiGame.constant.figureType.LANCE, ShogiGame.constant.owner.B
-      @figures[21] = new Figure ShogiGame.constant.figureType.KNIGHT, ShogiGame.constant.owner.B
-      @figures[22] = new Figure ShogiGame.constant.figureType.SILVER_GENERAL, ShogiGame.constant.owner.B
-      @figures[23] = new Figure ShogiGame.constant.figureType.GOLDEN_GENERAL, ShogiGame.constant.owner.B
-      @figures[24] = new Figure ShogiGame.constant.figureType.KING, ShogiGame.constant.owner.B
-      @figures[25] = new Figure ShogiGame.constant.figureType.GOLDEN_GENERAL, ShogiGame.constant.owner.B
-      @figures[26] = new Figure ShogiGame.constant.figureType.SILVER_GENERAL, ShogiGame.constant.owner.B
-      @figures[27] = new Figure ShogiGame.constant.figureType.KNIGHT, ShogiGame.constant.owner.B
-      @figures[28] = new Figure ShogiGame.constant.figureType.LANCE, ShogiGame.constant.owner.B
-      @figures[29] = new Figure ShogiGame.constant.figureType.BISHOP, ShogiGame.constant.owner.B
-      @figures[30] = new Figure ShogiGame.constant.figureType.ROOK, ShogiGame.constant.owner.B
-      @figures[31] = new Figure ShogiGame.constant.figureType.PAWN, ShogiGame.constant.owner.B
-      @figures[32] = new Figure ShogiGame.constant.figureType.PAWN, ShogiGame.constant.owner.B
-      @figures[33] = new Figure ShogiGame.constant.figureType.PAWN, ShogiGame.constant.owner.B
-      @figures[34] = new Figure ShogiGame.constant.figureType.PAWN, ShogiGame.constant.owner.B
-      @figures[35] = new Figure ShogiGame.constant.figureType.PAWN, ShogiGame.constant.owner.B
-      @figures[36] = new Figure ShogiGame.constant.figureType.PAWN, ShogiGame.constant.owner.B
-      @figures[37] = new Figure ShogiGame.constant.figureType.PAWN, ShogiGame.constant.owner.B
-      @figures[38] = new Figure ShogiGame.constant.figureType.PAWN, ShogiGame.constant.owner.B
-      @figures[39] = new Figure ShogiGame.constant.figureType.PAWN, ShogiGame.constant.owner.B
+      @figures.push(new Figure(piece, owners.A)) for piece in pieces
+      @figures.push(new Figure(piece, owners.B)) for piece in pieces
 
     resetBoard: (putFigures = true) ->
 
-      delete @board
-      @board = []
+      boardSize = ShogiGame.constant.misc.BOARD_SIZE
 
-      `
-      for(var i=0; i<ShogiGame.constant.misc.BOARD_SIZE; i++){
-       this.board[i] = [];
-      }
-      `
+      @board = ([] for i in [0...boardSize])
 
       delete @offside
       @offside = []
@@ -432,13 +394,10 @@ factory = (Figure, Position, $) ->
       #0,0             8,0
 
       #undefined to null
-      `
-      for (var i=0; i<ShogiGame.constant.misc.BOARD_SIZE; i++) {
-        for (var j=0; j<ShogiGame.constant.misc.BOARD_SIZE; j++) {
+      for i in [0...boardSize]
+        for j in [0...boardSize]
           this.board[i][j] = null;
-        }
-      }
-      `
+
       # Owner A
       @board[0][0] = @figures[0]
       @board[1][0] = @figures[1]
@@ -484,15 +443,10 @@ factory = (Figure, Position, $) ->
       @board[8][6] = @figures[39]
 
       # 'downgrade' all figures
-      `
-      for (var i=0; i<ShogiGame.constant.misc.BOARD_SIZE; i++) {
-        for (var j=0; j<ShogiGame.constant.misc.BOARD_SIZE; j++) {
-          if (this.board[i][j] != null) {
-            this.board[i][j].promoted = false
-          }
-        }
-      }
-      `
+
+      for i in [0...boardSize]
+        for j in [0...boardSize]
+          this.board[i][j]?.promoted = false
 
       # ugly Coffee hack - `` can't be last in func, because of return
       return true
