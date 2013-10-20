@@ -54,6 +54,9 @@ factory = (Figure, Position, $) ->
       if figure.type is ShogiGame.constant.figureType.ROOK
         return @_rookPossibleMoves position.x, position.y
 
+      if figure.type is ShogiGame.constant.figureType.BISHOP
+        return @_bishopPossibleMoves position.x, position.y
+
       return []
 
     _goldenGeneralPossibleMoves: (x, y) ->
@@ -223,7 +226,7 @@ factory = (Figure, Position, $) ->
       i = null
 
       oldPosition = new Position x, y
-      helper = (x, y) =>
+      next = (x, y) =>
         newPosition = new Position x, y
         if @_figureCanMove oldPosition, newPosition
           ret.push newPosition
@@ -236,24 +239,65 @@ factory = (Figure, Position, $) ->
 
       `
       for (i=(x-1); i>=0; i--) {
-        if (!helper(i, y)) {
+        if (!next(i, y)) {
           break;
         }
       }
       for (i=(x+1); i<ShogiGame.constant.misc.BOARD_SIZE; i++) {
-        if (!helper(i, y)) {
+        if (!next(i, y)) {
           break;
         }
       }
       for (i=(y-1); i>=0; i--) {
-        if (!helper(x, i)) {
+        if (!next(x, i)) {
           break;
         }
       }
       for (i=(y+1); i<ShogiGame.constant.misc.BOARD_SIZE; i++) {
-        if (!helper(x, i)) {
+        if (!next(x, i)) {
           break;
         }
+      }
+      `
+      return ret
+
+    _bishopPossibleMoves: (x, y) =>
+      ret = []
+
+      oldPosition = new Position x, y
+      next = (x, y) =>
+
+        return false if x < 0 or x >= ShogiGame.constant.misc.BOARD_SIZE
+        return false if y < 0 or y >= ShogiGame.constant.misc.BOARD_SIZE
+
+        newPosition = new Position x, y
+        if @_figureCanMove oldPosition, newPosition
+          ret.push newPosition
+          if newPosition.getFigure(@board) is null
+            return true
+          else
+            return false
+        else
+          return false
+
+      i = 1
+      run = true
+      next1 = true
+      next2 = true
+      next3 = true
+      next4 = true
+      `
+      while (run) {
+        next1 = next1 && next((x+i), (y+i));
+        next2 = next2 && next((x-i), (y+i));
+        next3 = next3 && next((x+i), (y-i));
+        next4 = next4 && next((x-i), (y-i));
+        if (next1 || next2 || next3 || next4) {
+          run = true;
+        } else {
+          run = false;
+        }
+        i++;
       }
       `
       return ret
