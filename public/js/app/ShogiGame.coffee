@@ -316,10 +316,8 @@ factory = (Figure, Position, $) ->
     _validMove: (oldPosition, newPosition) ->
 
       valid = false
-      id = newPosition.getSelector()
       for position in @_possibleMoves oldPosition
-        if id is position.getSelector()
-          valid = true
+        valid = true if newPosition.equalsTo position
 
       # can't take own figure
       newFigure = newPosition.getFigure @board

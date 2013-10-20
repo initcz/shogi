@@ -5,7 +5,7 @@
 # see https://github.com/umdjs/umd/blob/master/amdWeb.js
 #
 
-factory = (Position, ShogiGame) ->
+factory = (PositionUI, ShogiGame) ->
 
   class ShogiGameUI
 
@@ -18,21 +18,13 @@ factory = (Position, ShogiGame) ->
     initUI: (id) =>
 
       html = '<table class="shogi">'
-      cellId = ''
-      figureClass = ''
-
-      `
-      for (var y=(ShogiGame.constant.misc.BOARD_SIZE-1); y>=0; y--) {
-        html += '<tr>';
-        for (var x=0; x<ShogiGame.constant.misc.BOARD_SIZE; x++) {
-          cellId = Position.createSelector(x, y, false);
-          figureClass = this.game._getClass(this.game.board[x][y]).join(' '); // !!!
-          html += '<td id="' + cellId + '" class="' + figureClass + '"></td>';
-        }
-        html += '</tr>';
-      }
-      `
-
+      for y in [(ShogiGame.constant.misc.BOARD_SIZE-1)..0]
+        html += '<tr>'
+        for x in [0...ShogiGame.constant.misc.BOARD_SIZE]
+          position = new PositionUI x, y
+          figureClass = @game._getClass(position.getFigure(@game.board)).join(' ')
+          html += '<td id="' + position.getSelector(false) + '" class="' + figureClass + '"></td>'
+        html += '</tr>'
       html += '</table>'
 
       # TODO: add dependency to zepto/jquery
@@ -45,12 +37,13 @@ factory = (Position, ShogiGame) ->
 
         o = e.target
         obj = $(o)
-        position = new Position o.id
+        position = new PositionUI o.id
         figure = position.getFigure @game.board
 
-        same = false
         if lastPosition?
-          same = position.getSelector() is lastPosition.getSelector()
+          same = position.equalsTo lastPosition
+        else
+          same = false
 
         # highlight current position
         clazz = 'selected-figure'
@@ -70,9 +63,10 @@ factory = (Position, ShogiGame) ->
 
         # show possible places to move
         if figure? and not same
-          for move in @game._possibleMoves position
+          for p in @game._possibleMoves position
+            movePosition = new PositionUI p
             clazz = 'possible-move'
-            obj = $(move.getSelector())
+            obj = $(movePosition.getSelector())
             if not obj.hasClass clazz
               obj.addClass clazz
 
@@ -105,31 +99,22 @@ factory = (Position, ShogiGame) ->
       cell = null
       figure = null
 
-      `
-      for (var x=0; x<ShogiGame.constant.misc.BOARD_SIZE; x++) {
-        for (var y=0; y<ShogiGame.constant.misc.BOARD_SIZE; y++) {
-          cell = $(Position.createSelector(x, y));
-          cell.removeClass();
-          if (putFigures) {
-            figure = this.game.board[x][y];
-            if (figure != null) {
-              cell.addClass(this.game._getClass(figure).join(' '));
-            }
-          }
-        }
-      }
-      `
-
-      # ugly Coffee hack - `` can't be last in func, because of return
-      return true
+      for x in [0...ShogiGame.constant.misc.BOARD_SIZE]
+        for y in [0...ShogiGame.constant.misc.BOARD_SIZE]
+          cell = $(PositionUI.createSelector(x, y))
+          cell.removeClass()
+          if putFigures
+            figure = @game.board[x][y]
+            if figure isnt null
+              cell.addClass @game._getClass(figure).join(' ')
 
   return ShogiGameUI
 
 if typeof define is 'function' and define.amd
   # AMD. Register as an anonymous module.
-  define ['cs!app/Position','cs!app/ShogiGame'], factory
+  define ['cs!app/PositionUI','cs!app/ShogiGame'], factory
 else
   # Browser globals ('this' is window)
-  this.ShogiGameUI = factory(this.Position, this.ShogiGame)
+  this.ShogiGameUI = factory(this.PositionUI, this.ShogiGame)
 
 ## End
