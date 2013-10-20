@@ -82,9 +82,10 @@ factory = (PositionUI, ShogiGame) ->
             @redrawUI() # XXX
 
           else
-            for move in @game._possibleMoves lastPosition
+            for p in @game._possibleMoves lastPosition
+              movePosition = new PositionUI p
               clazz = 'possible-move'
-              obj = $(move.getSelector())
+              obj = $(movePosition.getSelector())
               if obj.hasClass clazz
                 obj.removeClass clazz
 
