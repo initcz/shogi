@@ -231,28 +231,18 @@ factory = (Figure, Position, $) ->
         else
           return false
 
-      `
-      for (i=(x-1); i>=0; i--) {
-        if (!next(i, y)) {
-          break;
-        }
-      }
-      for (i=(x+1); i<ShogiGame.constant.misc.BOARD_SIZE; i++) {
-        if (!next(i, y)) {
-          break;
-        }
-      }
-      for (i=(y-1); i>=0; i--) {
-        if (!next(x, i)) {
-          break;
-        }
-      }
-      for (i=(y+1); i<ShogiGame.constant.misc.BOARD_SIZE; i++) {
-        if (!next(x, i)) {
-          break;
-        }
-      }
-      `
+      for i in [(x-1)..0]
+        break if not next i, y
+
+      for i in [(x+1)...ShogiGame.constant.misc.BOARD_SIZE]
+        break if not next i, y
+
+      for i in [(y-1)..0]
+        break if not next x, i
+
+      for i in [(y+1)...ShogiGame.constant.misc.BOARD_SIZE]
+        break if not next x, i
+
       return ret
 
     _bishopPossibleMoves: (x, y) =>
@@ -280,20 +270,16 @@ factory = (Figure, Position, $) ->
       next2 = true
       next3 = true
       next4 = true
-      `
-      while (run) {
-        next1 = next1 && next((x+i), (y+i));
-        next2 = next2 && next((x-i), (y+i));
-        next3 = next3 && next((x+i), (y-i));
-        next4 = next4 && next((x-i), (y-i));
-        if (next1 || next2 || next3 || next4) {
-          run = true;
-        } else {
-          run = false;
-        }
-        i++;
-      }
-      `
+      while run
+        next1 = next1 && next (x+i), (y+i)
+        next2 = next2 && next (x-i), (y+i)
+        next3 = next3 && next (x+i), (y-i)
+        next4 = next4 && next (x-i), (y-i)
+        if next1 or next2 or next3 or next4
+          run = true
+        else
+          run = false
+        i++
       return ret
 
     _figureCanMove: (oldPosition, newPosition) ->
@@ -447,9 +433,6 @@ factory = (Figure, Position, $) ->
       for i in [0...boardSize]
         for j in [0...boardSize]
           this.board[i][j]?.promoted = false
-
-      # ugly Coffee hack - `` can't be last in func, because of return
-      return true
 
     move: ->
     promote: ->
