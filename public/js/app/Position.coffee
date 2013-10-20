@@ -16,7 +16,11 @@ class Position
         @x = data.x
         @y = data.y
     getFigure: (board) ->
-      return board[@x][@y]
+      f = board[@x][@y]
+      if f is undefined
+        return null
+      else
+        return f
     getSelector: (hash = true) ->
       return Position.createSelector @x, @y, hash
     @createSelector: (x, y, hash = true) ->
