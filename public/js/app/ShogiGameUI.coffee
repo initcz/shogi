@@ -42,63 +42,102 @@ factory = (PositionUI, ShogiGame) ->
         position = new PositionUI o.id
         figure = position.getFigure @game.board
 
-        # who's turn it is?
-        return if figure isnt null and figure.owner isnt @game.currentUser and lastPosition is null
+        highlight = false
+        move = false
 
+        # with previous select
         if lastPosition?
-          same = position.equalsTo lastPosition
-        else
-          same = false
 
-        # highlight current position
-        clazz = 'selected-figure'
-        if not same and figure? and not obj.hasClass clazz
-          obj.addClass clazz
+          # do nothing when clicking on same place
+          return if position.equalsTo lastPosition
 
-        # remove highlight for last position
-        if lastPosition?
-          obj = $(lastPosition.getSelector())
-          if not same and obj.hasClass clazz
-            obj.removeClass clazz
+          # last position is stored only when figure is there, and it's ours
+          lastFigure = lastPosition.getFigure @game.board
 
-        # remove highlighted possible places to move
-        if figure? and not same and lastPosition? and lastPosition.getFigure(@game.board)?
-          clazz = 'possible-move'
-          $("td.#{clazz}").removeClass(clazz)
+          removeHighlight = true
 
-        # show possible places to move
-        if figure? and not same
-          for p in @game._possibleMoves position
-            movePosition = new PositionUI p
+          if figure?
+
+            if figure.owner is @game.currentUser
+              #console.log 'ours - switch' # XXX
+              move = false
+              highlight = true
+            else
+              #console.log 'others - move?' # XXX
+              if @game._validMove lastPosition, position
+                move = true
+                highlight = false
+                #console.log 'valid!' # XXX
+              else
+                #console.log 'NOT valid!' # XXX
+                move = false
+                removeHighlight = false
+                highlight = false
+          else
+            move = true
+            removeHighlight = false if not @game._validMove lastPosition, position
+
+          if removeHighlight
+
+            # remove highlight for last position
+            $(lastPosition.getSelector()).removeClass('selected-figure')
+
+            # remove highlighted possible places to move
             clazz = 'possible-move'
-            obj = $(movePosition.getSelector())
-            if not obj.hasClass clazz
-              obj.addClass clazz
+            $("td.#{clazz}").removeClass(clazz)
 
-        # move figure
-        if lastPosition? and not same
+        # without previous select
+        else
 
+          if figure?
+
+            # exit when selecting other player figure (without previous select)
+            return if figure.owner isnt @game.currentUser
+
+            #console.log 'highlight' # XXX
+            highlight = true
+
+          else
+            #console.log 'nothing!' # XXX
+
+            # if not figure on last position and not current position
+            return
+
+        if move
+          #console.log 'move!' # XXX
           moveOk = @game.move lastPosition, position, @editorMode
           if moveOk
 
-            # TODO - 1: redraw only one figure, not whole board
-            # TODO - 2: separate UI from core
+            # TODO: redraw only one figure, not whole board
             @redrawUI() # XXX
 
+            #console.log 'move ok!'
+            lastPosition = null
+            return
+
+          ###
           else
-            for p in @game._possibleMoves lastPosition
+            console.log 'move NOT ok!'
+          ###
+
+        if highlight
+          #console.log 'highlight!' # XXX
+
+          # highlight current position
+          clazz = 'selected-figure'
+          obj.addClass clazz if figure? and not obj.hasClass clazz
+
+          # show possible places to move
+          if figure?
+            for p in @game._possibleMoves position
               movePosition = new PositionUI p
               clazz = 'possible-move'
               obj = $(movePosition.getSelector())
-              if obj.hasClass clazz
-                obj.removeClass clazz
+              if not obj.hasClass clazz
+                obj.addClass clazz
 
-          #delete lastPosition
-          lastPosition = null
-
-        else
-          # save last position
-          lastPosition = position
+        # store only location with figures and only our own
+        lastPosition = position if figure? and figure.owner is @game.currentUser
 
     redrawUI: (putFigures = true) ->
       cell = null
