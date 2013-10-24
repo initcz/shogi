@@ -11,13 +11,14 @@ factory = (PositionUI, ShogiGame) ->
 
     constructor: ->
       @editorMode = false
-
-      listener = (event, data) ->
-        console.log event, data # XXX
-
       @game = new ShogiGame()
-      @game.addListener listener
+      @game.addListener @onGameChange
       @initUI 'content'
+      @offBoardElems = [
+        document.getElementById('off-board-player-0')
+        document.getElementById('off-board-player-1')
+      ]
+      @offBoardPieces = [ [], [] ]
 
     initUI: (id) =>
 
@@ -151,6 +152,32 @@ factory = (PositionUI, ShogiGame) ->
             figure = @game.board[x][y]
             if figure isnt null
               cell.addClass @game._getClass(figure).join(' ')
+
+    onGameChange: (event, data) =>
+      console.log(event, data)
+      switch event
+        when 'taken'
+          player = data.player
+          type = data.type
+          offBoardElem = @offBoardElems[player]
+          pieces = @offBoardPieces[player]
+          piece = pieces[type]
+          if not piece?
+            pieceElem = document.createElement('div')
+            classes = @game._getClass({ owner: player, type: type }) # FIXME temporary!
+            classes.push('piece')
+            pieceElem.classList.add.apply(pieceElem.classList, classes)
+            offBoardElem.appendChild(pieceElem)
+
+            piece =
+              el: pieceElem
+              count: 0
+            pieces[type] = piece
+          else
+            pieceElem = pieces[type].el
+
+          piece.count += 1
+          pieceElem.dataset.count = piece.count
 
   return ShogiGameUI
 

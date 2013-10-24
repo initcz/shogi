@@ -15,11 +15,12 @@ factory = (Figure, Position, $) ->
       # TODO: init communication
 
     addListener: (listener) ->
+      # FIXME improve it - would be nice to use standard browser/node's event pattern
       if typeof listener isnt 'function'
         throw new Error 'not a function'
       @_listeners.push listener
 
-    _throw: (event, data) -> handle event, data for handle in @_listeners
+    _emit: (event, data) -> listener(event, data) for listener in @_listeners
 
     _possibleMoves: (position) ->
       figure = position.getFigure @board
@@ -488,8 +489,9 @@ factory = (Figure, Position, $) ->
           data =
             x: newPosition.x
             y: newPosition.y
+            player: @currentUser
             type: enemyFigure.type
-          @_throw 'taken', data
+          @_emit 'taken', data
 
         @board[newPosition.x][newPosition.y] = oldPosition.getFigure @board
         @board[oldPosition.x][oldPosition.y] = null
@@ -508,7 +510,7 @@ factory = (Figure, Position, $) ->
         action: 'move'
         data: data
 
-      @_throw 'move', data
+      @_emit 'move', data
 
       if @currentUser is ShogiGame.constant.owner.A
         @currentUser = ShogiGame.constant.owner.B

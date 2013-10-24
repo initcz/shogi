@@ -11,7 +11,8 @@ table.shogi {
   user-select: none;
 }
 
-table.shogi td {
+table.shogi td,
+.row.off-board .piece {
   overflow: hidden;
   height: 80px;
   width: 80px;
@@ -19,8 +20,37 @@ table.shogi td {
   border-right: 1px black solid;
 }
 
+.row.off-board {
+  overflow: hidden;
+  border: 1px black solid;
+  height: 82px;
+  margin: 5px 0;
+}
+
+.row.off-board .piece {
+  position: relative;
+  display: inline-block;
+  border-bottom: 0;
+}
+
+.row.off-board .piece:after {
+  content: attr(data-count);
+  display: table-cell;
+  position: absolute;
+  text-align: center; vertical-align: middle;
+  right: 5px; bottom: 5px;
+  width: 20px; height: 20px;
+  font-weight: bold;
+  color: white;
+  background-color: black;
+  -webkit-border-radius: 10px;
+  -moz-border-radius: 10px;
+  border-radius: 10px;
+}
+
 /* see http://www.sitepoint.com/css3-transform-background-image/ */
-table.shogi td:before {
+table.shogi td:before,
+.row.off-board .piece:before {
   content: "";
   display: block;
   top: 0;
@@ -92,10 +122,4 @@ table.shogi td:before {
 
 .silver_general:before {
   background-image: url(../img/silver-general.svg);
-}
-
-.off-board {
-  border: 1px black solid;
-  height: 80px;
-  margin: 5px 0;
 }
