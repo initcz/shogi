@@ -461,7 +461,7 @@ factory = (Figure, Position, $) ->
 
       for i in [0...boardSize]
         for j in [0...boardSize]
-          this.board[i][j]?.promoted = false
+          @board[i][j].promoted = false if @board[i][j]?
 
     move: (oldPosition, newPosition, editorMode = false) ->
 
