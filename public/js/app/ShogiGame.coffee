@@ -22,6 +22,16 @@ factory = (Figure, Position, $) ->
 
     _emit: (event, data) -> listener(event, data) for listener in @_listeners
 
+    _possiblePlacesForFigure: ->
+      ret = []
+      boardSize = ShogiGame.constant.misc.BOARD_SIZE
+      for i in [0...boardSize]
+        for j in [0...boardSize]
+          if this.board[i][j] == null
+            newPosition = new Position i, j
+            ret.push newPosition
+      return ret
+
     _possibleMoves: (position) ->
       figure = position.getFigure @board
 
