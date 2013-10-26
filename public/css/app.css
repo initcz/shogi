@@ -1,4 +1,11 @@
-table.shogi {
+body {
+  padding: 0;
+  margin: 0;
+  padding-top: 125px;
+  padding-left: 125px;
+}
+
+.shogi-board {
   border-top: 1px black solid;
   border-left: 1px black solid;
 
@@ -9,10 +16,18 @@ table.shogi {
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
+
+  width: 729px;
+  height: 729px;
+
+  letter-spacing: 0;
+  word-spacing: 0;
+  font-size: 0;
 }
 
-table.shogi td,
+.shogi-board .field,
 .row.off-board .piece {
+  display: inline-block;
   overflow: hidden;
   height: 80px;
   width: 80px;
@@ -20,36 +35,8 @@ table.shogi td,
   border-right: 1px black solid;
 }
 
-.row.off-board {
-  overflow: hidden;
-  border: 1px black solid;
-  height: 82px;
-  margin: 5px 0;
-}
-
-.row.off-board .piece {
-  position: relative;
-  display: inline-block;
-  border-bottom: 0;
-}
-
-.row.off-board .piece:after {
-  content: attr(data-count);
-  display: table-cell;
-  position: absolute;
-  text-align: center; vertical-align: middle;
-  right: 5px; bottom: 5px;
-  width: 20px; height: 20px;
-  font-weight: bold;
-  color: white;
-  background-color: black;
-  -webkit-border-radius: 10px;
-  -moz-border-radius: 10px;
-  border-radius: 10px;
-}
-
 /* see http://www.sitepoint.com/css3-transform-background-image/ */
-table.shogi td:before,
+.shogi-board .field:before,
 .row.off-board .piece:before {
   content: "";
   display: block;
@@ -62,7 +49,8 @@ table.shogi td:before,
   background-position: center center;
 }
 
-.selected-figure {
+.selected-figure,
+.piece.selected {
   background-color: yellow !important;
 }
 
@@ -80,7 +68,8 @@ table.shogi td:before,
   background-color: red !important;
 }
 
-.player-a, .player-b {
+.player-a,
+.player-b {
   cursor: pointer;
 }
 

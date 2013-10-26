@@ -22,7 +22,7 @@ factory = (Figure, Position, $) ->
 
     _emit: (event, data) -> listener(event, data) for listener in @_listeners
 
-    _possiblePlacesForFigure: ->
+    _possiblePlacesForFigure: (player, type) ->
       ret = []
       boardSize = ShogiGame.constant.misc.BOARD_SIZE
       for i in [0...boardSize]
@@ -252,17 +252,18 @@ factory = (Figure, Position, $) ->
         else
           return false
 
-      for i in [(x-1)..0]
-        break if not next i, y
+      for i in [(x - 1)..0]
+        break if i >= 0 and not next(i, y)
 
-      for i in [(x+1)...ShogiGame.constant.misc.BOARD_SIZE]
-        break if not next i, y
+      for i in [(y - 1)..0]
+        break if i >= 0 and not next(x, i)
 
-      for i in [(y-1)..0]
-        break if not next x, i
+      boardSize = ShogiGame.constant.misc.BOARD_SIZE
+      for i in [(x + 1)...boardSize]
+        break if i < boardSize and not next(i, y)
 
-      for i in [(y+1)...ShogiGame.constant.misc.BOARD_SIZE]
-        break if not next x, i
+      for i in [(y + 1)...boardSize]
+        break if i < boardSize and not next(x, i)
 
       return ret
 
@@ -325,11 +326,11 @@ factory = (Figure, Position, $) ->
       return ret
 
     _getClass: (figure) ->
-      result = []
+      result = ['field']
 
       if figure?
         result.push(if figure.owner is ShogiGame.constant.owner.A then 'player-a' else 'player-b')
-        result.push(ShogiGame.constant.figureNames[figure.type]);
+        result.push(ShogiGame.constant.figureNames[figure.type])
 
       return result
 
@@ -464,7 +465,6 @@ factory = (Figure, Position, $) ->
           @board[i][j].promoted = false if @board[i][j]?
 
     move: (oldPosition, newPosition, editorMode = false) ->
-
       if editorMode
         if not @_inSpace oldPosition
           msg = 'oldPosition not whithin space'
@@ -491,7 +491,6 @@ factory = (Figure, Position, $) ->
         moveOk = @_validMove oldPosition, newPosition if moveOk
 
       if moveOk
-
         enemyFigure = newPosition.getFigure @board
         if enemyFigure isnt null
           enemyFigure.owner = @currentUser
@@ -528,6 +527,13 @@ factory = (Figure, Position, $) ->
         @currentUser = ShogiGame.constant.owner.A
 
       return true
+
+    returnPiece: (figure, position) ->
+      # FIXME append to _moveHistory?
+      @board[position.x][position.y] = figure
+      @_emit 'returned',
+        figure: figure
+        position: position
 
     promote: ->
       # requires history of moves

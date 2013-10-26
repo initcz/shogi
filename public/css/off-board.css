@@ -1,0 +1,182 @@
+/* common part is defined in app.css */
+.row.off-board {
+  overflow: visible;
+  text-align: center;
+  position: relative;
+  width: 0;
+  height: 0;
+  margin: 0;
+}
+
+.row.off-board .piece {
+  position: absolute;
+  height: 60px;
+  width: 60px;
+  border-width: 0;
+  /* TODO add support for opera and ms too? */
+  -webkit-transition: -webkit-transform 0.5s, left 0.5s, top 0.5s, opacity 0.5s;
+  -moz-transition: -moz-transform 0.5s, left 0.5s, top 0.5s, opacity 0.5s;
+  transition: transform 0.5s, left 0.5s, top 0.5s, opacity 0.5s;
+  left: 0;
+  top: 0;
+  opacity: 0;
+}
+
+#off-board-player-1 {
+  -webkit-transform: translate(-10px, -10px) rotate(135deg);
+  -moz-transform: translate(-10px, -10px) rotate(135deg);
+  transform: translate(-10px, -10px) rotate(135deg);
+}
+
+#off-board-player-0 {
+  -webkit-transform: translate(740px, 10px) rotate(-45deg);
+  -moz-transform: translate(740px, 10px) rotate(-45deg);
+  transform: translate(740px, 10px) rotate(-45deg);
+}
+
+.row.off-board .piece:before {
+  background-size: 80%;
+}
+
+/* pieces for odd count */
+.row.off-board.pieces-1 .piece:nth-child(1),
+.row.off-board.pieces-3 .piece:nth-child(2),
+.row.off-board.pieces-5 .piece:nth-child(3),
+.row.off-board.pieces-7 .piece:nth-child(4) {
+  left: -30px;
+  -webkit-transform: rotate(0deg);
+  -moz-transform: rotate(0deg);
+  transform: rotate(0deg);
+  opacity: 1;
+}
+
+.row.off-board.pieces-3 .piece:nth-child(1),
+.row.off-board.pieces-5 .piece:nth-child(2),
+.row.off-board.pieces-7 .piece:nth-child(3) {
+  left: -90px;
+  top: -10px;
+  -webkit-transform: rotate(24deg);
+  -moz-transform: rotate(24deg);
+  transform: rotate(24deg);
+  opacity: 1;
+}
+.row.off-board.pieces-3 .piece:nth-child(3),
+.row.off-board.pieces-5 .piece:nth-child(4),
+.row.off-board.pieces-7 .piece:nth-child(5) {
+  left: 30px;
+  top: -10px;
+  -webkit-transform: rotate(-24deg);
+  -moz-transform: rotate(-24deg);
+  transform: rotate(-24deg);
+  opacity: 1;
+}
+
+.row.off-board.pieces-5 .piece:nth-child(1),
+.row.off-board.pieces-7 .piece:nth-child(2) {
+  left: -140px;
+  top: -45px;
+  -webkit-transform: rotate(48deg);
+  -moz-transform: rotate(48deg);
+  transform: rotate(48deg);
+  opacity: 1;
+}
+.row.off-board.pieces-5 .piece:nth-child(5),
+.row.off-board.pieces-7 .piece:nth-child(6) {
+  left: 80px;
+  top: -45px;
+  -webkit-transform: rotate(-48deg);
+  -moz-transform: rotate(-48deg);
+  transform: rotate(-48deg);
+  opacity: 1;
+}
+
+.row.off-board.pieces-7 .piece:nth-child(1) {
+  left: -170px;
+  top: -100px;
+  -webkit-transform: rotate(72deg);
+  -moz-transform: rotate(72deg);
+  transform: rotate(72deg);
+  opacity: 1;
+}
+.row.off-board.pieces-7 .piece:nth-child(7) {
+  left: 110px;
+  top: -100px;
+  -webkit-transform: rotate(-72deg);
+  -moz-transform: rotate(-72deg);
+  transform: rotate(-72deg);
+  opacity: 1;
+}
+
+/* piecess for even count */
+.row.off-board.pieces-2 .piece:nth-child(1),
+.row.off-board.pieces-4 .piece:nth-child(2),
+.row.off-board.pieces-6 .piece:nth-child(3) {
+  left: -60px;
+  -webkit-transform: rotate(12deg);
+  -moz-transform: rotate(12deg);
+  transform: rotate(12deg);
+  opacity: 1;
+}
+.row.off-board.pieces-2 .piece:nth-child(2),
+.row.off-board.pieces-4 .piece:nth-child(3),
+.row.off-board.pieces-6 .piece:nth-child(4) {
+  left: 0px;
+  -webkit-transform: rotate(-12deg);
+  -moz-transform: rotate(-12deg);
+  transform: rotate(-12deg);
+  opacity: 1;
+}
+
+.row.off-board.pieces-4 .piece:nth-child(1),
+.row.off-board.pieces-6 .piece:nth-child(2) {
+  left: -115px;
+  top: -25px;
+  -webkit-transform: rotate(36deg);
+  -moz-transform: rotate(36deg);
+  transform: rotate(36deg);
+  opacity: 1;
+}
+.row.off-board.pieces-4 .piece:nth-child(4),
+.row.off-board.pieces-6 .piece:nth-child(5) {
+  left: 55px;
+  top: -25px;
+  -webkit-transform: rotate(-36deg);
+  -moz-transform: rotate(-36deg);
+  transform: rotate(-36deg);
+  opacity: 1;
+}
+
+.row.off-board.pieces-6 .piece:nth-child(1) {
+  left: -155px;
+  top: -70px;
+  -webkit-transform: rotate(60deg);
+  -moz-transform: rotate(60deg);
+  transform: rotate(60deg);
+  opacity: 1;
+}
+.row.off-board.pieces-6 .piece:nth-child(6) {
+  left: 95px;
+  top: -70px;
+  -webkit-transform: rotate(-60deg);
+  -moz-transform: rotate(-60deg);
+  transform: rotate(-60deg);
+  opacity: 1;
+}
+
+.row.off-board .piece.show-count:after {
+  content: attr(data-count);
+  display: table-cell;
+  position: absolute;
+  text-align: center; vertical-align: middle;
+  right: 0; bottom: 0;
+  width: 20px; height: 20px;
+  font-family: sans-serif;
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: bold;
+  color: white;
+  background-color: black;
+  -webkit-border-radius: 10px;
+  -moz-border-radius: 10px;
+  border-radius: 10px;
+}

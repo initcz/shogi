@@ -29,7 +29,7 @@ factory = (Position) ->
       @createSelector: (x, y, hash = true) ->
         id = "x#{x}y#{y}"
         if hash
-          return '#' + id
+          return "##{id}"
         else
           return id
 
