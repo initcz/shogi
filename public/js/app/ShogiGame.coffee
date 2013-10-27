@@ -186,39 +186,29 @@ factory = (Figure, Position, $) ->
       ret = []
       currentPosition = new Position x, y
       if @board[x][y].owner is ShogiGame.constant.owner.A
-        `
-        for(var i=y;i<8;i++){
-          newPosition = new Position(x, i+1);
-          if(this._figureCanMove(currentPosition, newPosition)){
-            figure = newPosition.getFigure(this.board);
-            ret.push(newPosition);
-            if(figure !== null){
-              if(figure.owner === ShogiGame.constant.owner.B){
-                break;
-              }
-            }
-          }else{
-            break;
-          }
-        }
-        `
+        boardSize = ShogiGame.constant.misc.BOARD_SIZE
+        for i in [0...boardSize]
+          newPosition = new Position x, i+1
+          if @_figureCanMove currentPosition, newPosition
+            figure = newPosition.getFigure @board
+            ret.push newPosition
+            if figure != null
+              if figure.owner is ShogiGame.constant.owner.B
+                break
+          else
+            break
       else
-        `
-        for(var i=y;i>0;i--){
-          newPosition = new Position(x, i-1);
-          if(this._figureCanMove(currentPosition, newPosition)){
-            figure = newPosition.getFigure(this.board);
-            ret.push(newPosition);
-            if(figure !== null){
-              if(figure.owner === ShogiGame.constant.owner.A){
-                break;
-              }
-            }
-          }else{
-            break;
-          }
-        }
-        `
+        boardSize = ShogiGame.constant.misc.BOARD_SIZE
+        for i in [0...boardSize]
+          newPosition = new Position x, i-1
+          if @_figureCanMove currentPosition, newPosition
+            figure = newPosition.getFigure @board
+            ret.push newPosition
+            if figure != null
+              if figure.owner is ShogiGame.constant.owner.A
+                break
+          else
+            break
       ret = @_figureIsOnBoard ret
       return ret
 
