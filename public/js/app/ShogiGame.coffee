@@ -187,7 +187,7 @@ factory = (Figure, Position, $) ->
       currentPosition = new Position x, y
       if @board[x][y].owner is ShogiGame.constant.owner.A
         boardSize = ShogiGame.constant.misc.BOARD_SIZE
-        for i in [0...boardSize]
+        for i in [y...boardSize]
           newPosition = new Position x, i+1
           if @_figureCanMove currentPosition, newPosition
             figure = newPosition.getFigure @board
@@ -199,7 +199,7 @@ factory = (Figure, Position, $) ->
             break
       else
         boardSize = ShogiGame.constant.misc.BOARD_SIZE
-        for i in [0...boardSize]
+        for i in [y...boardSize]
           newPosition = new Position x, i-1
           if @_figureCanMove currentPosition, newPosition
             figure = newPosition.getFigure @board
