@@ -27,7 +27,7 @@ factory = (Figure, Position, $) ->
       boardSize = ShogiGame.constant.misc.BOARD_SIZE
       for i in [0...boardSize]
         for j in [0...boardSize]
-          if this.board[i][j] == null
+          if @board[i][j] == null
             newPosition = new Position i, j
             ret.push newPosition
       return ret
