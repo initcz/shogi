@@ -6,7 +6,7 @@ define([
   class Pieces extends EventEmitter
     constructor: (@figures) ->
       @pieceSizeCoef = 0.7;
-      @svg = d3.select('body').append('svg').attr('id', 'pieces')
+      @svg = d3.select('body').append('svg').attr('id', 'pieces').attr('width', '100%').attr('height', '100%')
       @piecesGroup = @svg.append('g')
 
     initialize: () ->
