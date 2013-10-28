@@ -2,7 +2,7 @@
 # ShogiGame class
 #
 
-factory = (Figure, Position, $) ->
+factory = (Figure, Position) ->
 
   class ShogiGame
 
@@ -577,7 +577,7 @@ factory = (Figure, Position, $) ->
 
 if typeof define is 'function' and define.amd
   # AMD. Register as an anonymous module.
-  define ['cs!app/Figure', 'cs!app/Position', 'jquery'], factory
+  define ['cs!app/Figure', 'cs!app/Position'], factory
 else if typeof exports is 'object'
   # using node.js modules system
   require 'coffee-script'
@@ -589,6 +589,6 @@ else if typeof exports is 'object'
   module.exports = factory(Figure, Position)
 else
   # Browser globals ('this' is window)
-  this.ShogiGame = factory(this.Figure, this.Position, this.$)
+  this.ShogiGame = factory(this.Figure, this.Position)
 
 ## End

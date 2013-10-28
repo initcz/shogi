@@ -1,0 +1,47 @@
+@import "prefixer.less";
+
+body {
+  padding: 0;
+  margin: 0;
+}
+
+#board {
+  // disabled text selecting
+  .user-select(none);
+
+  // to correct display: inline-block for fields
+  letter-spacing: 0;
+  word-spacing: 0;
+  font-size: 0;
+
+  border-right: 1px solid black;
+
+  .field {
+    display: inline-block;
+    .box-sizing(border-box);
+    border-left: 1px solid black;
+    border-top: 1px solid black;
+
+    &:nth-child(31), &:nth-child(34),
+    &:nth-child(58), &:nth-child(61) {
+      position: relative;
+      &:after {
+        position: absolute;
+        content: '';
+        width: 9px;
+        height: 9px;
+        .border-radius(5px);
+        left: -5px;
+        top: -5px;
+        background-color: black;
+      }
+    }
+  }
+}
+
+#pieces {
+  position: absolute;
+  left: 0;
+  top: 0;
+  pointer-events: none;
+}

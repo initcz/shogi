@@ -3,20 +3,12 @@
 <head>
   <meta charset="utf-8" />
   <title>Shogi</title>
-
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <link rel="stylesheet" href="/css/app.css" />
-  <link rel="stylesheet" href="/css/off-board.css" />
-  <!-- data-main attribute tells require.js to load
-  scripts/main.js after require.js loads. -->
+  <link rel="stylesheet/less" href="/css/app.less" />
   <script data-main="js/main" src="js/lib/require.js"></script>
+  <style id="board-style"></style><!-- dynamic board style -->
 </head>
 <body>
-  <div class="container">
-    <div id="off-board-player-1" class="row off-board"></div>
-    <div id="content"></div>
-    <div id="off-board-player-0" class="row off-board"></div>
-  </div>
+  <div id="board"></div>
 </body>
 </html>
