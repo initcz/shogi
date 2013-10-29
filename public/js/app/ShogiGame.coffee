@@ -255,6 +255,21 @@ factory = (Figure, Position, $) ->
       for i in [(y + 1)...boardSize]
         break if i < boardSize and not next(x, i)
 
+      if @board[x][y].promoted is true
+        currentPosition = new Position x, y
+        newPosition = new Position x+1, y+1
+        if @_figureCanMove currentPosition, newPosition
+          ret.push newPosition
+        newPosition = new Position x-1, y+1
+        if @_figureCanMove currentPosition, newPosition
+          ret.push newPosition
+        newPosition = new Position x+1, y-1
+        if @_figureCanMove currentPosition, newPosition
+          ret.push newPosition
+        newPosition = new Position x-1, y-1
+        if @_figureCanMove currentPosition, newPosition
+          ret.push newPosition
+
       return ret
 
     _bishopPossibleMoves: (x, y) =>
@@ -292,6 +307,22 @@ factory = (Figure, Position, $) ->
         else
           run = false
         i++
+
+      if @board[x][y].promoted is true
+        currentPosition = new Position x, y
+        newPosition = new Position x+1, y
+        if @_figureCanMove currentPosition, newPosition
+          ret.push newPosition
+        newPosition = new Position x-1, y
+        if @_figureCanMove currentPosition, newPosition
+          ret.push newPosition
+        newPosition = new Position x, y+1
+        if @_figureCanMove currentPosition, newPosition
+          ret.push newPosition
+        newPosition = new Position x, y-1
+        if @_figureCanMove currentPosition, newPosition
+          ret.push newPosition
+
       return ret
 
     _figureCanMove: (oldPosition, newPosition) ->
