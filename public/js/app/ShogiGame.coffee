@@ -27,7 +27,7 @@ factory = (Figure, Position) ->
       boardSize = ShogiGame.constant.misc.BOARD_SIZE
       for i in [0...boardSize]
         for j in [0...boardSize]
-          if this.board[i][j] == null
+          if @board[i][j] == null
             newPosition = new Position i, j
             ret.push newPosition
       return ret
@@ -186,39 +186,29 @@ factory = (Figure, Position) ->
       ret = []
       currentPosition = new Position x, y
       if @board[x][y].owner is ShogiGame.constant.owner.A
-        `
-        for(var i=y;i<8;i++){
-          newPosition = new Position(x, i+1);
-          if(this._figureCanMove(currentPosition, newPosition)){
-            figure = newPosition.getFigure(this.board);
-            ret.push(newPosition);
-            if(figure !== null){
-              if(figure.owner === ShogiGame.constant.owner.B){
-                break;
-              }
-            }
-          }else{
-            break;
-          }
-        }
-        `
+        boardSize = ShogiGame.constant.misc.BOARD_SIZE
+        for i in [y...boardSize]
+          newPosition = new Position x, i+1
+          if @_figureCanMove currentPosition, newPosition
+            figure = newPosition.getFigure @board
+            ret.push newPosition
+            if figure != null
+              if figure.owner is ShogiGame.constant.owner.B
+                break
+          else
+            break
       else
-        `
-        for(var i=y;i>0;i--){
-          newPosition = new Position(x, i-1);
-          if(this._figureCanMove(currentPosition, newPosition)){
-            figure = newPosition.getFigure(this.board);
-            ret.push(newPosition);
-            if(figure !== null){
-              if(figure.owner === ShogiGame.constant.owner.A){
-                break;
-              }
-            }
-          }else{
-            break;
-          }
-        }
-        `
+        boardSize = ShogiGame.constant.misc.BOARD_SIZE
+        for i in [y...boardSize]
+          newPosition = new Position x, i-1
+          if @_figureCanMove currentPosition, newPosition
+            figure = newPosition.getFigure @board
+            ret.push newPosition
+            if figure != null
+              if figure.owner is ShogiGame.constant.owner.A
+                break
+          else
+            break
       ret = @_figureIsOnBoard ret
       return ret
 
@@ -265,6 +255,21 @@ factory = (Figure, Position) ->
       for i in [(y + 1)...boardSize]
         break if i < boardSize and not next(x, i)
 
+      if @board[x][y].promoted is true
+        currentPosition = new Position x, y
+        newPosition = new Position x+1, y+1
+        if @_figureCanMove currentPosition, newPosition
+          ret.push newPosition
+        newPosition = new Position x-1, y+1
+        if @_figureCanMove currentPosition, newPosition
+          ret.push newPosition
+        newPosition = new Position x+1, y-1
+        if @_figureCanMove currentPosition, newPosition
+          ret.push newPosition
+        newPosition = new Position x-1, y-1
+        if @_figureCanMove currentPosition, newPosition
+          ret.push newPosition
+
       return ret
 
     _bishopPossibleMoves: (x, y) =>
@@ -302,6 +307,22 @@ factory = (Figure, Position) ->
         else
           run = false
         i++
+
+      if @board[x][y].promoted is true
+        currentPosition = new Position x, y
+        newPosition = new Position x+1, y
+        if @_figureCanMove currentPosition, newPosition
+          ret.push newPosition
+        newPosition = new Position x-1, y
+        if @_figureCanMove currentPosition, newPosition
+          ret.push newPosition
+        newPosition = new Position x, y+1
+        if @_figureCanMove currentPosition, newPosition
+          ret.push newPosition
+        newPosition = new Position x, y-1
+        if @_figureCanMove currentPosition, newPosition
+          ret.push newPosition
+
       return ret
 
     _figureCanMove: (oldPosition, newPosition) ->
