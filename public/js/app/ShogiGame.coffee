@@ -557,7 +557,7 @@ factory = (Figure, Position) ->
         KNIGHT: 6
         PAWN: 7
 
-      figureNames: ['king', 'golden_general', 'silver_general', 'bishop', 'rook', 'lance', 'knight', 'pawn']
+      figureNames: ['king', 'golden-general', 'silver-general', 'bishop', 'rook', 'lance', 'knight', 'pawn']
 
       owner:
         A: 0

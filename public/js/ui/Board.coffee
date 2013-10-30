@@ -5,13 +5,12 @@ define([
   'cs!ui/DelayedTask'
 ], (exports, d3, EventEmitter, DelayedTask) ->
   class Board extends EventEmitter
-    constructor: (fieldCountPerRow, marginPercent) ->
-      @fieldCountPerRow = fieldCountPerRow
-      @marginPercent = marginPercent
+    constructor: (config) ->
+      { @fieldCountPerRow, @marginPercent } = config
 
       @boardFields = []
-      for y in [(fieldCountPerRow - 1)..0]
-        for x in [0...fieldCountPerRow]
+      for y in [(@fieldCountPerRow - 1)..0]
+        for x in [0...@fieldCountPerRow]
           @boardFields.push({ x: x, y: y })
 
       d3.select('#board').selectAll('div')
