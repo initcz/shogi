@@ -50,13 +50,23 @@ define([
           .attr('height', @fieldSize)
       @pieces.transition().attr('opacity', 1)
 
-    move: (next) =>
-      @figures[0].x = next.x
-      @figures[0].y = next.y
+    bringToFront: (index) =>
+      # little hack to implement bring to front functionality in D3
+      # more details here: http://stackoverflow.com/questions/6566406/svg-re-ordering-z-index-raphael-optional
+      # and here: https://github.com/mbostock/d3/issues/252
+      @pieces[0][index].parentNode.appendChild(@pieces[0][index])
 
+    move: (next) =>
+      # FIXME temporary
+      current = Math.round(Math.random() * (@figures.length - 1))
+
+      @figures[current].x = next.x
+      @figures[current].y = next.y
+
+      @bringToFront(current)
       moveTransition = @pieces
-        .filter((d, i) -> i is 0)
-        .datum(@figures[0])
+        .filter((data, index) -> index is current)
+        .datum(@figures[current])
         .transition()
         .duration(500) # TODO calculate duration according to distance
         .ease('sin')
