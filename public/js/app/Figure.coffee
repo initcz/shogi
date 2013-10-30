@@ -2,7 +2,12 @@
 # Figure class
 #
 class Figure
-  constructor: (@type, @owner) ->
+  constructor: (@id, @type, @owner, @x, @y) ->
+    @id = null if not id?
+    @type = null if not type?
+    @owner = null if not owner?
+    @x = null if not x?
+    @y = null if not y?
     @promoted = false
 
 factory = ->

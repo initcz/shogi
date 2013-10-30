@@ -3,12 +3,20 @@
 #
 class Position
     constructor: (@x, @y) ->
-    getFigure: (board) ->
-      f = board[@x][@y]
-      if f is undefined
-        return null
+    getFigureId: (board) ->
+      id = board[@x][@y]
+      if id?
+        return id
       else
-        return f
+        return null
+
+    getFigure: (board, figures) ->
+      id = board[@x][@y]
+      if id?
+        return figures[id]
+      else
+        return null
+
     equalsTo: (position) ->
       if not position instanceof Position
         throw new Error 'not Position argument'

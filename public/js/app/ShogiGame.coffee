@@ -33,7 +33,7 @@ factory = (Figure, Position) ->
       return ret
 
     _possibleMoves: (position) ->
-      figure = position.getFigure @board
+      figure = position.getFigure @board, @figures
 
       if figure is undefined
         throw new Error "figure shouldn't be undefined - see stack trace and fix it!"
@@ -77,7 +77,8 @@ factory = (Figure, Position) ->
     _goldenGeneralPossibleMoves: (x, y) ->
       ret = []
       currentPosition = new Position x, y
-      if @board[x][y].owner is ShogiGame.constant.owner.A
+      figure = currentPosition.getFigure @board, @figures
+      if figure.owner is ShogiGame.constant.owner.A
         newPosition = new Position x+1, y+1
         if @_figureCanMove currentPosition, newPosition
           ret.push newPosition
@@ -139,7 +140,8 @@ factory = (Figure, Position) ->
     _knightPossibleMoves: (x, y) ->
       ret = []
       currentPosition = new Position x, y
-      if @board[x][y].owner is ShogiGame.constant.owner.A
+      figure = currentPosition.getFigure @board, @figures
+      if figure.owner is ShogiGame.constant.owner.A
         newPosition = new Position x+1, y+2
         if @_figureCanMove currentPosition, newPosition
           ret.push newPosition
@@ -159,7 +161,8 @@ factory = (Figure, Position) ->
     _silverGeneralPossibleMoves: (x, y) ->
       ret = []
       currentPosition = new Position x, y
-      if @board[x][y].owner is ShogiGame.constant.owner.A
+      figure = currentPosition.getFigure @board, @figures
+      if figure.owner is ShogiGame.constant.owner.A
         newPosition = new Position x, y+1
         if @_figureCanMove currentPosition, newPosition
           ret.push newPosition
@@ -185,12 +188,13 @@ factory = (Figure, Position) ->
     _lancePossibleMoves: (x, y) ->
       ret = []
       currentPosition = new Position x, y
-      if @board[x][y].owner is ShogiGame.constant.owner.A
+      figure = currentPosition.getFigure @board, @figures
+      if figure.owner is ShogiGame.constant.owner.A
         boardSize = ShogiGame.constant.misc.BOARD_SIZE
         for i in [y...boardSize]
           newPosition = new Position x, i+1
           if @_figureCanMove currentPosition, newPosition
-            figure = newPosition.getFigure @board
+            figure = newPosition.getFigure @board, @figures
             ret.push newPosition
             if figure != null
               if figure.owner is ShogiGame.constant.owner.B
@@ -202,7 +206,7 @@ factory = (Figure, Position) ->
         for i in [y...boardSize]
           newPosition = new Position x, i-1
           if @_figureCanMove currentPosition, newPosition
-            figure = newPosition.getFigure @board
+            figure = newPosition.getFigure @board, @figures
             ret.push newPosition
             if figure != null
               if figure.owner is ShogiGame.constant.owner.A
@@ -215,7 +219,8 @@ factory = (Figure, Position) ->
     _pawnPossibleMoves: (x, y) ->
       ret = []
       currentPosition = new Position x, y
-      if @board[x][y].owner is ShogiGame.constant.owner.A
+      figure = currentPosition.getFigure @board, @figures
+      if figure.owner is ShogiGame.constant.owner.A
         newPosition = new Position x, y+1
         if @_figureCanMove currentPosition, newPosition
           ret.push newPosition
@@ -235,7 +240,7 @@ factory = (Figure, Position) ->
         newPosition = new Position x, y
         if @_figureCanMove oldPosition, newPosition
           ret.push newPosition
-          if newPosition.getFigure(@board) is null
+          if newPosition.getFigureId(@board) is null
             return true
           else
             return false
@@ -284,7 +289,7 @@ factory = (Figure, Position) ->
         newPosition = new Position x, y
         if @_figureCanMove oldPosition, newPosition
           ret.push newPosition
-          if newPosition.getFigure(@board) is null
+          if newPosition.getFigureId(@board) is null
             return true
           else
             return false
@@ -326,12 +331,12 @@ factory = (Figure, Position) ->
       return ret
 
     _figureCanMove: (oldPosition, newPosition) ->
-      figure = oldPosition.getFigure @board
+      figure = oldPosition.getFigure @board, @figures
 
       if figure is null
         throw new Error "old position is empty"
 
-      newFigure = newPosition.getFigure @board
+      newFigure = newPosition.getFigure @board, @figures
       if newFigure is null
         return true
 
@@ -373,7 +378,7 @@ factory = (Figure, Position) ->
         valid = true if newPosition.equalsTo position
 
       # can't take own figure
-      newFigure = newPosition.getFigure @board
+      newFigure = newPosition.getFigure @board, @figures
       valid = false if valid and oldFigure? and newFigure? and oldFigure.owner is newFigure.owner
 
       return valid
@@ -401,10 +406,15 @@ factory = (Figure, Position) ->
 
       owners = ShogiGame.constant.owner
       @figures = []
-      @figures.push(new Figure(piece, owners.A)) for piece in pieces
-      @figures.push(new Figure(piece, owners.B)) for piece in pieces
+      id = 0
+      for piece in pieces
+        @figures.push(new Figure(id, piece, owners.A))
+        id++
+      for piece in pieces
+        @figures.push(new Figure(id, piece, owners.B))
+        id++
 
-    resetBoard: (putFigures = true) ->
+    resetBoard: (putFigures = true) =>
 
       boardSize = ShogiGame.constant.misc.BOARD_SIZE
 
@@ -435,49 +445,54 @@ factory = (Figure, Position) ->
         for j in [0...boardSize]
           this.board[i][j] = null;
 
+      placeFigure = (id, x, y) =>
+        @board[x][y] = id
+        @figures[id].x = x
+        @figures[id].y = y
+
       # Owner A
-      @board[0][0] = @figures[0]
-      @board[1][0] = @figures[1]
-      @board[2][0] = @figures[2]
-      @board[3][0] = @figures[3]
-      @board[4][0] = @figures[4]
-      @board[5][0] = @figures[5]
-      @board[6][0] = @figures[6]
-      @board[7][0] = @figures[7]
-      @board[8][0] = @figures[8]
-      @board[1][1] = @figures[9]
-      @board[7][1] = @figures[10]
-      @board[0][2] = @figures[11]
-      @board[1][2] = @figures[12]
-      @board[2][2] = @figures[13]
-      @board[3][2] = @figures[14]
-      @board[4][2] = @figures[15]
-      @board[5][2] = @figures[16]
-      @board[6][2] = @figures[17]
-      @board[7][2] = @figures[18]
-      @board[8][2] = @figures[19]
+      placeFigure 0, 0, 0
+      placeFigure 1,  1,  0
+      placeFigure 2,  2,  0
+      placeFigure 3,  3,  0
+      placeFigure 4,  4,  0
+      placeFigure 5,  5,  0
+      placeFigure 6,  6,  0
+      placeFigure 7,  7,  0
+      placeFigure 8,  8,  0
+      placeFigure 9,  1,  1
+      placeFigure 10, 7,  1
+      placeFigure 11, 0,  2
+      placeFigure 12, 1,  2
+      placeFigure 13, 2,  2
+      placeFigure 14, 3,  2
+      placeFigure 15, 4,  2
+      placeFigure 16, 5,  2
+      placeFigure 17, 6,  2
+      placeFigure 18, 7,  2
+      placeFigure 19, 8,  2
 
       # Owner B
-      @board[0][8] = @figures[20]
-      @board[1][8] = @figures[21]
-      @board[2][8] = @figures[22]
-      @board[3][8] = @figures[23]
-      @board[4][8] = @figures[24]
-      @board[5][8] = @figures[25]
-      @board[6][8] = @figures[26]
-      @board[7][8] = @figures[27]
-      @board[8][8] = @figures[28]
-      @board[1][7] = @figures[30] # ROOK is always on the right side of the player
-      @board[7][7] = @figures[29] # BISHOP is always on the left side of the player
-      @board[0][6] = @figures[31]
-      @board[1][6] = @figures[32]
-      @board[2][6] = @figures[33]
-      @board[3][6] = @figures[34]
-      @board[4][6] = @figures[35]
-      @board[5][6] = @figures[36]
-      @board[6][6] = @figures[37]
-      @board[7][6] = @figures[38]
-      @board[8][6] = @figures[39]
+      placeFigure 20, 0, 8
+      placeFigure 21, 1, 8
+      placeFigure 22, 2, 8
+      placeFigure 23, 3, 8
+      placeFigure 24, 4, 8
+      placeFigure 25, 5, 8
+      placeFigure 26, 6, 8
+      placeFigure 27, 7, 8
+      placeFigure 28, 8, 8
+      placeFigure 30, 1, 7 # ROOK is always on the right side of the player
+      placeFigure 29, 7, 7 # BISHOP is always on the left side of the player
+      placeFigure 31, 0, 6
+      placeFigure 32, 1, 6
+      placeFigure 33, 2, 6
+      placeFigure 34, 3, 6
+      placeFigure 35, 4, 6
+      placeFigure 36, 5, 6
+      placeFigure 37, 6, 6
+      placeFigure 38, 7, 6
+      placeFigure 39, 8, 6
 
       # 'downgrade' all figures
 
@@ -499,7 +514,7 @@ factory = (Figure, Position) ->
           moveOk = false
           #throw new Error msg
 
-        if newPosition.getFigure(@board) isnt null
+        if newPosition.getFigureId(@board) isnt null
           msg = 'can\'t move where is figure already'
           console.log msg # XXX
           moveOk = false
@@ -508,14 +523,16 @@ factory = (Figure, Position) ->
         moveOk = true
 
       else
-        moveOk = oldPosition.getFigure(@board).owner is @currentUser
+        moveOk = oldPosition.getFigure(@board, @figures).owner is @currentUser
         moveOk = @_validMove oldPosition, newPosition if moveOk
 
       if moveOk
-        enemyFigure = newPosition.getFigure @board
-        if enemyFigure isnt null
+
+        enemyFigureId = newPosition.getFigureId @board
+        if enemyFigureId isnt null
+          enemyFigure = @figures[enemyFigureId]
           enemyFigure.owner = @currentUser
-          @offside[@currentUser].push enemyFigure
+          @offside[@currentUser].push enemyFigureId
           data =
             x: newPosition.x
             y: newPosition.y
@@ -523,7 +540,7 @@ factory = (Figure, Position) ->
             type: enemyFigure.type
           @_emit 'taken', data
 
-        @board[newPosition.x][newPosition.y] = oldPosition.getFigure @board
+        @board[newPosition.x][newPosition.y] = oldPosition.getFigureId @board
         @board[oldPosition.x][oldPosition.y] = null
       else
         return false
