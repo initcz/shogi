@@ -21,7 +21,7 @@ define([
   for x in [0...boardSize]
     for y in [0...boardSize]
       pieceID = game.board[x][y]
-      if pieceID
+      if pieceID?
         field = game.figures[pieceID]
         figures.push(transformFigure(x, y, field))
 
