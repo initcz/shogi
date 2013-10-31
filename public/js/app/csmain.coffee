@@ -9,9 +9,9 @@ define([
   figureNames = ShogiGame.constant.figureNames
   game = new ShogiGame
 
-  transformFigure = (id, x, y, figure) ->
+  transformFigure = (x, y, figure) ->
     return {
-      id: id
+      id: figure.id
       x: x, y: y
       player: if figure.owner is owners.A then 'a' else 'b'
       type: figureNames[figure.type]
@@ -20,8 +20,10 @@ define([
   figures = []
   for x in [0...boardSize]
     for y in [0...boardSize]
-      field = game.board[x][y]
-      figures.push(transformFigure(figures.length, x, y, field)) if field
+      pieceID = game.board[x][y]
+      if pieceID
+        field = game.figures[pieceID]
+        figures.push(transformFigure(x, y, field))
 
   board = new Board({
     fieldCountPerRow: boardSize
