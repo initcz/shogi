@@ -1,20 +1,22 @@
 define([
   'exports'
-  'd3',
-  'EventEmitter',
+  'd3'
+  'EventEmitter'
   'cs!ui/DelayedTask'
 ], (exports, d3, EventEmitter, DelayedTask) ->
   class Board extends EventEmitter
     constructor: (config) ->
       { @fieldCountPerRow, @marginPercent } = config
 
-      @boardFields = []
+      @fields = []
+      @positionToIndex = {}
       for y in [(@fieldCountPerRow - 1)..0]
         for x in [0...@fieldCountPerRow]
-          @boardFields.push({ x: x, y: y })
+          @positionToIndex["#{x},#{y}"] = @fields.length
+          @fields.push({ x: x, y: y })
 
-      d3.select('#board').selectAll('div')
-          .data(@boardFields)
+      @fieldElems = d3.select('#board').selectAll('div')
+          .data(@fields)
         .enter().append('div').classed('field', true)
           .attr('id', (data) -> "x#{data.x}y#{data.y}") # maybe we don't need id because data are directly bound to elements
           .on('click', @onFieldClick)
@@ -24,9 +26,34 @@ define([
 
       @boardStyleEl = document.querySelector('#board-style')
 
+    highlight: (currentPosition, positions) ->
+      # TODO optimize it! use d3 filter or map or something to set data in batch?
+      @unhighlight()
+      @_highlightField(currentPosition, 'selected')
+      @_highlightField(position, 'possible') for position in positions
+      @fieldElems
+        .classed('selected', (data) -> data.highlightAs is 'selected')
+        .classed('possible', (data) -> data.highlightAs is 'possible')
+      @_updateFieldElems()
+
+    _highlightField: (position, highlightAs) ->
+      index = @positionToIndex["#{position.x},#{position.y}"]
+      field = @fields[index]
+      field.highlightAs = highlightAs
+
+    unhighlight: ->
+      for field in @fields
+        delete field.highlightAs
+      @_updateFieldElems()
+
+    _updateFieldElems: ->
+      @fieldElems
+        .classed('selected', (data) -> data.highlightAs is 'selected')
+        .classed('possible', (data) -> data.highlightAs is 'possible')
+
     onFieldClick: (data) => @emit('fieldClick', data)
 
-    initialize: -> @onWindowResize(null) # make an initial resize
+    prepare: -> @onWindowResize(null) # make an initial resize
 
     resize: (boardSize, fieldSize, @margins) ->
       boardCss = [

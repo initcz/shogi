@@ -1,6 +1,6 @@
 define([
   'exports'
-  'd3',
+  'd3'
   'EventEmitter'
 ], (exports, d3, EventEmitter) ->
   class Pieces extends EventEmitter
@@ -8,11 +8,11 @@ define([
       { @figures, @animate } = config
       @pieceSizeCoef = 0.7;
       @svg = d3.select('body').append('svg').attr('id', 'pieces').attr('width', '100%').attr('height', '100%')
-      @piecesGroup = @svg.append('g')
+      @piecesGroupElem = @svg.append('g')
 
     initialize: () ->
       @isInitialized = true
-      @piecesGroup.selectAll('image')
+      @piecesGroupElem.selectAll('image')
           .data(@figures)
         .enter().append('g')
           .classed('piece', true)
@@ -22,8 +22,8 @@ define([
           .append('svg:image')
             .classed('piece-image', true)
             .attr('xlink:href', (data) -> return "/img/#{data.type}.svg")
-      @pieces = @piecesGroup.selectAll('.piece')
-      @pieces
+      @pieceElems = @piecesGroupElem.selectAll('.piece')
+      @pieceElems
         .append('svg:image')
           .classed('promotion-edge', true)
           .attr('xlink:href', (data) -> return "/img/promotion-edge.svg")
@@ -31,8 +31,8 @@ define([
     resize: (data) =>
       { @boardSize, @fieldSize, @margins } = data
       @initialize() if not @isInitialized
-      @piecesGroup.attr('transform', @translateScalePieces)
-      @pieces
+      @piecesGroupElem.attr('transform', @translateScalePieces)
+      @pieceElems
         .attr('transform', @translatePiece)
         .selectAll('.piece-image')
           .attr('transform', (data) => @scaleRotatePiece(data, null))
@@ -40,7 +40,7 @@ define([
           .attr('y', -Math.round(@fieldSize / 2))
           .attr('width', @fieldSize)
           .attr('height', @fieldSize)
-      @pieces
+      @pieceElems
         .selectAll('.promotion-edge')
           .attr('opacity', 0)
           .attr('transform', (data) => @scaleRotatePiece(data, null))
@@ -48,41 +48,47 @@ define([
           .attr('y', -Math.round(@fieldSize / 2))
           .attr('width', @fieldSize)
           .attr('height', @fieldSize)
-      @pieces.transition().attr('opacity', 1)
+      @pieceElems.transition().attr('opacity', 1)
 
     bringToFront: (index) =>
       # little hack to implement bring to front functionality in D3
       # more details here: http://stackoverflow.com/questions/6566406/svg-re-ordering-z-index-raphael-optional
       # and here: https://github.com/mbostock/d3/issues/252
-      @pieces[0][index].parentNode.appendChild(@pieces[0][index])
+      @pieceElems[0][index].parentNode.appendChild(@pieceElems[0][index])
 
-    move: (next) =>
-      # FIXME temporary
-      current = Math.round(Math.random() * (@figures.length - 1))
+    move: (figureIndex, next) =>
+      @figures[figureIndex].x = next.x
+      @figures[figureIndex].y = next.y
 
-      @figures[current].x = next.x
-      @figures[current].y = next.y
+      # TODO separate following code
+      if @animate
+        @bringToFront(figureIndex)
+        moveTransition = @pieceElems
+          .filter((data, index) -> index is figureIndex)
+          .datum(@figures[figureIndex])
+          .transition()
+          .duration(500) # TODO calculate duration according to distance
+          .ease('sin')
 
-      @bringToFront(current)
-      moveTransition = @pieces
-        .filter((data, index) -> index is current)
-        .datum(@figures[current])
-        .transition()
-        .duration(500) # TODO calculate duration according to distance
-        .ease('sin')
-
-      zoomTransition = moveTransition.select('.piece-image')
-      moveTransition.attr('transform', @translatePiece)
-      zoomTransition.attrTween('transform', (data) => (value) =>
-        scale = @pieceSizeCoef * (1 + Math.sin(value * Math.PI))
-        return @scaleRotatePiece(data, scale)
-      )
+        zoomTransition = moveTransition.select('.piece-image')
+        moveTransition.attr('transform', @translatePiece)
+        zoomTransition.attrTween('transform', (data) => (value) =>
+          scale = @pieceSizeCoef * (1 + Math.sin(value * Math.PI))
+          return @scaleRotatePiece(data, scale)
+        )
+        moveTransition.each('end', => @emit('moveFinished'))
+      else
+        @pieceElems
+          .filter((data, index) -> index is figureIndex)
+          .datum(@figures[figureIndex])
+          .attr('transform', @translatePiece)
+        @emit('moveFinished')
 
     promote: () =>
       @figures[0].promote = not @figures[0].promote
 
       # FIXME improve and simplify it!
-      rotateTransition = @pieces
+      rotateTransition = @pieceElems
         .filter((d, i) -> i is 0)
         .datum(@figures[0])
         .transition()
