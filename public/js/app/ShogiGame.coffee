@@ -383,6 +383,12 @@ factory = (Figure, Position) ->
 
       return valid
 
+    getFigure: (x, y) ->
+      id = @getFigureId x, y
+      return @figures[id]
+    getFigureId: (x, y) -> @board[x][y]
+    getFigureById: (id) -> @figures[id]
+
     initFigures: ->
 
       types = ShogiGame.constant.figureType
