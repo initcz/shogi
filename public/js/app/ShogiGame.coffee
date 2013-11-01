@@ -14,6 +14,10 @@ factory = (Figure, Position) ->
       @_moveHistory = []
       # TODO: init communication
 
+    getPossibleMoves: (position) -> @_possibleMoves(new Position(position.x, position.y))
+    isMoveValid: (figurePosition, destinedPosition) -> @_validMove(new Position(figurePosition.x, figurePosition.y), new Position(destinedPosition.x, destinedPosition.y))
+    moveTo: (figurePosition, destinedPosition) -> @move(new Position(figurePosition.x, figurePosition.y), new Position(destinedPosition.x, destinedPosition.y)) # TODO rename back to move after refactoring of Position
+
     addListener: (listener) ->
       # FIXME improve it - would be nice to use standard browser/node's event pattern
       if typeof listener isnt 'function'

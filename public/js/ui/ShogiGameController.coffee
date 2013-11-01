@@ -27,10 +27,10 @@ define([
 
       for x in [0...boardSize]
         for y in [0...boardSize]
-          figureId = @game.board[x][y]
+          figureId = @game.getFigureId(x, y)
           if figureId?
-            figure = @_transformFigure(@game.figures[figureId], owners, figureNames)
-            @idToFigureIndex[figure.id] = @figures.length
+            figure = @_transformFigure(@game.getFigureById(figureId), owners, figureNames)
+            @idToFigureIndex[figureId] = @figures.length
             @figures.push(figure)
 
       @board = new Board({
@@ -58,24 +58,24 @@ define([
       @state = 'selectFigure'
 
     # possible states and it's handlers
-    _selectFigure: (data) ->
-      figureId = @game.board[data.x][data.y]
+    _selectFigure: (selectedPosition) ->
+      { x, y } = selectedPosition
+      figureId = @game.getFigureId(x, y)
       if figureId?
-        figure = @game.figures[figureId]
+        figure = @game.getFigureById(figureId)
         if figure.owner is @currentPlayer
           @selectedFigureIndex = @idToFigureIndex[figureId]
-          positions = @game._possibleMoves(new Position(data.x, data.y)) # TODO shoudn't be this function public? do I really need to create an instance of Position?
-          @board.highlight(data, positions)
+          positions = @game.getPossibleMoves(selectedPosition)
+          @board.highlight(selectedPosition, positions)
         else
           # TODO take opponent's figure
       else if @selectedFigureIndex?
         figure = @figures[@selectedFigureIndex]
-        if @game._validMove(new Position(figure.x, figure.y), new Position(data.x, data.y)) # TODO shoudn't be this function public? do I really need to create an instance of Position?
-          # FIXME add validation!
+        if @game.isMoveValid(figure, selectedPosition)
           @state = 'inMove'
           @board.unhighlight()
-          @game.move(new Position(figure.x, figure.y), new Position(data.x, data.y))
-          @pieces.move(@selectedFigureIndex, data)
+          @game.moveTo(figure, selectedPosition)
+          @pieces.move(@selectedFigureIndex, selectedPosition)
         else
           # TODO shake with piece if it's not valid move?
 
