@@ -1,10 +1,11 @@
 define([
   'exports'
   'cs!ui/Board'
+  'cs!ui/OffBoard'
   'cs!ui/Pieces'
   'cs!app/ShogiGame'
   'cs!app/Position'
-], (exports, Board, Pieces, ShogiGame, Position) ->
+], (exports, Board, OffBoard, Pieces, ShogiGame, Position) ->
   class ShogiGameController
     constructor: (config) ->
       { @animate } = config
@@ -37,11 +38,14 @@ define([
         fieldCountPerRow: boardSize
         marginPercent: 10
       })
+      @offBoard = new OffBoard()
+      window.offBoard = @offBoard
       @pieces = new Pieces({
         figures: @figures
         animate: @animate
       })
       @board.on('boardResize', @pieces.resize)
+      @board.on('boardResize', @offBoard.resize)
       @board.on('fieldClick', @_onFieldClick)
       @pieces.on('moveFinished', @_moveFinished)
 

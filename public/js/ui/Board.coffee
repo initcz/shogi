@@ -15,10 +15,10 @@ define([
           @positionToIndex["#{x},#{y}"] = @fields.length
           @fields.push({ x: x, y: y })
 
-      @fieldElems = d3.select('#board').selectAll('div')
+      @boardElem = d3.select('#board')
+      @fieldElems = @boardElem.selectAll('.field')
           .data(@fields)
         .enter().append('div').classed('field', true)
-          .attr('id', (data) -> "x#{data.x}y#{data.y}") # maybe we don't need id because data are directly bound to elements
           .on('click', @onFieldClick)
 
       @resizeTask = new DelayedTask(@onWindowResize, 200)
@@ -27,29 +27,24 @@ define([
       @boardStyleEl = document.querySelector('#board-style')
 
     highlight: (currentPosition, positions) ->
-      # TODO optimize it! use d3 filter or map or something to set data in batch?
-      @unhighlight()
+      @unhighlight(true)
       @_highlightField(currentPosition, 'selected')
       @_highlightField(position, 'possible') for position in positions
       @fieldElems
         .classed('selected', (data) -> data.highlightAs is 'selected')
         .classed('possible', (data) -> data.highlightAs is 'possible')
-      @_updateFieldElems()
 
     _highlightField: (position, highlightAs) ->
       index = @positionToIndex["#{position.x},#{position.y}"]
       field = @fields[index]
       field.highlightAs = highlightAs
 
-    unhighlight: ->
-      for field in @fields
-        delete field.highlightAs
-      @_updateFieldElems()
-
-    _updateFieldElems: ->
-      @fieldElems
-        .classed('selected', (data) -> data.highlightAs is 'selected')
-        .classed('possible', (data) -> data.highlightAs is 'possible')
+    unhighlight: (onlyData) ->
+      delete field.highlightAs for field in @fields
+      if not onlyData
+        @boardElem.selectAll('.selected, .possible')
+          .classed('selected', false)
+          .classed('possible', false)
 
     onFieldClick: (data) => @emit('fieldClick', data)
 
