@@ -13,7 +13,7 @@ define([
         player: 'b'
         pieces: []
       }]
-      @offBoardElems = d3.selectAll('.offBoard')
+      @offBoardElems = d3.select('body').selectAll('.offBoard')
           .data(@offBoard)
         .enter().append('div').classed('offBoard', true)
           .classed('player-a', (data) -> data.player is 'a')
@@ -22,6 +22,15 @@ define([
     resize: (data) =>
       { @boardSize, @fieldSize, @margins } = data
       @initialize() if not @isInitialized
+      d3.select('.offBoard.player-a')
+        .style('left', "#{@margins.left}px")
+        .style('top', "#{@margins.top}px")
+      d3.select('.offBoard.player-b')
+        .style('left', "#{@margins.left + @boardSize}px")
+        .style('top', "#{@margins.top + @boardSize}px")
+      d3.selectAll('.offBoard .field')
+        .style('width', "#{@fieldSize}px")
+        .style('height', "#{@fieldSize}px")
 
     onTake: (player, takenPiece) =>
       offBoard = @offBoard[if player is 'a' then 0 else 1]
@@ -38,9 +47,16 @@ define([
           count: 1
         })
         # TODO improve this
-        d3.selectAll(".offBoard.player-#{player}").selectAll('.field')
+        d3.select(".offBoard.player-#{player}")
+          .classed("fields-#{offBoard.pieces.length - 1}", false)
+          .classed("fields-#{offBoard.pieces.length}", true)
+        # TODO improve this
+        d3.select(".offBoard.player-#{player}").selectAll('.field')
             .data(offBoard.pieces)
           .enter().append('div').classed('field', true)
+            .style('width', "#{@fieldSize}px")
+            .style('height', "#{@fieldSize}px")
+            .on('click', @onFieldClick)
 
     onReturn: (player, returnedPiece) =>
       offBoard = @offBoard[if player is 'a' then 0 else 1]
@@ -56,9 +72,15 @@ define([
       if remove
         offBoard.pieces.splice(index, 1)
         # TODO improve this
-        d3.selectAll(".offBoard.player-#{player}").selectAll('.field')
+        d3.select(".offBoard.player-#{player}")
+          .classed("fields-#{offBoard.pieces.length + 1}", false)
+          .classed("fields-#{offBoard.pieces.length}", true)
+        # TODO improve this
+        d3.select(".offBoard.player-#{player}").selectAll('.field')
             .data(offBoard.pieces)
           .exit().remove('.field')
+
+    onFieldClick: (data) => @emit('fieldClick', data)
 
   exports.OffBoard = OffBoard
 )

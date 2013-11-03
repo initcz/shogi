@@ -36,10 +36,13 @@ define([
 
       @board = new Board({
         fieldCountPerRow: boardSize
-        marginPercent: 10
+        marginPercent: 13
       })
       @offBoard = new OffBoard()
-      window.offBoard = @offBoard
+      # FIXME temporary!
+      window['offBoard+'] = (player, count) => @offBoard.onTake(player, { type: "#{i}" }) for i in [0...count]
+      window['offBoard-'] = (player, count) => @offBoard.onReturn(player, { type: "#{i}" }) for i in [0...count]
+
       @pieces = new Pieces({
         figures: @figures
         animate: @animate
@@ -47,6 +50,7 @@ define([
       @board.on('boardResize', @pieces.resize)
       @board.on('boardResize', @offBoard.resize)
       @board.on('fieldClick', @_onFieldClick)
+      @offBoard.on('fieldClick', (data) -> console.log(data))
       @pieces.on('moveFinished', @_moveFinished)
 
     start: ->
