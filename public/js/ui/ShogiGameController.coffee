@@ -13,24 +13,24 @@ define([
       @figures = []
       @idToFigureIndex = {}
 
-    _transformFigure: (figure, owners, figureNames) ->
+    _transformFigure: (figure) ->
       return {
         id: figure.id
         x: figure.x, y: figure.y
-        player: if figure.owner is owners.A then 'a' else 'b'
-        type: figureNames[figure.type]
+        player: if figure.owner is @owners.A then 'a' else 'b'
+        type: @figureNames[figure.type]
       }
 
     initialize: ->
       boardSize = ShogiGame.constant.misc.BOARD_SIZE
-      owners = ShogiGame.constant.owner
-      figureNames = ShogiGame.constant.figureNames
+      @owners = ShogiGame.constant.owner
+      @figureNames = ShogiGame.constant.figureNames
 
       for x in [0...boardSize]
         for y in [0...boardSize]
           figureId = @game.getFigureId(x, y)
           if figureId?
-            figure = @_transformFigure(@game.getFigureById(figureId), owners, figureNames)
+            figure = @_transformFigure(@game.getFigureById(figureId))
             @idToFigureIndex[figureId] = @figures.length
             @figures.push(figure)
 
@@ -75,8 +75,19 @@ define([
           @selectedFigureIndex = @idToFigureIndex[figureId]
           positions = @game.getPossibleMoves(selectedPosition)
           @board.highlight(selectedPosition, positions)
-        else
-          # TODO take opponent's figure
+        else if @selectedFigureIndex?
+          takenFigure = @_transformFigure(figure)
+          takenFigure.player = if @currentPlayer is @owners.A then 'a' else 'b'
+          takenFigureIndex = @idToFigureIndex[takenFigure.id]
+
+          figure = @figures[@selectedFigureIndex]
+          if @game.isMoveValid(figure, selectedPosition)
+            @offBoard.onTake(takenFigure)
+            @pieces.onTake(takenFigureIndex)
+            @state = 'inMove'
+            @board.unhighlight()
+            @game.moveTo(figure, selectedPosition)
+            @pieces.move(@selectedFigureIndex, selectedPosition)
       else if @selectedFigureIndex?
         figure = @figures[@selectedFigureIndex]
         if @game.isMoveValid(figure, selectedPosition)

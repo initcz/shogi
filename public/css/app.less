@@ -74,10 +74,10 @@ body {
     position: absolute;
   }
   &.player-a {
-    -webkit-transform: rotate(45deg);
+    .rotate(-135deg);
   }
   &.player-b {
-    -webkit-transform: rotate(-135deg);
+    .rotate(45deg);
   }
 
   /* fields for odd count */
@@ -85,73 +85,73 @@ body {
   &.fields-3 .field:nth-child(2),
   &.fields-5 .field:nth-child(3),
   &.fields-7 .field:nth-child(4) {
-    -webkit-transform: translate(-100%, -50%) rotate(0deg);
+    .transform(translate(-100%, -50%) rotate(0deg));
   }
 
   &.fields-3 .field:nth-child(1),
   &.fields-5 .field:nth-child(2),
   &.fields-7 .field:nth-child(3) {
-    -webkit-transform-origin: 100% 100%;
-    -webkit-transform: translate(-100%, -150%) rotate(24deg);
+    .transform-origin(100% 100%);
+    .transform(translate(-100%, -150%) rotate(24deg));
   }
   &.fields-3 .field:nth-child(3),
   &.fields-5 .field:nth-child(4),
   &.fields-7 .field:nth-child(5) {
-    -webkit-transform-origin: 100% 0%;
-    -webkit-transform: translate(-100%, 50%) rotate(-24deg);
+    .transform-origin(100% 0%);
+    .transform(translate(-100%, 50%) rotate(-24deg));
   }
 
   &.fields-5 .field:nth-child(1),
   &.fields-7 .field:nth-child(2) {
-    -webkit-transform-origin: 110% 150%;
-    -webkit-transform: translate(-100%, -250%) rotate(48deg);
+    .transform-origin(110% 150%);
+    .transform(translate(-100%, -250%) rotate(48deg));
   }
   &.fields-5 .field:nth-child(5),
   &.fields-7 .field:nth-child(6) {
-    -webkit-transform-origin: 110% -50%;
-    -webkit-transform: translate(-100%, 150%) rotate(-48deg);
+    .transform-origin(110% -50%);
+    .transform(translate(-100%, 150%) rotate(-48deg));
   }
 
   &.fields-7 .field:nth-child(1) {
-    -webkit-transform-origin: 128% 200%;
-    -webkit-transform: translate(-100%, -350%) rotate(72deg);
+    .transform-origin(128% 200%);
+    .transform(translate(-100%, -350%) rotate(72deg));
   }
   &.fields-7 .field:nth-child(7) {
-    -webkit-transform-origin: 128% -100%;
-    -webkit-transform: translate(-100%, 250%) rotate(-72deg);
+    .transform-origin(128% -100%);
+    .transform(translate(-100%, 250%) rotate(-72deg));
   }
 
   /* fields for even count */
   &.fields-2 .field:nth-child(1),
   &.fields-4 .field:nth-child(2),
   &.fields-6 .field:nth-child(3) {
-    -webkit-transform-origin: 100% 100%;
-    -webkit-transform: translate(-100%, -100%) rotate(12deg);
+    .transform-origin(100% 100%);
+    .transform(translate(-100%, -100%) rotate(12deg));
   }
   &.fields-2 .field:nth-child(2),
   &.fields-4 .field:nth-child(3),
   &.fields-6 .field:nth-child(4) {
-    -webkit-transform-origin: 100% 0%;
-    -webkit-transform: translate(-100%, 0%) rotate(-12deg);
+    .transform-origin(100% 0%);
+    .transform(translate(-100%, 0%) rotate(-12deg));
   }
 
   &.fields-4 .field:nth-child(1),
   &.fields-6 .field:nth-child(2) {
-    -webkit-transform-origin: 105% 133%;
-    -webkit-transform: translate(-100%, -200%) rotate(36deg);
+    .transform-origin(105% 133%);
+    .transform(translate(-100%, -200%) rotate(36deg));
   }
   &.fields-4 .field:nth-child(4),
   &.fields-6 .field:nth-child(5) {
-    -webkit-transform-origin: 105% -33%;
-    -webkit-transform: translate(-100%, 100%) rotate(-36deg);
+    .transform-origin(105% -33%);
+    .transform(translate(-100%, 100%) rotate(-36deg));
   }
 
   &.fields-6 .field:nth-child(1) {
-    -webkit-transform-origin: 120% 180%;
-    -webkit-transform: translate(-100%, -300%) rotate(60deg);
+    .transform-origin(120% 180%);
+    .transform(translate(-100%, -300%) rotate(60deg));
   }
   &.fields-6 .field:nth-child(6) {
-    -webkit-transform-origin: 120% -80%;
-    -webkit-transform: translate(-100%, 200%) rotate(-60deg);
+    .transform-origin(120% -80%);
+    .transform(translate(-100%, 200%) rotate(-60deg));
   }
 }

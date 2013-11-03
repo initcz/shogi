@@ -23,16 +23,17 @@ define([
       { @boardSize, @fieldSize, @margins } = data
       @initialize() if not @isInitialized
       d3.select('.offBoard.player-a')
-        .style('left', "#{@margins.left}px")
-        .style('top', "#{@margins.top}px")
-      d3.select('.offBoard.player-b')
         .style('left', "#{@margins.left + @boardSize}px")
         .style('top', "#{@margins.top + @boardSize}px")
+      d3.select('.offBoard.player-b')
+        .style('left', "#{@margins.left}px")
+        .style('top', "#{@margins.top}px")
       d3.selectAll('.offBoard .field')
         .style('width', "#{@fieldSize}px")
         .style('height', "#{@fieldSize}px")
 
-    onTake: (player, takenPiece) =>
+    onTake: (takenPiece) =>
+      { player } = takenPiece
       offBoard = @offBoard[if player is 'a' then 0 else 1]
       found = false
       for piece in offBoard.pieces

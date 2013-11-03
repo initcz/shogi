@@ -537,7 +537,6 @@ factory = (Figure, Position) ->
         moveOk = @_validMove oldPosition, newPosition if moveOk
 
       if moveOk
-
         enemyFigureId = newPosition.getFigureId @board
         if enemyFigureId isnt null
           enemyFigure = @figures[enemyFigureId]
@@ -550,8 +549,13 @@ factory = (Figure, Position) ->
             type: enemyFigure.type
           @_emit 'taken', data
 
-        @board[newPosition.x][newPosition.y] = oldPosition.getFigureId @board
+        figureId = oldPosition.getFigureId(@board)
+        @board[newPosition.x][newPosition.y] = figureId
         @board[oldPosition.x][oldPosition.y] = null
+
+        figure = @getFigureById(figureId)
+        figure.x = newPosition.x
+        figure.y = newPosition.y
       else
         return false
 

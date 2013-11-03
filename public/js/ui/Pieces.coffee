@@ -56,6 +56,13 @@ define([
       # and here: https://github.com/mbostock/d3/issues/252
       @pieceElems[0][index].parentNode.appendChild(@pieceElems[0][index])
 
+    onTake: (figureIndex) =>
+      @bringToFront(figureIndex)
+      @pieceElems
+        .filter((data, index) -> index is figureIndex)
+        # TODO animate it!
+        .style('opacity', '0')
+
     move: (figureIndex, next) =>
       @figures[figureIndex].x = next.x
       @figures[figureIndex].y = next.y

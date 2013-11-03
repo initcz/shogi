@@ -236,6 +236,13 @@
     -webkit-transform: translate3d(@x,@y,0);
     -moz-transform: translate3d(@x,@y,0);
 }
+.transform-origin(@args) {
+  -webkit-transform-origin: @args;
+  -moz-transform-origin: @args;
+  -ms-transform-origin: @args;
+  -o-transform-origin: @args;
+  transform-origin: @args;
+}
 
 
 // Transitions
