@@ -335,8 +335,9 @@ factory = (Figure, Position) ->
       return ret
 
     _figureCanMove: (oldPosition, newPosition) ->
-      figure = oldPosition.getFigure @board, @figures
+      return false if not @_inSpace(newPosition)
 
+      figure = oldPosition.getFigure @board, @figures
       if figure is null
         throw new Error "old position is empty"
 
